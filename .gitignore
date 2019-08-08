@@ -11,8 +11,10 @@ out/
 *.ipr
 *.iws
 
+
 # fabric
 
 run/
 minecraft/
 cursegradle.properties
+logs/
