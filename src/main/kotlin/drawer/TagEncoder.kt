@@ -2,7 +2,6 @@ import kotlinx.serialization.*
 import kotlinx.serialization.internal.EnumDescriptor
 import net.minecraft.nbt.CompoundTag
 
-//TODO: bytebuf encoder
 //TODO: document usage
 //TODO: upload to bintray and curseforge
 
