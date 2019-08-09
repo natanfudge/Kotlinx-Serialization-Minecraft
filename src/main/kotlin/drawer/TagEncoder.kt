@@ -2,8 +2,13 @@ import kotlinx.serialization.*
 import kotlinx.serialization.internal.EnumDescriptor
 import net.minecraft.nbt.CompoundTag
 
-//TODO: document usage
-//TODO: upload to bintray and curseforge
+//TODO: document usage:
+// Badges: discord, bintray, curseforge
+//TODO: more formats: TextComponent (steal https://github.com/Juuxel/Adorn/blob/1f979868c1744bfa80d6bf40c4ac5f6c265f3d0f/src/main/kotlin/juuxel/adorn/block/entity/TradingStationBlockEntity.kt),
+// ItemStack, DefaultedList,
+//TODO: test nullable data class
+//TODO: test readme
+
 
 /**
  * This demo shows another approach to serialization:

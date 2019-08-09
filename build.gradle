@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id "org.jetbrains.kotlin.jvm"
     id "kotlinx-serialization"
-//    id "com.jfrog.bintray" version "1.8.4"
+    id "com.jfrog.bintray" version "1.8.3"
     id 'com.matthewprenger.cursegradle' version "1.3.0"
 }
 
@@ -18,63 +18,26 @@ minecraft {
 }
 
 
-//
-//
-//def pomConfig = {
-//    licenses {
-//        license {
-//            name project.license
-//        }
-//    }
-//    developers {
-//        developer {
-//            id "fudge"
-//            name "natan"
-//            email "natandestroyer100@gmail.com"
-//        }
-//    }
-//
-//    scm {
-//       url project.github_url
-//    }
-//}
-//
-//publishing {
-//    publications {
-//        DrawerPublication(MavenPublication) {
-//            from components.kotlin
-//            artifact sourcesJar
-//            artifact javadocJar
-//            groupId project.maven_group
-//            artifactId project.archives_base_name
-//            version  project.mod_version
-//            pom.withXml {
-//                def root = asNode()
-//                root.appendNode('description', 'Fabric mod that adds NBT and PacketByteBuf to kotlinx.serialization')
-//                root.appendNode('name', 'Fabric-Drawer')
-//                root.appendNode('url', project.github_url)
-//                root.children().last() + pomConfig
-//            }
-//        }
-//    }
-//}
-//
-//bintray {
-//    user = System.getenv('BINTRAY_USER')
-//    key = System.getenv('BINTRAY_KEY')
-//    pkg {
-//        repo = "maven"
-//        licenses = [project.license]
-//        vscUrl = project.github_url
-//        version {
-//            name = project.mod_version
-//            released = new Date()
-//        }
-//    }
-//    publications = ["DrawerPublication"]
-//}
-//
-//
+def pomConfig = {
+    licenses {
+        license {
+            name project.license
+        }
+    }
+    developers {
+        developer {
+            id "fudge"
+            name "natan"
+            email "natandestroyer100@gmail.com"
+        }
+    }
+
+    scm {
+        url project.github_url
+    }
+}
+
+
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
     maven { url = "https://kotlin.bintray.com/kotlinx" }
@@ -89,7 +52,8 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version"
 
-    api "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
+    modApi "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
+    include "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
@@ -133,26 +97,25 @@ jar {
 }
 
 // configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(jar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
-
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
-    }
-}
-
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            // add all the jars that should be included when publishing to maven
+//            artifact(jar) {
+//                builtBy remapJar
+//            }
+//            artifact(sourcesJar) {
+//                builtBy remapSourcesJar
+//            }
+//        }
+//    }
+//
+//    // select the repositories you want to publish to
+//    repositories {
+//        // uncomment to publish to the local maven
+//        // mavenLocal()
+//    }
+//}
 
 
 curseforge {
@@ -171,7 +134,7 @@ curseforge {
         }
 
         mainArtifact(jar) {
-            displayName = "Fabric Drawer version: $project.mod_version"
+            displayName = "Fabric Drawer $project.mod_version"
         }
         addArtifact sourcesJar
 
@@ -185,6 +148,67 @@ curseforge {
         forgeGradleIntegration = false
     }
 }
+//
+//task javadocs(type: Javadoc) {
+//	source = sourceSets.main.allSource
+//}
+//
+//task javadocsJar(type: Jar, dependsOn: javadocs) {
+//	classifier = "javadocs"
+//	from javadocs.destinationDir
+//}
+
+publishing {
+    publications {
+        DrawerPublication(MavenPublication) {
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+//            from components.kotlin
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+//            artifact javadocsJar
+            groupId project.maven_group
+            artifactId project.archives_base_name
+            version project.mod_version
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Fabric mod that adds NBT and PacketByteBuf to kotlinx.serialization')
+                root.appendNode('name', 'Fabric-Drawer')
+                root.appendNode('url', project.github_url)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+println("user = ${project.property('bintray_user')}")
+println("key = ${project.property('bintray_api_key')}")
+
+bintray {
+    user = project.hasProperty('bintray_user') ? project.property('bintray_user') : ""
+    key = project.hasProperty('bintray_api_key') ? project.property('bintray_api_key') : ""
+    publications = ["DrawerPublication"]
+    publish = true //[Default: false] Whether version should be auto published after an upload
+    pkg {
+        repo = "libs"
+        name = "fabric-drawer"
+        desc = 'Fabric library mod for kotlin mods that allows you to easily save data to NBT and PacketByteBuf using kotlinx.serialization.'
+        websiteUrl = project.github_url
+        issueTrackerUrl = "${project.github_url}/issues"
+        githubRepo = 'natanfudge/fabric-drawer' //Optional Github repository
+        githubReleaseNotesFile = 'README.md' //Optional Github readme file
+        licenses = [project.license]
+        vcsUrl = project.github_url
+        version {
+            name = project.mod_version
+            released = new Date()
+        }
+    }
+
+}
+
 
 test {
     useJUnitPlatform()
@@ -193,6 +217,20 @@ test {
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+}
+
+//String.metaClass.execute = {(command)-> "cmd /c $command" }
+task updateTemplate {
+    group = "template"
+    description = "Parses the README.template.md file and inserts the current version into a new README.md file."
+    doLast {
+        if(!project.hasProperty("version")) throw new IllegalArgumentException("Please define a 'version' property in gradle.properties.")
+        def readMeTemplateFile = new File("README.template.md")
+        if(!readMeTemplateFile.exists()) throw new FileNotFoundException("could not find $readMeTemplateFile.")
+        def readMeTemplateText = readMeTemplateFile.text
+        def readMeFile = new File("README.md")
+        readMeFile.write(readMeTemplateText.replace('$VERSION', project.version))
     }
 }
 
