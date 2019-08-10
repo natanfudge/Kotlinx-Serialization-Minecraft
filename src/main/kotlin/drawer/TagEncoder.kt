@@ -1,14 +1,24 @@
+import com.mojang.datafixers.Dynamic
+import com.mojang.datafixers.types.JsonOps
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.EnumDescriptor
+import net.minecraft.datafixers.NbtOps
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.text.Text
 
 //TODO: document usage:
 // Badges: discord, bintray, curseforge
 //TODO: more formats: TextComponent (steal https://github.com/Juuxel/Adorn/blob/1f979868c1744bfa80d6bf40c4ac5f6c265f3d0f/src/main/kotlin/juuxel/adorn/block/entity/TradingStationBlockEntity.kt),
-// ItemStack, DefaultedList,
+// ItemStack, DefaultedList, Identifier
 //TODO: test nullable data class
 //TODO: test readme
 //TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
+//TODO: add extension methods to CompoundTag and PacketByteBuf for all supported data formats
+
+//TODO: nbt serializer -> Itemstack serializer -> Ingredient serializer -> DefaultedList<...> serializer(add to readme when done)
+
+//TODO: Text serializer (later version)
+//TODO: getNullableFrom / readNullableFrom extension methods for all types (later version)
 
 /**
  * This demo shows another approach to serialization:

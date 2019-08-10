@@ -1,10 +1,11 @@
-@file:UseSerializers(Serializers.Uuid::class, Serializers.BlockPos::class)
+@file:UseSerializers(Serializers.Uuid::class, Serializers.BlockPos::class, Serializers.Identifier::class)
 
 package utils
 
 import drawer.Serializers
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import java.util.*
 
@@ -86,7 +87,8 @@ data class OtherFormats(
     val uuid: UUID,
     val uuidList: List<UUID>,
     val blockPos: BlockPos,
-    val blockPosList: List<BlockPos>
+    val blockPosList: List<BlockPos>,
+    val id: Identifier
 )
 
 // TestShop from Kotlin Koans
@@ -242,7 +244,8 @@ val otherFormats = OtherFormats(
     UUID(1, 222222222),
     listOf(UUID(2, 3), UUID(4, 5), UUID(11111111111111111, 9)),
     BlockPos(78, 12, 2),
-    listOf(BlockPos(4, 5, 6), BlockPos(7, 8, 9), BlockPos(10, 11, 12))
+    listOf(BlockPos(4, 5, 6), BlockPos(7, 8, 9), BlockPos(10, 11, 12)),
+    Identifier("spatialcrafting", "x2crafter_piece")
 )
 
 val zeroNumbers = VariousNumbers(0, 0, 0, 0f, 0, 0.0)

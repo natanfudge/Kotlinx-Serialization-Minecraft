@@ -1,30 +1,40 @@
 package drawer
 
-import TagDecoder
-import TagEncoder
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.LongDescriptor
 import kotlinx.serialization.internal.SerialClassDescImpl
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.PacketByteBuf
+import net.minecraft.nbt.Tag
+import net.minecraft.util.registry.Registry
 import java.util.*
+import kotlin.collections.HashMap
+
+private typealias McBlockPos = net.minecraft.util.math.BlockPos
+private typealias McIdentifier = net.minecraft.util.Identifier
+private typealias McIngredient = net.minecraft.recipe.Ingredient
+private typealias McDefaultedList<T> = net.minecraft.util.DefaultedList<T>
+private typealias McItemStack = net.minecraft.item.ItemStack
+private typealias McText = net.minecraft.text.Text
+private typealias McCompoundTag = net.minecraft.nbt.CompoundTag
+
 
 object Serializers {
     @Serializer(forClass = net.minecraft.util.math.BlockPos::class)
-    object BlockPos : KSerializer<net.minecraft.util.math.BlockPos> {
-        override val descriptor: SerialDescriptor
-            get() = LongDescriptor.withName("BlockPos")
-
-        override fun serialize(encoder: Encoder, obj: net.minecraft.util.math.BlockPos) {
-            encoder.encodeLong(obj.asLong())
-        }
-
-        override fun deserialize(decoder: Decoder): net.minecraft.util.math.BlockPos {
-            return net.minecraft.util.math.BlockPos.fromLong(decoder.decodeLong())
-        }
+    object BlockPos : KSerializer<McBlockPos> {
+        override val descriptor: SerialDescriptor = LongDescriptor.withName("BlockPos")
+        override fun serialize(encoder: Encoder, obj: McBlockPos) = encoder.encodeLong(obj.asLong())
+        override fun deserialize(decoder: Decoder): McBlockPos = McBlockPos.fromLong(decoder.decodeLong())
     }
 
-    @Serializer(forClass = UUID::class)
+
+    @Serializer(forClass = McIdentifier::class)
+    object Identifier : KSerializer<McIdentifier> {
+        override val descriptor: SerialDescriptor = LongDescriptor.withName("Identifier")
+        override fun serialize(encoder: Encoder, obj: McIdentifier) = encoder.encodeString(obj.toString())
+        override fun deserialize(decoder: Decoder): McIdentifier = McIdentifier(decoder.decodeString())
+    }
+
+        @Serializer(forClass = UUID::class)
     object Uuid : KSerializer<UUID> {
         override val descriptor: SerialDescriptor = object : SerialClassDescImpl("Uuid") {
             init {
@@ -59,91 +69,47 @@ object Serializers {
 
     }
 
-
-}
-
-
-/**
- * Converts [obj] into a [CompoundTag] that represents [obj].
- * Later [fromTag] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
- *
- * These functions are not documented because I think they would be confusing.
- * Do you want these to be an official part of the API? Please make an issue.
- */
-
-fun <T> KSerializer<T>.convertToTag(obj: T) = TagEncoder().also { it.encode(this, obj) }.compoundTag
-
-fun <T> KSerializer<T>.fromTag(tag: CompoundTag) = TagDecoder(tag).decode(this)
-
-
-/**
- * Puts [obj] into the [CompoundTag] instance of [inTag].
- * Later [getFrom] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
- *
- * @param key If you are serializing two objects of the same type, you MUST  specify a key.
- * The same key must be used in [getFrom].
- */
-fun <T> KSerializer<T>.put(obj: T?, inTag: CompoundTag, key: String? = null) {
-    val usedKey = key ?: this.descriptor.name
-    require(!inTag.containsKey(usedKey)) {
-        """If you are serializing two objects of the same type, you MUST specify a key, see kdoc.
-        |Also make sure you didn't use the same key twice.
-    """.trimMargin()
-    }
-    if(obj != null) inTag.put(usedKey, convertToTag(obj))
-}
-
-
-/**
- * Retrieves the object the tag that was stored in [tag] with [put] and converts it into the original object.
- * That object can be null. If you know it's not nullable use [getFrom] instead.
- *
- * @param key If you are serializing two objects of the same type, you MUST specify a key.
- * The same key must be used in [put].
- */
-fun <T> KSerializer<T>.getNullableFrom(tag: CompoundTag, key: String? = null): T? {
-    val deserializedTag = tag.getTag(key ?: this.descriptor.name) ?: return null
-    return fromTag(deserializedTag as CompoundTag)
-}
-
-/**
- * Retrieves the object the tag that was stored in [tag] with [put] and converts it into the original object.
- * That object cannot be null. If you need it to be nullable use [getNullableFrom] instead.
- *
- * @param key If you are serializing two objects of the same type, you MUST specify a key.
- * The same key must be used in [put].
- */
-fun <T> KSerializer<T>.getFrom(tag: CompoundTag, key: String? = null): T = getNullableFrom(tag,key) ?:
- throw SerializationException("getFrom cannot be used on a nullable value. Use getNullableFrom instead.")
+//
+//    @Serializer(forClass = McItemStack::class)
+//    object ItemStack : KSerializer<McItemStack> {
+//        override val descriptor: SerialDescriptor = object : SerialClassDescImpl("ItemStack") {
+//            init {
+//                addElement("id") //  will have index 0
+//                addElement("count") //  will have index 1
+//                addElement("tag")
+//            }
+//        }
+//
+//        private const val IdIndex = 0
+//        private const val CountIndex = 1
+//        private const val TagIndex = 2
+//
+//        override fun serialize(encoder: Encoder, obj: McItemStack) {
+//            val compositeOutput = encoder.beginStructure(descriptor)
+//            compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(obj.item).toString())
+//            compositeOutput.encodeByteElement(descriptor, CountIndex, obj.count.toByte())
+//            compositeOutput.encodeNullableSerializableElement(descriptor,)
+//            compositeOutput.endStructure(descriptor)
+//            compoundTag_1.putString("id", )
+//            compoundTag_1.putByte("Count", this.count as Byte)
+//            if (this.tag != null) {
+//                compoundTag_1.put("tag", this.tag)
+//            }
+//
+//            return compoundTag_1
+//        }
+//
+//        override fun deserialize(decoder: Decoder): McItemStack {
+//
+//        }
+//
+//
+//    }
 
 
 
-/**
- * Writes [obj] into [toBuf], to later be retrieved with [readFrom].
- */
-fun <T> KSerializer<T>.write(obj: T?, toBuf: PacketByteBuf) {
-    ByteBufEncoder(toBuf).apply {
-        if(obj != null) {
-            encodeNotNullMark()
-            encode(this@write, obj)
-        } else encodeNull()
-    }
-}
 
-/**
- * Retrieves the object that was stored in the [buf] previously with [write].
- * Must be used on non-null values only. For nullable values use [readNullableFrom].
- */
-fun <T> KSerializer<T>.readFrom(buf: PacketByteBuf): T = readNullableFrom(buf) ?:
-throw SerializationException("readFrom cannot be used on a nullable value. Use readNullableFrom instead.")
-/**
- * Retrieves the object that was stored in the [buf] previously with [write].
- * For non-null values use [readFrom].
- */
-fun <T> KSerializer<T>.readNullableFrom(buf: PacketByteBuf): T? {
-    val decoder = ByteBufDecoder(buf)
-    return if(decoder.decodeNotNullMark()){
-        decoder.decode(this)
-    }else null
+
+
 }
 

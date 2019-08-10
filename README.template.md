@@ -152,13 +152,13 @@ To fix this, put at the very top of the file:
 Serializers for the following classes are available:
 - UUID
 - BlockPos
-- Text
-- ItemStack
-- DefaultedList
+- Identifier
 
-You can also add your own serializers and more using the kotlinx.serialization API. For more information: https://github.com/Kotlin/kotlinx.serialization
+Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#getFoo`, `PacketByteBuf#writeFoo` / `PacketByteBuf#readFoo` are also available for the mentioned classes when they are missing from the vanilla API.
 
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
+
+You can also add your own serializers and more using the kotlinx.serialization API. For more information: https://github.com/Kotlin/kotlinx.serialization
 
 ### Tips
 To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:

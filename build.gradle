@@ -51,8 +51,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:$loader_version"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    //TODO: remove
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version"
 
