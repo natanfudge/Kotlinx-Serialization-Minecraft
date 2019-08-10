@@ -67,14 +67,11 @@ object Serializers {
  * Converts [obj] into a [CompoundTag] that represents [obj].
  * Later [fromTag] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
  *
- * These functions are not part of the api because I think they would be confusing.
- * Do you want these internal functions as part of the API? Please make an issue.
+ * These functions are not documented because I think they would be confusing.
+ * Do you want these to be an official part of the API? Please make an issue.
  */
-//TODO: check if this should be internal and document if not
 
- fun < T > KSerializer<T>.convertToTag(obj: T) = TagEncoder().also { it.encode(this, obj) }.compoundTag
-//fun <T> convertToTag(serializer: KSerializer<T>, obj: T) =
-//    TagEncoder().also { it.encode(serializer, obj) }.compoundTag
+fun <T> KSerializer<T>.convertToTag(obj: T) = TagEncoder().also { it.encode(this, obj) }.compoundTag
 
 fun <T> KSerializer<T>.fromTag(tag: CompoundTag) = TagDecoder(tag).decode(this)
 
