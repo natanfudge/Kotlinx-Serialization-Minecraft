@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag
 // ItemStack, DefaultedList,
 //TODO: test nullable data class
 //TODO: test readme
-
+//TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
 
 /**
  * This demo shows another approach to serialization:

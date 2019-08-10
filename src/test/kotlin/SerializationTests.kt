@@ -1,6 +1,7 @@
 import drawer.*
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.PacketByteBuf
 import org.junit.jupiter.api.Assertions
@@ -20,9 +21,9 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any): TestResult {
     // save
     val buf = PacketByteBuf(Unpooled.buffer())
     serializer.write(obj, toBuf = buf)
-    val back = serializer.readFrom(buf)
+    val back = serializer.readNullableFrom(buf)
     // result
-    return TestResult(obj, back, "$buf")
+    return TestResult(obj, back!!, "$buf")
 }
 
 
@@ -65,7 +66,6 @@ class SerializationTests {
         }
 
 
-
     }
 
     @Test
@@ -85,5 +85,50 @@ class SerializationTests {
 
     }
 
+
+    @Test
+    fun `Using getFrom on null is not allowed in TagEncoder`() {
+        val tag = CompoundTag()
+        val data: CityData? = null
+        CityData.serializer().put(data, tag)
+        Assertions.assertThrows(SerializationException::class.java) {
+            val back = CityData.serializer().getFrom(tag)
+        }
+
+    }
+
+    @Test
+    fun `You can use getNullableFrom on null in TagEncoder`() {
+        val tag = CompoundTag()
+        val data: CityData? = null
+        CityData.serializer().put(data, tag)
+        val back = CityData.serializer().getNullableFrom(tag)
+
+        assertEquals(data, back)
+    }
+
+        @Test
+    fun `Using readFrom on null is not allowed in ByteBufEncoder`() {
+        val buf = PacketByteBuf(Unpooled.buffer())
+        val data: CityData? = null
+        CityData.serializer().write(data, buf)
+        Assertions.assertThrows(SerializationException::class.java) {
+            val back = CityData.serializer().readFrom(buf)
+        }
+
+    }
+
+    @Test
+    fun `You can use readNullableFrom on null in ByteBufEncoder`() {
+        val buf = PacketByteBuf(Unpooled.buffer())
+
+        val data: CityData? = null
+
+        CityData.serializer().write(data, buf)
+
+        val back = CityData.serializer().readNullableFrom(buf)
+        assertEquals(data, back)
+
+    }
 
 }

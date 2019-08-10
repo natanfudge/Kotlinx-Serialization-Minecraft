@@ -24,7 +24,10 @@ val testCases: List<Case<*>> = listOf(
     Case(CountyData("US", listOf(CityData(1, "New York"), CityData(2, "Chicago"))), CountyData.serializer()),
     Case(zoo, Zoo.serializer(), hasNulls = true),
     Case(shop, Shop.serializer()),
-    Case(otherFormats, OtherFormats.serializer())
+    Case(otherFormats, OtherFormats.serializer()),
+    Case(zeroNumbers, VariousNumbers.serializer()),
+    Case(nullableZeroNumbers, VariousNullableNumbers.serializer())
+
 )
 
 @Suppress("UNCHECKED_CAST")

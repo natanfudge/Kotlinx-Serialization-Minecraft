@@ -38,13 +38,15 @@ pluginManagement {
 }
 ```
 
-It's recommended you update the IDEA Kotlin plugin to 1.50 by going to `Tools -> Kotlin -> Configure Kotlin Plugin Updates`
+It's recommended you update the IDEA Kotlin plugin to 1.3.50 by going to `Tools -> Kotlin -> Configure Kotlin Plugin Updates`
  because it provides special syntax highlighting for kotlinx.serialization.
 
 ## Usage
 
 Annotate any class with `@Serializable` to make it serializable:
 ```kotlin
+import kotlinx.serialization.Serializable
+
 @Serializable
 data class BlockInfo(var timesClicked : Int, val timeOfPlacement : Long, val nameOfFirstPersonClicked : String?)
 ```
@@ -154,7 +156,22 @@ Serializers for the following classes are available:
 - ItemStack
 - DefaultedList
 
+You can also add your own serializers and more using the kotlinx.serialization API. For more information: https://github.com/Kotlin/kotlinx.serialization
+
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
+
+### Tips
+To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
+```kotlin
+@Serializable
+data class MyData(val x :Int, val y : String){
+    fun putIn(tag : CompoundTag) = MyData.serializer().put(this,tag)
+}
+```
+
+### Troubleshooting
+- It's saying `serializer()` is undefined!
+Refresh gradle (ReImport all Gradle projects button)
 
 ### Closing notes
 You are looking at the first revision of this library and its readme. 

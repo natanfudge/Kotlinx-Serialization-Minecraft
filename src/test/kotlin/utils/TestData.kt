@@ -3,13 +3,32 @@
 package utils
 
 import drawer.Serializers
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import net.minecraft.util.math.BlockPos
 import java.util.*
 
 // simple data objects
+
+@Serializable
+data class VariousNumbers(
+    val int: Int,
+    val byte: Byte,
+    val short: Short,
+    val float: Float,
+    val long: Long,
+    val double: Double
+)
+
+@Serializable
+data class VariousNullableNumbers(
+    val int: Int?,
+    val byte: Byte?,
+    val short: Short,
+    val float: Float?,
+    val long: Long,
+    val double: Double
+)
 
 @Serializable
 data class CityData(
@@ -225,3 +244,6 @@ val otherFormats = OtherFormats(
     BlockPos(78, 12, 2),
     listOf(BlockPos(4, 5, 6), BlockPos(7, 8, 9), BlockPos(10, 11, 12))
 )
+
+val zeroNumbers = VariousNumbers(0, 0, 0, 0f, 0, 0.0)
+val nullableZeroNumbers = VariousNullableNumbers(null, 0, 0, 0f, 0, 0.0)

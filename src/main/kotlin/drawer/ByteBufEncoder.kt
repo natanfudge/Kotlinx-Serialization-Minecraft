@@ -75,5 +75,6 @@ class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder() {
     override fun decodeChar(): Char = buf.readChar()
     override fun decodeString(): String = buf.readString()
     override fun decodeEnum(enumDescription: EnumDescriptor): Int = buf.readInt()
+    override fun decodeNull(): Nothing? = null
 }
 
