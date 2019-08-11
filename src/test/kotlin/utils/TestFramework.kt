@@ -26,7 +26,9 @@ val testCases: List<Case<*>> = listOf(
     Case(shop, Shop.serializer()),
     Case(otherFormats, OtherFormats.serializer()),
     Case(zeroNumbers, VariousNumbers.serializer()),
-    Case(nullableZeroNumbers, VariousNullableNumbers.serializer())
+    Case(nullableZeroNumbers, VariousNullableNumbers.serializer()),
+    Case(tags,Tags.serializer()),
+    Case(intArrayTagWrapper,IntArrayTagWrapper.serializer())
 
 )
 

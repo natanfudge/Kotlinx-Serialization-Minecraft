@@ -1,41 +1,121 @@
 package drawer
 
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.LongDescriptor
-import kotlinx.serialization.internal.SerialClassDescImpl
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.Tag
-import net.minecraft.util.registry.Registry
+import kotlinx.serialization.internal.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import net.minecraft.nbt.*
+import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import java.util.*
-import kotlin.collections.HashMap
-
-private typealias McBlockPos = net.minecraft.util.math.BlockPos
-private typealias McIdentifier = net.minecraft.util.Identifier
-private typealias McIngredient = net.minecraft.recipe.Ingredient
-private typealias McDefaultedList<T> = net.minecraft.util.DefaultedList<T>
-private typealias McItemStack = net.minecraft.item.ItemStack
-private typealias McText = net.minecraft.text.Text
-private typealias McCompoundTag = net.minecraft.nbt.CompoundTag
 
 
 object Serializers {
     @Serializer(forClass = net.minecraft.util.math.BlockPos::class)
-    object BlockPos : KSerializer<McBlockPos> {
+    object ForBlockPos : KSerializer<BlockPos> {
         override val descriptor: SerialDescriptor = LongDescriptor.withName("BlockPos")
-        override fun serialize(encoder: Encoder, obj: McBlockPos) = encoder.encodeLong(obj.asLong())
-        override fun deserialize(decoder: Decoder): McBlockPos = McBlockPos.fromLong(decoder.decodeLong())
+        override fun serialize(encoder: Encoder, obj: BlockPos) = encoder.encodeLong(obj.asLong())
+        override fun deserialize(decoder: Decoder): BlockPos = BlockPos.fromLong(decoder.decodeLong())
     }
 
 
-    @Serializer(forClass = McIdentifier::class)
-    object Identifier : KSerializer<McIdentifier> {
+    @Serializer(forClass = Identifier::class)
+    object ForIdentifier : KSerializer<Identifier> {
         override val descriptor: SerialDescriptor = LongDescriptor.withName("Identifier")
-        override fun serialize(encoder: Encoder, obj: McIdentifier) = encoder.encodeString(obj.toString())
-        override fun deserialize(decoder: Decoder): McIdentifier = McIdentifier(decoder.decodeString())
+        override fun serialize(encoder: Encoder, obj: Identifier) = encoder.encodeString(obj.toString())
+        override fun deserialize(decoder: Decoder): Identifier = Identifier(decoder.decodeString())
     }
 
-        @Serializer(forClass = UUID::class)
-    object Uuid : KSerializer<UUID> {
+
+    @Serializer(forClass = ByteTag::class)
+    object ForByteTag : KSerializer<ByteTag> {
+        override val descriptor: SerialDescriptor = ByteDescriptor.withName("ByteTag")
+        override fun serialize(encoder: Encoder, obj: ByteTag) = encoder.encodeByte(obj.byte)
+        override fun deserialize(decoder: Decoder): ByteTag = ByteTag(decoder.decodeByte())
+    }
+
+    @Serializer(forClass = ShortTag::class)
+    object ForShortTag : KSerializer<ShortTag> {
+        override val descriptor: SerialDescriptor = ShortDescriptor.withName("ShortTag")
+        override fun serialize(encoder: Encoder, obj: ShortTag) = encoder.encodeShort(obj.short)
+        override fun deserialize(decoder: Decoder): ShortTag = ShortTag(decoder.decodeShort())
+    }
+
+    @Serializer(forClass = IntTag::class)
+    object ForIntTag : KSerializer<IntTag> {
+        override val descriptor: SerialDescriptor = IntDescriptor.withName("IntTag")
+        override fun serialize(encoder: Encoder, obj: IntTag) = encoder.encodeInt(obj.int)
+        override fun deserialize(decoder: Decoder): IntTag = IntTag(decoder.decodeInt())
+    }
+
+    @Serializer(forClass = LongTag::class)
+    object ForLongTag : KSerializer<LongTag> {
+        override val descriptor: SerialDescriptor = LongDescriptor.withName("LongTag")
+        override fun serialize(encoder: Encoder, obj: LongTag) = encoder.encodeLong(obj.long)
+        override fun deserialize(decoder: Decoder): LongTag = LongTag(decoder.decodeLong())
+    }
+
+    @Serializer(forClass = FloatTag::class)
+    object ForFloatTag : KSerializer<FloatTag> {
+        override val descriptor: SerialDescriptor = FloatDescriptor.withName("FloatTag")
+        override fun serialize(encoder: Encoder, obj: FloatTag) = encoder.encodeFloat(obj.float)
+        override fun deserialize(decoder: Decoder): FloatTag = FloatTag(decoder.decodeFloat())
+    }
+
+    @Serializer(forClass = DoubleTag::class)
+    object ForDoubleTag : KSerializer<DoubleTag> {
+        override val descriptor: SerialDescriptor = DoubleDescriptor.withName("DoubleTag")
+        override fun serialize(encoder: Encoder, obj: DoubleTag) = encoder.encodeDouble(obj.double)
+        override fun deserialize(decoder: Decoder): DoubleTag = DoubleTag(decoder.decodeDouble())
+    }
+
+    @Serializer(forClass = StringTag::class)
+    object ForStringTag : KSerializer<StringTag> {
+        override val descriptor: SerialDescriptor = StringDescriptor.withName("StringTag")
+        override fun serialize(encoder: Encoder, obj: StringTag) = encoder.encodeString(obj.asString())
+        override fun deserialize(decoder: Decoder): StringTag = StringTag(decoder.decodeString())
+    }
+
+    @Serializer(forClass = EndTag::class)
+    object ForEndTag : KSerializer<EndTag> {
+        override val descriptor: SerialDescriptor = ByteDescriptor.withName("EndTag")
+        override fun serialize(encoder: Encoder, obj: EndTag) = encoder.encodeByte(0)
+        override fun deserialize(decoder: Decoder): EndTag = EndTag().also { decoder.decodeByte() }
+    }
+
+    @Serializer(forClass = ByteArrayTag::class)
+    object ForByteArrayTag : KSerializer<ByteArrayTag> {
+        override val descriptor: SerialDescriptor = ArrayClassDesc(ForByteTag.descriptor)
+        override fun serialize(encoder: Encoder, obj: ByteArrayTag) =
+            ArrayListSerializer(ForByteTag).serialize(encoder, obj)
+
+        override fun deserialize(decoder: Decoder): ByteArrayTag =
+            ByteArrayTag(ArrayListSerializer(ForByteTag).deserialize(decoder).map { it.byte })
+    }
+
+    @Serializer(forClass = IntArrayTag::class)
+    object ForIntArrayTag : KSerializer<IntArrayTag> {
+        override val descriptor: SerialDescriptor = ArrayClassDesc(ForIntTag.descriptor)
+        override fun serialize(encoder: Encoder, obj: IntArrayTag) =
+            ArrayListSerializer(ForIntTag).serialize(encoder, obj)
+
+        override fun deserialize(decoder: Decoder): IntArrayTag =
+            IntArrayTag(ArrayListSerializer(ForIntTag).deserialize(decoder).map { it.int })
+    }
+
+    @Serializer(forClass = LongArrayTag::class)
+    object ForLongArrayTag : KSerializer<LongArrayTag> {
+        override val descriptor: SerialDescriptor = ArrayClassDesc(ForLongTag.descriptor)
+        override fun serialize(encoder: Encoder, obj: LongArrayTag) =
+            ArrayListSerializer(ForLongTag).serialize(encoder, obj)
+
+        override fun deserialize(decoder: Decoder): LongArrayTag =
+            LongArrayTag(ArrayListSerializer(ForLongTag).deserialize(decoder).map { it.long })
+    }
+
+
+    @Serializer(forClass = UUID::class)
+    object ForUuid : KSerializer<UUID> {
         override val descriptor: SerialDescriptor = object : SerialClassDescImpl("Uuid") {
             init {
                 addElement("most") // most will have index 0
@@ -56,18 +136,41 @@ object Serializers {
         override fun deserialize(decoder: Decoder): UUID {
             val dec: CompositeDecoder = decoder.beginStructure(descriptor)
 
-            assert(dec.decodeElementIndex(descriptor) == CompositeDecoder.READ_ALL)
-            { "Only use the UUID serializer for tag compounds and bytebuffs." }
+            val index = dec.decodeElementIndex(descriptor)
+            if (index == CompositeDecoder.READ_ALL) {
+                val most = dec.decodeLongElement(descriptor, MostIndex)
+                val least = dec.decodeLongElement(descriptor, LeastIndex)
 
-            val most = dec.decodeLongElement(descriptor, MostIndex)
-            val least = dec.decodeLongElement(descriptor, LeastIndex)
+                dec.endStructure(descriptor)
+                return UUID(most, least)
+            } else {
+                var most: Long? = null // consider using flags or bit mask if you
+                var least: Long? = null // need to read nullable non-optional properties
+                when (index) {
+                    CompositeDecoder.READ_DONE -> throw SerializationException("Read should not be done yet.")
+                    MostIndex -> most = dec.decodeLongElement(descriptor, index)
+                    LeastIndex -> least = dec.decodeLongElement(descriptor, index)
+                    else -> throw SerializationException("Unknown index $index")
+                }
 
-            dec.endStructure(descriptor)
-            return UUID(most, least)
+                loop@ while (true) {
+                    when (val i = dec.decodeElementIndex(descriptor)) {
+                        CompositeDecoder.READ_DONE -> break@loop
+                        MostIndex -> most = dec.decodeLongElement(descriptor, i)
+                        LeastIndex -> least = dec.decodeLongElement(descriptor, i)
+                        else -> throw SerializationException("Unknown index $i")
+                    }
+                }
+                dec.endStructure(descriptor)
+                return UUID(
+                    most ?: throw MissingFieldException("most"),
+                    least ?: throw MissingFieldException("least")
+                )
+            }
         }
-
-
     }
+
+
 
 //
 //    @Serializer(forClass = McItemStack::class)
@@ -105,10 +208,6 @@ object Serializers {
 //
 //
 //    }
-
-
-
-
 
 
 }

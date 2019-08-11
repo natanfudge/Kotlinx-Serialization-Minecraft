@@ -1,10 +1,26 @@
-@file:UseSerializers(Serializers.Uuid::class, Serializers.BlockPos::class, Serializers.Identifier::class)
+@file:UseSerializers(
+    Serializers.ForUuid::class,
+    Serializers.ForBlockPos::class,
+    Serializers.ForIdentifier::class,
+    Serializers.ForByteTag::class,
+    Serializers.ForShortTag::class,
+    Serializers.ForIntTag::class,
+    Serializers.ForLongTag::class,
+    Serializers.ForFloatTag::class,
+    Serializers.ForDoubleTag::class,
+    Serializers.ForEndTag::class,
+    Serializers.ForByteArrayTag::class,
+    Serializers.ForIntArrayTag::class,
+    Serializers.ForLongArrayTag::class,
+    Serializers.ForStringTag::class
+)
 
 package utils
 
 import drawer.Serializers
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import net.minecraft.nbt.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import java.util.*
@@ -55,6 +71,35 @@ data class StreetData2(
 data class CountyData(
     val name: String,
     val cities: List<CityData>
+)
+
+@Serializable
+data class Tags(
+    val byte: ByteTag,
+    val short: ShortTag,
+    val int: IntTag,
+    val long: LongTag,
+    val float: FloatTag,
+    val double: DoubleTag,
+    val string: StringTag,
+    val end: EndTag,
+    val byteArray: ByteArrayTag,
+    val intArray: IntArrayTag,
+    val longArray: LongArrayTag
+)
+
+@Serializable
+data class IntArrayTagWrapper(
+    val end: EndTag,
+    val byteArray: ByteArrayTag,
+    val intArray: IntArrayTag,
+    val longArray: LongArrayTag
+)
+
+@Serializable
+data class AbstractTags(
+    val tag1 : Tag,
+    val tag2 : Tag
 )
 
 // Shop from Kotlin Koans
@@ -250,3 +295,16 @@ val otherFormats = OtherFormats(
 
 val zeroNumbers = VariousNumbers(0, 0, 0, 0f, 0, 0.0)
 val nullableZeroNumbers = VariousNullableNumbers(null, 0, 0, 0f, 0, 0.0)
+
+val tags = Tags(
+    ByteTag(0), ShortTag(1), IntTag(2), LongTag(3),
+    FloatTag(3.5f), DoubleTag(4.23), StringTag("amar"), EndTag(),
+    ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())), IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L))
+)
+
+val intArrayTagWrapper = IntArrayTagWrapper(EndTag(),ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L)))
+
+val abstractTags = AbstractTags(
+    IntTag(1), StringTag("halo")
+)

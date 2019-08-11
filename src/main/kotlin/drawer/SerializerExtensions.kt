@@ -2,10 +2,7 @@ package drawer
 
 import TagDecoder
 import TagEncoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.decode
-import kotlinx.serialization.encode
+import kotlinx.serialization.*
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.PacketByteBuf
 
@@ -18,9 +15,9 @@ import net.minecraft.util.PacketByteBuf
  * Do you want these to be an official part of the API? Please make an issue.
  */
 
-fun <T> KSerializer<T>.convertToTag(obj: T) = TagEncoder().also { it.encode(this, obj) }.compoundTag
+fun <T> SerializationStrategy<T>.convertToTag(obj: T) = TagEncoder().also { it.encode(this, obj) }.compoundTag
 
-fun <T> KSerializer<T>.fromTag(tag: CompoundTag) = TagDecoder(tag).decode(this)
+fun <T> DeserializationStrategy<T>.fromTag(tag: CompoundTag) = TagDecoder(tag).decode(this)
 
 
 /**
@@ -30,10 +27,11 @@ fun <T> KSerializer<T>.fromTag(tag: CompoundTag) = TagDecoder(tag).decode(this)
  * @param key If you are serializing two objects of the same type, you MUST  specify a key.
  * The same key must be used in [getFrom].
  */
-fun <T> KSerializer<T>.put(obj: T?, inTag: CompoundTag, key: String? = null) {
+fun <T> SerializationStrategy<T>.put(obj: T?, inTag: CompoundTag, key: String? = null) {
     val usedKey = key ?: this.descriptor.name
     require(!inTag.containsKey(usedKey)) {
-        """If you are serializing two objects of the same type, you MUST specify a key, see kdoc.
+        """A '${this.descriptor.name}' appears twice in the CompoundTag.
+            |If you are serializing two objects of the same type, you MUST specify a key, see kdoc.
         |Also make sure you didn't use the same key twice.
     """.trimMargin()
     }
@@ -48,7 +46,7 @@ fun <T> KSerializer<T>.put(obj: T?, inTag: CompoundTag, key: String? = null) {
  * @param key If you are serializing two objects of the same type, you MUST specify a key.
  * The same key must be used in [put].
  */
-fun <T> KSerializer<T>.getNullableFrom(tag: CompoundTag, key: String? = null): T? {
+fun <T> DeserializationStrategy<T>.getNullableFrom(tag: CompoundTag, key: String? = null): T? {
     val deserializedTag = tag.getTag(key ?: this.descriptor.name) ?: return null
     return fromTag(deserializedTag as CompoundTag)
 }
@@ -60,7 +58,7 @@ fun <T> KSerializer<T>.getNullableFrom(tag: CompoundTag, key: String? = null): T
  * @param key If you are serializing two objects of the same type, you MUST specify a key.
  * The same key must be used in [put].
  */
-fun <T> KSerializer<T>.getFrom(tag: CompoundTag, key: String? = null): T = getNullableFrom(tag,key) ?:
+fun <T> DeserializationStrategy<T>.getFrom(tag: CompoundTag, key: String? = null): T = getNullableFrom(tag,key) ?:
  throw SerializationException("getFrom cannot be used on a nullable value. Use getNullableFrom instead.")
 
 
@@ -68,7 +66,7 @@ fun <T> KSerializer<T>.getFrom(tag: CompoundTag, key: String? = null): T = getNu
 /**
  * Writes [obj] into [toBuf], to later be retrieved with [readFrom].
  */
-fun <T> KSerializer<T>.write(obj: T?, toBuf: PacketByteBuf) {
+fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf) {
     ByteBufEncoder(toBuf).apply {
         if(obj != null) {
             encodeNotNullMark()
@@ -81,13 +79,13 @@ fun <T> KSerializer<T>.write(obj: T?, toBuf: PacketByteBuf) {
  * Retrieves the object that was stored in the [buf] previously with [write].
  * Must be used on non-null values only. For nullable values use [readNullableFrom].
  */
-fun <T> KSerializer<T>.readFrom(buf: PacketByteBuf): T = readNullableFrom(buf) ?:
+fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf): T = readNullableFrom(buf) ?:
 throw SerializationException("readFrom cannot be used on a nullable value. Use readNullableFrom instead.")
 /**
  * Retrieves the object that was stored in the [buf] previously with [write].
  * For non-null values use [readFrom].
  */
-fun <T> KSerializer<T>.readNullableFrom(buf: PacketByteBuf): T? {
+fun <T> DeserializationStrategy<T>.readNullableFrom(buf: PacketByteBuf): T? {
     val decoder = ByteBufDecoder(buf)
     return if(decoder.decodeNotNullMark()){
         decoder.decode(this)

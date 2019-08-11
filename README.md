@@ -1,4 +1,5 @@
 # Fabric Drawer
+![CurseForge](https://cf.way2muchnoise.eu/334410.svg) ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord) ![Bintray](https://img.shields.io/bintray/v/natanfudge/libs/fabric-drawer?color=green&label=Bintray) ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
 
 Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to NBT and PacketByteBuf using kotlinx.serialization.
 
@@ -15,7 +16,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.9")
+    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.10")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
@@ -146,7 +147,7 @@ data class myPlayer(val id : UUID)
 
 To fix this, put at the very top of the file:
 ```kotlin
-@file:UseSerializers(Serializers.Uuid::class, Serializers.BlockPos::class)
+@file:UseSerializers(Serializers.ForUuid::class, Serializers.ForBlockPos::class)
 ```
 
 Serializers for the following classes are available:
@@ -158,16 +159,18 @@ Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#ge
 
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
 
-You can also add your own serializers and more using the kotlinx.serialization API. For more information: https://github.com/Kotlin/kotlinx.serialization
+You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
 
 ### Tips
-To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
+- To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
 ```kotlin
 @Serializable
 data class MyData(val x :Int, val y : String){
     fun putIn(tag : CompoundTag) = MyData.serializer().put(this,tag)
 }
 ```
+
+- Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
 
 ### Troubleshooting
 - It's saying `serializer()` is undefined!

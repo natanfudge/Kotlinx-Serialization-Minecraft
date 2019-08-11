@@ -131,4 +131,23 @@ class SerializationTests {
 
     }
 
+//    @Test
+//    fun `Test Polymorphic`(){
+//        val tag = CompoundTag()
+//        AbstractTags.serializer().put(abstractTags,tag)
+//        val back = AbstractTags.serializer().getFrom(tag)
+//        assertEquals(abstractTags,back)
+//    }
+//
+//        @Test
+//    fun `Test Polymorphic 2`(){
+//            val format = TagFormat()
+//            val tag = format.tagify(AbstractTags.serializer(),abstractTags)
+//            val back = format.parse(AbstractTags.serializer(),tag)
+////        val tag = CompoundTag()
+////        AbstractTags.serializer().put(abstractTags,tag)
+////        val back = AbstractTags.serializer().getFrom(tag)
+//        assertEquals(abstractTags,back)
+//    }
+
 }

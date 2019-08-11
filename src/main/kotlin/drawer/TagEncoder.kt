@@ -1,24 +1,25 @@
-import com.mojang.datafixers.Dynamic
-import com.mojang.datafixers.types.JsonOps
+import drawer.Serializers
+import drawer.convertToTag
+import drawer.fromTag
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.EnumDescriptor
-import net.minecraft.datafixers.NbtOps
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.text.Text
+import kotlinx.serialization.modules.EmptyModule
+import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.plus
+import net.minecraft.nbt.*
 
-//TODO: document usage:
-// Badges: discord, bintray, curseforge
-//TODO: more formats: TextComponent (steal https://github.com/Juuxel/Adorn/blob/1f979868c1744bfa80d6bf40c4ac5f6c265f3d0f/src/main/kotlin/juuxel/adorn/block/entity/TradingStationBlockEntity.kt),
-// ItemStack, DefaultedList, Identifier
-//TODO: test nullable data class
 //TODO: test readme
 //TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
 //TODO: add extension methods to CompoundTag and PacketByteBuf for all supported data formats
 
+//TODO: figure out polymorphic serialization
 //TODO: nbt serializer -> Itemstack serializer -> Ingredient serializer -> DefaultedList<...> serializer(add to readme when done)
 
-//TODO: Text serializer (later version)
-//TODO: getNullableFrom / readNullableFrom extension methods for all types (later version)
+//TODO: Later version:
+//TODO: Text serializer
+//TODO: getNullableFrom / readNullableFrom extension methods for all types  + optional key for all types
+//TODO: "Identifiable" serializer
 
 /**
  * This demo shows another approach to serialization:
@@ -83,4 +84,32 @@ internal class TagDecoder(private val map: CompoundTag) : NamedValueDecoder() {
 
 }
 
-
+//val TagModule = SerializersModule {
+//    polymorphic(Tag::class) {
+//        ByteTag::class with Serializers.ForByteTag
+//        ShortTag::class with Serializers.ForShortTag
+//        IntTag::class with Serializers.ForIntTag
+//        LongTag::class with Serializers.ForLongTag
+//        FloatTag::class with Serializers.ForFloatTag
+//        DoubleTag::class with Serializers.ForDoubleTag
+//        StringTag::class with Serializers.ForStringTag
+//        EndTag::class with Serializers.ForEndTag
+//        ByteArrayTag::class with Serializers.ForByteArrayTag
+//        IntArrayTag::class with Serializers.ForIntArrayTag
+//        LongArrayTag::class with Serializers.ForLongArrayTag
+////            Tag::class with ForTag
+////            Tag::class with ForTag
+//    }
+//}
+//
+//
+//class TagFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
+//    fun <T> parse(deserializer: DeserializationStrategy<T>, tag: CompoundTag): T {
+//        return deserializer.fromTag(tag)
+//    }
+//
+//    fun <T> tagify(serializer: SerializationStrategy<T>, obj: T): CompoundTag {
+//        return serializer.convertToTag(obj)
+//    }
+//}
+//
