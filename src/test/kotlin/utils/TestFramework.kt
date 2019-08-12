@@ -1,6 +1,8 @@
 package utils
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.modules.EmptyModule
+import kotlinx.serialization.modules.SerialModule
 import kotlin.reflect.KFunction
 
 data class TestResult(
@@ -9,9 +11,10 @@ data class TestResult(
     val ext: Any  // serialized (external) representation
 )
 
-class Case<T : Any>(
+data class Case<T : Any>(
     val obj: T,
     val serializer: KSerializer<T>,
+    val context: SerialModule = EmptyModule,
     val name: String = obj.javaClass.simpleName,
     val hasNulls: Boolean = false
 )
@@ -27,8 +30,11 @@ val testCases: List<Case<*>> = listOf(
     Case(otherFormats, OtherFormats.serializer()),
     Case(zeroNumbers, VariousNumbers.serializer()),
     Case(nullableZeroNumbers, VariousNullableNumbers.serializer()),
-    Case(tags,Tags.serializer()),
-    Case(intArrayTagWrapper,IntArrayTagWrapper.serializer())
+    Case(tags, Tags.serializer()),
+    Case(intArrayTagWrapper, IntArrayTagWrapper.serializer()),
+    Case(abstractTags, AbstractTags.serializer()),
+    Case(message, MessageWrapper.serializer(), messageModule),
+    Case(composedTags, ComposedTags.serializer())
 
 )
 
@@ -36,11 +42,13 @@ val testCases: List<Case<*>> = listOf(
 fun <T : Any> testCase(
     serializer: KSerializer<T>,
     obj: T,
-    method: (KSerializer<Any>, Any) -> TestResult,
+    context: SerialModule,
+    method: (KSerializer<Any>, Any, SerialModule) -> TestResult,
     verbose: Boolean = true
+
 ): Boolean {
     if (verbose) println("Start with $obj")
-    val result = method(serializer as KSerializer<Any>, obj)
+    val result = method(serializer as KSerializer<Any>, obj, context)
 
     if (verbose) {
         println("Loaded obj ${result.res}")
@@ -50,14 +58,26 @@ fun <T : Any> testCase(
     return obj == result.res
 }
 
-fun testCase(case: Case<Any>, method: (KSerializer<Any>, Any) -> TestResult, verbose: Boolean = true): Boolean {
+fun testCase(
+    case: Case<Any>,
+    method: (KSerializer<Any>, Any, SerialModule) -> TestResult,
+    verbose: Boolean = true
+): Boolean {
     println("Test case ${case.name}")
-    return testCase(case.serializer, case.obj, method, verbose)
+    try {
+        return testCase(case.serializer, case.obj, case.context, method, verbose)
+    } catch (e: java.lang.Exception) {
+        println("Error executing test case '$case':\n")
+        throw e
+    }
+
 }
+
+class TestException(message: String) : java.lang.Exception(message)
 
 @Suppress("UNCHECKED_CAST")
 fun testMethod(
-    method: (KSerializer<Any>, Any) -> TestResult,
+    method: (KSerializer<Any>, Any, SerialModule) -> TestResult,
     supportsNull: Boolean = true,
     verbose: Boolean = true
 ): Pair<Int, Int> {

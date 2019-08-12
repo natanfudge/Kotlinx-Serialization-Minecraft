@@ -12,7 +12,8 @@
     Serializers.ForByteArrayTag::class,
     Serializers.ForIntArrayTag::class,
     Serializers.ForLongArrayTag::class,
-    Serializers.ForStringTag::class
+    Serializers.ForStringTag::class,
+    Serializers.ForListTag::class
 )
 
 package utils
@@ -20,6 +21,7 @@ package utils
 import drawer.Serializers
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -98,9 +100,19 @@ data class IntArrayTagWrapper(
 
 @Serializable
 data class AbstractTags(
-    val tag1 : Tag,
-    val tag2 : Tag
+    val tag1: Tag,
+    val tag2: Tag,
+    val tag3: Tag,
+    val tag4: Tag,
+    val tag5: Tag,
+    val tag6: Tag,
+    val tag7: Tag,
+    val tag8: Tag,
+    val tag9: Tag,
+    val tag10: Tag,
+    val tag11: Tag
 )
+
 
 // Shop from Kotlin Koans
 
@@ -135,6 +147,18 @@ data class OtherFormats(
     val blockPosList: List<BlockPos>,
     val id: Identifier
 )
+
+
+interface PolymorphicMessage
+@Serializable
+data class IntMessage(val int: Int) : PolymorphicMessage
+
+@Serializable
+data class StringMessage(val string: String) : PolymorphicMessage
+
+@Serializable
+data class MessageWrapper(val message: PolymorphicMessage, val stringMessage: StringMessage)
+
 
 // TestShop from Kotlin Koans
 
@@ -284,7 +308,6 @@ val zoo = Zoo(
     )
 )
 
-
 val otherFormats = OtherFormats(
     UUID(1, 222222222),
     listOf(UUID(2, 3), UUID(4, 5), UUID(11111111111111111, 9)),
@@ -296,15 +319,72 @@ val otherFormats = OtherFormats(
 val zeroNumbers = VariousNumbers(0, 0, 0, 0f, 0, 0.0)
 val nullableZeroNumbers = VariousNullableNumbers(null, 0, 0, 0f, 0, 0.0)
 
+val message = MessageWrapper(
+    IntMessage(1),
+    StringMessage("Asdf")
+)
+val messageModule = SerializersModule {
+    polymorphic(PolymorphicMessage::class) {
+        IntMessage::class with IntMessage.serializer()
+        StringMessage::class with StringMessage.serializer()
+    }
+}
+
 val tags = Tags(
-    ByteTag(0), ShortTag(1), IntTag(2), LongTag(3),
-    FloatTag(3.5f), DoubleTag(4.23), StringTag("amar"), EndTag(),
-    ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())), IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L))
+    ByteTag(0),
+    ShortTag(1),
+    IntTag(2),
+    LongTag(3),
+    FloatTag(3.5f),
+    DoubleTag(4.23),
+    StringTag("amar"),
+    EndTag(),
+    ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    IntArrayTag(listOf(8, 9, 10)),
+    LongArrayTag(listOf(11L, 12L, 13L))
 )
 
-val intArrayTagWrapper = IntArrayTagWrapper(EndTag(),ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
-    IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L)))
+val intArrayTagWrapper = IntArrayTagWrapper(
+    EndTag(), ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L))
+)
 
 val abstractTags = AbstractTags(
-    IntTag(1), StringTag("halo")
+    ByteTag(0),
+    ShortTag(1),
+    IntTag(2),
+    LongTag(3),
+    FloatTag(3.5f),
+    DoubleTag(4.23),
+    StringTag("amar"),
+    EndTag(),
+    ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    IntArrayTag(listOf(8, 9, 10)),
+    LongArrayTag(listOf(11L, 12L, 13L))
+)
+
+@Serializable
+data class LessAbstractTags(val tag: Tag)
+
+val lessAbstractTags = LessAbstractTags(IntArrayTag(listOf(8, 9, 10)))
+
+
+@Serializable
+data class ComposedTags(val listTag1: ListTag, val listTag2: ListTag, val listTag3: ListTag)
+
+//TODO: list tag of compound tag
+val composedTags = ComposedTags(ListTag().apply {
+    add(IntTag(1))
+    add(IntTag(2))
+    add(IntTag(3))
+}, ListTag().apply {
+    add(StringTag("asdf"))
+    add(StringTag("asdf"))
+},
+    ListTag().apply {
+        add(ByteArrayTag(listOf(1.toByte(), 2.toByte(), 3.toByte())))
+        add(ByteArrayTag(listOf(2.toByte(), 4.toByte(), 3.toByte())))
+        add(ByteArrayTag(listOf((-13).toByte(), 2.toByte(), 4.toByte())))
+    }
+
 )

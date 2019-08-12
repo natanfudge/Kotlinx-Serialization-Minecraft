@@ -2,6 +2,7 @@ import drawer.*
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.modules.SerialModule
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.PacketByteBuf
 import org.junit.jupiter.api.Assertions
@@ -9,22 +10,20 @@ import org.junit.jupiter.api.Test
 import utils.*
 import kotlin.test.assertEquals
 
-fun testTag(serializer: KSerializer<Any>, obj: Any): TestResult {
-    // save
-    val tag = serializer.convertToTag(obj)
-    val back = serializer.fromTag(tag)
-    // result
-    return TestResult(obj, back, "${tag.size} items $tag")
+fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
+    val tag = CompoundTag()
+    serializer.put(obj, tag, context = context)
+    val back = serializer.getFrom(tag, context = context)
+    return TestResult(obj, back, "$tag")
 }
 
-fun testByteBuf(serializer: KSerializer<Any>, obj: Any): TestResult {
-    // save
+fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
     val buf = PacketByteBuf(Unpooled.buffer())
-    serializer.write(obj, toBuf = buf)
-    val back = serializer.readNullableFrom(buf)
-    // result
+    serializer.write(obj, toBuf = buf, context = context)
+    val back = serializer.readNullableFrom(buf, context = context)
     return TestResult(obj, back!!, "$buf")
 }
+//TODO: test custom polymorphic serialization
 
 
 class SerializationTests {
@@ -107,7 +106,7 @@ class SerializationTests {
         assertEquals(data, back)
     }
 
-        @Test
+    @Test
     fun `Using readFrom on null is not allowed in ByteBufEncoder`() {
         val buf = PacketByteBuf(Unpooled.buffer())
         val data: CityData? = null
@@ -131,23 +130,15 @@ class SerializationTests {
 
     }
 
-//    @Test
-//    fun `Test Polymorphic`(){
-//        val tag = CompoundTag()
-//        AbstractTags.serializer().put(abstractTags,tag)
-//        val back = AbstractTags.serializer().getFrom(tag)
-//        assertEquals(abstractTags,back)
-//    }
-//
-//        @Test
-//    fun `Test Polymorphic 2`(){
-//            val format = TagFormat()
-//            val tag = format.tagify(AbstractTags.serializer(),abstractTags)
-//            val back = format.parse(AbstractTags.serializer(),tag)
-////        val tag = CompoundTag()
-////        AbstractTags.serializer().put(abstractTags,tag)
-////        val back = AbstractTags.serializer().getFrom(tag)
-//        assertEquals(abstractTags,back)
-//    }
+    @Test
+    fun `Abstract array tags can be encoded in a ByteBuf`() {
+        val buf = PacketByteBuf(Unpooled.buffer())
+        val data = lessAbstractTags
+        LessAbstractTags.serializer().write(data, buf)
+        val back = LessAbstractTags.serializer().readNullableFrom(buf)
+
+        assertEquals(data, back)
+    }
+
 
 }

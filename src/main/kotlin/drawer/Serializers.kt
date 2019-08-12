@@ -2,8 +2,6 @@ package drawer
 
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -85,7 +83,8 @@ object Serializers {
 
     @Serializer(forClass = ByteArrayTag::class)
     object ForByteArrayTag : KSerializer<ByteArrayTag> {
-        override val descriptor: SerialDescriptor = ArrayClassDesc(ForByteTag.descriptor)
+        override val descriptor: SerialDescriptor =UnsealedListLikeDescriptorImpl(ForByteTag.descriptor,"ByteArrayTag")
+
         override fun serialize(encoder: Encoder, obj: ByteArrayTag) =
             ArrayListSerializer(ForByteTag).serialize(encoder, obj)
 
@@ -95,7 +94,8 @@ object Serializers {
 
     @Serializer(forClass = IntArrayTag::class)
     object ForIntArrayTag : KSerializer<IntArrayTag> {
-        override val descriptor: SerialDescriptor = ArrayClassDesc(ForIntTag.descriptor)
+        override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForIntTag.descriptor,"IntArrayTag")
+
         override fun serialize(encoder: Encoder, obj: IntArrayTag) =
             ArrayListSerializer(ForIntTag).serialize(encoder, obj)
 
@@ -105,12 +105,41 @@ object Serializers {
 
     @Serializer(forClass = LongArrayTag::class)
     object ForLongArrayTag : KSerializer<LongArrayTag> {
-        override val descriptor: SerialDescriptor = ArrayClassDesc(ForLongTag.descriptor)
+        override val descriptor: SerialDescriptor =UnsealedListLikeDescriptorImpl(ForLongTag.descriptor,"LongArrayTag")
+
         override fun serialize(encoder: Encoder, obj: LongArrayTag) =
             ArrayListSerializer(ForLongTag).serialize(encoder, obj)
 
         override fun deserialize(decoder: Decoder): LongArrayTag =
             LongArrayTag(ArrayListSerializer(ForLongTag).deserialize(decoder).map { it.long })
+    }
+
+    @Serializer(forClass = Tag::class)
+    object ForTag : KSerializer<Tag>{
+       override val descriptor: SerialDescriptor = PolymorphicClassDescriptor
+        override fun serialize(encoder: Encoder, obj: Tag) {
+            PolymorphicSerializer(Tag::class).serialize(encoder,obj)
+        }
+         override fun deserialize(decoder: Decoder): Tag {
+            return PolymorphicSerializer(Tag::class).deserialize(decoder) as Tag
+        }
+    }
+
+    /**
+     * ListTag can only hold one type of tag
+     */
+    @Serializer(forClass = ListTag::class)
+    class ForListTag : KSerializer<ListTag>{
+        override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForTag.descriptor,"ListTag")
+
+        override fun serialize(encoder: Encoder, obj: ListTag) {
+            ArrayListSerializer(ForTag).serialize(encoder,obj)
+        }
+        override fun deserialize(decoder: Decoder): ListTag = ListTag().apply {
+            for(tag in ArrayListSerializer(ForTag).deserialize(decoder)){
+                add(tag)
+            }
+        }
     }
 
 
@@ -169,6 +198,7 @@ object Serializers {
             }
         }
     }
+
 
 
 

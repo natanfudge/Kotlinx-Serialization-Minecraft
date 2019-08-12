@@ -94,6 +94,8 @@ ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packetId")){ con
 }
 ```
 
+An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-example).
+
 #### Putting two objects of the same type in one CompoundTag
  If you are putting two objects of the same type in one CompoundTag you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
  For example:
@@ -161,6 +163,11 @@ If I've missed anything you need please [open an issue](https://github.com/natan
 
 You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
 
+### Polymorphic serialization
+- Read [this](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md) first. 
+- In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
+If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
+
 ### Tips
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
 ```kotlin
@@ -168,7 +175,14 @@ You can also add your own serializers and more using the kotlinx.serialization A
 data class MyData(val x :Int, val y : String){
     fun putIn(tag : CompoundTag) = MyData.serializer().put(this,tag)
 }
+//Usage:
+fun toTag(tag :CompoundTag){
+    val data = MyData(1,"hello")
+    tag.putIn(tag) // Instead of MyData.serializer().put(data,tag)
+}
 ```
+
+Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/issues/329) so we can have this syntax built-in to the library for all serializable classes! Having a common interface for serializable classes would also enable avoiding boilerplate in other places.
 
 - Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
 
