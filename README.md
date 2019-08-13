@@ -19,7 +19,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.11")
+    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.12")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
@@ -161,6 +161,7 @@ Serializers for the following classes are available:
 - Identifier
 - All NBT classes
 - ItemStack (note: requires being in a Minecraft context as it accesses the registry)
+- Ingredient (note: requires being in a Minecraft context as it accesses the registry)
 
 Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#getFoo`, `PacketByteBuf#writeFoo` / `PacketByteBuf#readFoo` are also available for the mentioned classes when they are missing from the vanilla API.
 

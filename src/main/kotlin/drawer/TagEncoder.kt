@@ -8,12 +8,17 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
 
-//TODO: make Serializers into a java object so you can do a * import. Remove Serializers as a class instead and just not have them nested???
+//TODO: test the following things in the example mod:
+// - ItemStack
+// - Ingredient
+// - DefaultedList<ItemStack>
+// - DefaultedList<Ingredient>
+
 //TODO: test readme (example mod)
 //TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
 
 //TODO: figure out polymorphic serialization
-//TODO: nbt serializer -> Itemstack serializer -> Ingredient serializer -> DefaultedList<...> serializer(add to readme when done)
+//TODO: Ingredient serializer -> DefaultedList<T> serializer(add to readme when done)
 
 //TODO: Later version:
 //TODO: Text serializer

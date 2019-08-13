@@ -7,13 +7,12 @@ import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import net.minecraft.recipe.Ingredient
 import net.minecraft.util.PacketByteBuf
 
 internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
-    inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder(), ICanEncodeCompoundTag{
-         override fun encodeCompoundTag(tag: CompoundTag) {
-            buf.writeCompoundTag(tag)
-        }
+    inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder(), ICanEncodeCompoundTag, ICanEncodeIngredient{
+
 
         override val context: SerialModule = this@ByteBufFormat.context
 
@@ -74,9 +73,19 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun encodeEnum(enumDescription: EnumDescriptor, ordinal: Int) {
             buf.writeInt(ordinal)
         }
+
+        override fun encodeIngredient(ingredient: Ingredient) {
+            ingredient.write(buf)
+        }
+
+        override fun encodeCompoundTag(tag: CompoundTag) {
+            buf.writeCompoundTag(tag)
+        }
     }
 
-    inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder(), ICanDecodeCompoundTag {
+    inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder(), ICanDecodeCompoundTag, ICanDecodeIngredient {
+
+
         override val context: SerialModule = this@ByteBufFormat.context
 
         override fun decodeCollectionSize(desc: SerialDescriptor): Int = buf.readInt()
@@ -93,6 +102,8 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun decodeEnum(enumDescription: EnumDescriptor): Int = buf.readInt()
         override fun decodeNull(): Nothing? = null
         override fun decodeCompoundTag() : CompoundTag = buf.readCompoundTag()!!
+        override fun decodeIngredient(): Ingredient  = Ingredient.fromPacket(buf)
+
     }
 
 

@@ -23,7 +23,6 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): 
     val back = serializer.readNullableFrom(buf, context = context)
     return TestResult(obj, back!!, "$buf")
 }
-//TODO: test custom polymorphic serialization
 
 
 class SerializationTests {

@@ -4,6 +4,7 @@ import drawer.util.UnsealedNamedValueDecoder
 import drawer.util.UnsealedNamedValueEncoder
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import net.minecraft.recipe.Ingredient
 
 interface ICanEncodeTag : ICanEncodeCompoundTag {
     fun encodeTag(tag: Tag)
@@ -31,4 +32,13 @@ abstract class NamedValueTagEncoder : UnsealedNamedValueEncoder(), ICanEncodeTag
 abstract class NamedValueTagDecoder : UnsealedNamedValueDecoder(), ICanDecodeTag {
     final override fun decodeTag(): Tag = decodeTaggedTag(popTag())
     abstract fun decodeTaggedTag(key: String): Tag
+}
+
+
+interface ICanEncodeIngredient{
+    fun encodeIngredient(ingredient: Ingredient)
+}
+
+interface ICanDecodeIngredient{
+    fun decodeIngredient() : Ingredient
 }

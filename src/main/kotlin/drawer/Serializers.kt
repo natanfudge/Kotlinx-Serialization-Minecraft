@@ -1,12 +1,15 @@
 package drawer
 
+import drawer.util.bufferedPacketByteBuf
+import io.netty.buffer.Unpooled
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.*
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
+import net.minecraft.recipe.Ingredient
 import net.minecraft.util.Identifier
+import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.registry.Registry
 import java.util.*
 
 @Serializer(forClass = net.minecraft.util.math.BlockPos::class)
@@ -82,6 +85,7 @@ object ForEndTag : KSerializer<EndTag> {
 }
 
 @Serializer(forClass = ByteArrayTag::class)
+//TODO: optimizable by making the inner byte array public with a getter mixin
 object ForByteArrayTag : KSerializer<ByteArrayTag> {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForByteTag.descriptor, "ByteArrayTag")
 
@@ -92,6 +96,7 @@ object ForByteArrayTag : KSerializer<ByteArrayTag> {
         ByteArrayTag(ArrayListSerializer(ForByteTag).deserialize(decoder).map { it.byte })
 }
 
+//TODO: optimizable by making the inner int array public with a getter mixin
 @Serializer(forClass = IntArrayTag::class)
 object ForIntArrayTag : KSerializer<IntArrayTag> {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForIntTag.descriptor, "IntArrayTag")
@@ -103,6 +108,7 @@ object ForIntArrayTag : KSerializer<IntArrayTag> {
         IntArrayTag(ArrayListSerializer(ForIntTag).deserialize(decoder).map { it.int })
 }
 
+//TODO: optimizable by making the inner long array public with a getter mixin
 @Serializer(forClass = LongArrayTag::class)
 object ForLongArrayTag : KSerializer<LongArrayTag> {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForLongTag.descriptor, "LongArrayTag")
@@ -114,6 +120,7 @@ object ForLongArrayTag : KSerializer<LongArrayTag> {
         LongArrayTag(ArrayListSerializer(ForLongTag).deserialize(decoder).map { it.long })
 }
 
+//TODO: optimizable by using the exisiting encoding system
 @Serializer(forClass = Tag::class)
 object ForTag : KSerializer<Tag> {
     override val descriptor: SerialDescriptor = PolymorphicClassDescriptor
@@ -131,6 +138,7 @@ object ForTag : KSerializer<Tag> {
 /**
  * ListTag can only hold one type of tag
  */
+//TODO: optimizable by making the inner List<Tag> public with a getter mixin
 @Serializer(forClass = ListTag::class)
 object ForListTag : KSerializer<ListTag> {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForTag.descriptor, "ListTag")
@@ -146,6 +154,7 @@ object ForListTag : KSerializer<ListTag> {
     }
 }
 
+//TODO: optimizable by making the inner Map<String,Tag> public with a getter mixin
 @Serializer(forClass = CompoundTag::class)
 object ForCompoundTag : KSerializer<CompoundTag> {
     override val descriptor: SerialDescriptor = HashMapClassDesc(StringDescriptor, ForTag.descriptor)
@@ -176,6 +185,7 @@ object ForCompoundTag : KSerializer<CompoundTag> {
 
 //TODO: serialize / deserialize can be optimized specifically in ByteBufEncoder / TagEncoder to use the built-in functions
 // PacketByteBuf#writeItemStack, ItemStack#ToTag, etc, Using canEncodeItemStack interface the same way as in Tag.
+//TODO: optimizable by making the inner TagCompound public with a getter mixin
 @Serializer(forClass = ItemStack::class)
 object ForItemStack : KSerializer<ItemStack> {
     override val descriptor: SerialDescriptor = object : SerialClassDescImpl("ItemStack") {
@@ -196,7 +206,7 @@ object ForItemStack : KSerializer<ItemStack> {
 
 
     override fun serialize(encoder: Encoder, obj: ItemStack) {
-        ForCompoundTag.serialize(encoder,obj.toTag(CompoundTag()))
+        ForCompoundTag.serialize(encoder, obj.toTag(CompoundTag()))
 //        val compositeOutput = encoder.beginStructure(descriptor)
 //        compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(obj.item).toString())
 //        compositeOutput.encodeByteElement(descriptor, CountIndex, obj.count.toByte())
@@ -257,6 +267,41 @@ object ForItemStack : KSerializer<ItemStack> {
 
 }
 
+//TODO: optimizable by making the inner Array<ItemStack> public with a getter mixin
+@Serializer(forClass = Ingredient::class)
+object ForIngredient : KSerializer<Ingredient> {
+    override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForItemStack.descriptor, "Ingredient")
+
+    override fun serialize(encoder: Encoder, obj: Ingredient) {
+        if (encoder is ICanEncodeIngredient) {
+            encoder.encodeIngredient(obj)
+        } else {
+            // This is the only choice to serialize Ingredient in other formats
+            val buf = bufferedPacketByteBuf()
+            obj.write(buf)
+            val stackArrayLength = buf.readVarInt()
+            val matchingStacks = List(stackArrayLength) { buf.readItemStack() }
+            ArrayListSerializer(ForItemStack).serialize(encoder, matchingStacks)
+        }
+    }
+
+    override fun deserialize(decoder: Decoder): Ingredient {
+        if(decoder is ICanDecodeIngredient){
+            return decoder.decodeIngredient()
+        }else{
+            // This is the only choice to serialize Ingredient in other formats
+            val matchingStacks = ArrayListSerializer(ForItemStack).deserialize(decoder)
+            val buf = bufferedPacketByteBuf().apply {
+                writeVarInt(matchingStacks.size)
+                for(matchingStack in matchingStacks){
+                    writeItemStack(matchingStack)
+                }
+            }
+            return Ingredient.fromPacket(buf)
+        }
+    }
+}
+
 
 @Serializer(forClass = UUID::class)
 object ForUuid : KSerializer<UUID> {
@@ -288,11 +333,11 @@ object ForUuid : KSerializer<UUID> {
             dec.endStructure(descriptor)
             return UUID(most, least)
         } else {
-            return handleWeirdInputOrdering(index, dec)
+            return handleUnorthodoxInputOrdering(index, dec)
         }
     }
 
-    private fun handleWeirdInputOrdering(index: Int, dec: CompositeDecoder): UUID {
+    private fun handleUnorthodoxInputOrdering(index: Int, dec: CompositeDecoder): UUID {
         var most: Long? = null // consider using flags or bit mask if you
         var least: Long? = null // need to read nullable non-optional properties
         when (index) {
