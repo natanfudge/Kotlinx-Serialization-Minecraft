@@ -1,7 +1,7 @@
 # Fabric Drawer
 ![CurseForge](https://cf.way2muchnoise.eu/334410.svg) ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord) ![Bintray](https://img.shields.io/bintray/v/natanfudge/libs/fabric-drawer?color=green&label=Bintray) ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
 
-Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to NBT and PacketByteBuf using kotlinx.serialization.
+Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to and load from NBT and PacketByteBuf using kotlinx.serialization.
 
 ## Gradle
 
@@ -16,7 +16,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.10")
+    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.11")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
@@ -58,7 +58,7 @@ Then you can serialize it back and forth.
 fun fillData(){
     myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
 }
-// Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed
+// Or make myInfo nullable without lateinit and use getFromNullable if initializing it at first placement is not guaranteed
 lateinit var myInfo : BlockInfo
     private set
 fun toTag(tag: CompoundTag){
@@ -149,13 +149,15 @@ data class myPlayer(val id : UUID)
 
 To fix this, put at the very top of the file:
 ```kotlin
-@file:UseSerializers(Serializers.ForUuid::class, Serializers.ForBlockPos::class)
+@file:UseSerializers(ForUuid::class, ForBlockPos::class)
 ```
 
 Serializers for the following classes are available:
 - UUID
 - BlockPos
 - Identifier
+- All NBT classes
+- ItemStack (note: requires being in a Minecraft context as it accesses the registry)
 
 Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#getFoo`, `PacketByteBuf#writeFoo` / `PacketByteBuf#readFoo` are also available for the mentioned classes when they are missing from the vanilla API.
 
@@ -163,7 +165,10 @@ If I've missed anything you need please [open an issue](https://github.com/natan
 
 You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
 
-
+### Polymorphic serialization
+- Read [this](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md) first. 
+- In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
+If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
 
 ### Tips
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
@@ -179,7 +184,7 @@ fun toTag(tag :CompoundTag){
 }
 ```
 
-Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/issues/329) so we can have this syntax always as an extension method to all serializable classes, without having to add any methods! Having a common interface for serializable classes would also enable avoiding boilerplate in other places.
+Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/issues/329) so we can have this syntax built-in to the library for all serializable classes! Having a common interface for serializable classes would also enable avoiding boilerplate in other places.
 
 - Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
 
