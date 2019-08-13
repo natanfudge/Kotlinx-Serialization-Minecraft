@@ -1,5 +1,8 @@
 # Fabric Drawer
-![CurseForge](https://cf.way2muchnoise.eu/334410.svg) ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord) ![Bintray](https://img.shields.io/bintray/v/natanfudge/libs/fabric-drawer?color=green&label=Bintray) ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
+![CurseForge](https://cf.way2muchnoise.eu/334410.svg)
+![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)
+![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg) 
+![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
 
 Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to and load from NBT and PacketByteBuf using kotlinx.serialization.
 

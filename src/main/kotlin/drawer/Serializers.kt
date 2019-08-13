@@ -120,7 +120,6 @@ object ForTag : KSerializer<Tag> {
     override fun serialize(encoder: Encoder, obj: Tag) {
         if (encoder is ICanEncodeTag) encoder.encodeTag(obj)
         else PolymorphicSerializer(Tag::class).serialize(encoder, obj)
-        val x = 2
     }
 
     override fun deserialize(decoder: Decoder): Tag {
