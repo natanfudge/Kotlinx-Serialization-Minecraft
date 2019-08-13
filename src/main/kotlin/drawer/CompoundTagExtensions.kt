@@ -6,13 +6,13 @@ import net.minecraft.util.math.BlockPos
 
 
 /** See [put] */
-fun CompoundTag.putIdentifier(id: Identifier?, key: String? = null) = Serializers.ForIdentifier.put(id, this, key)
+fun CompoundTag.putIdentifier(id: Identifier?, key: String? = null) =ForIdentifier.put(id, this, key)
 
 /** See [getFrom] */
-fun CompoundTag.getIdentifier(key: String? = null) = Serializers.ForIdentifier.getFrom(this, key)
+fun CompoundTag.getIdentifier(key: String? = null) = ForIdentifier.getFrom(this, key)
 
 /** * See [put]*/
-fun CompoundTag.putBlockPos(id: BlockPos?, key: String? = null) = Serializers.ForBlockPos.put(id, this, key)
+fun CompoundTag.putBlockPos(id: BlockPos?, key: String? = null) = ForBlockPos.put(id, this, key)
 
 /** See [getFrom] */
-fun CompoundTag.getBlockPos(key: String? = null) = Serializers.ForBlockPos.getFrom(this, key)
+fun CompoundTag.getBlockPos(key: String? = null) = ForBlockPos.getFrom(this, key)

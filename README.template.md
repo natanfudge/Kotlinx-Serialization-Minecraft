@@ -1,7 +1,7 @@
 # Fabric Drawer
 ![CurseForge](https://cf.way2muchnoise.eu/334410.svg) ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord) ![Bintray](https://img.shields.io/bintray/v/natanfudge/libs/fabric-drawer?color=green&label=Bintray) ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
 
-Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to NBT and PacketByteBuf using kotlinx.serialization.
+Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to and load from NBT and PacketByteBuf using kotlinx.serialization.
 
 ## Gradle
 
@@ -58,7 +58,7 @@ Then you can serialize it back and forth.
 fun fillData(){
     myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
 }
-// Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed
+// Or make myInfo nullable without lateinit and use getFromNullable if initializing it at first placement is not guaranteed
 lateinit var myInfo : BlockInfo
     private set
 fun toTag(tag: CompoundTag){
@@ -149,13 +149,15 @@ data class myPlayer(val id : UUID)
 
 To fix this, put at the very top of the file:
 ```kotlin
-@file:UseSerializers(Serializers.ForUuid::class, Serializers.ForBlockPos::class)
+@file:UseSerializers(ForUuid::class, ForBlockPos::class)
 ```
 
 Serializers for the following classes are available:
 - UUID
 - BlockPos
 - Identifier
+- All NBT classes
+- ItemStack (note: requires being in a Minecraft context as it accesses the registry)
 
 Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#getFoo`, `PacketByteBuf#writeFoo` / `PacketByteBuf#readFoo` are also available for the mentioned classes when they are missing from the vanilla API.
 

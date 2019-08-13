@@ -18,7 +18,6 @@ data class Case<T : Any>(
     val name: String = obj.javaClass.simpleName,
     val hasNulls: Boolean = false
 )
-
 val testCases: List<Case<*>> = listOf(
     Case(CityData(1, "New York"), CityData.serializer()),
     Case(StreetData(2, "Broadway", CityData(1, "New York")), StreetData.serializer()),
@@ -34,7 +33,8 @@ val testCases: List<Case<*>> = listOf(
     Case(intArrayTagWrapper, IntArrayTagWrapper.serializer()),
     Case(abstractTags, AbstractTags.serializer()),
     Case(message, MessageWrapper.serializer(), messageModule),
-    Case(composedTags, ComposedTags.serializer())
+    Case(listTags, ListTags.serializer()),
+    Case(compoundTags,CompoundTags.serializer())
 
 )
 

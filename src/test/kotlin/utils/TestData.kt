@@ -1,27 +1,30 @@
 @file:UseSerializers(
-    Serializers.ForUuid::class,
-    Serializers.ForBlockPos::class,
-    Serializers.ForIdentifier::class,
-    Serializers.ForByteTag::class,
-    Serializers.ForShortTag::class,
-    Serializers.ForIntTag::class,
-    Serializers.ForLongTag::class,
-    Serializers.ForFloatTag::class,
-    Serializers.ForDoubleTag::class,
-    Serializers.ForEndTag::class,
-    Serializers.ForByteArrayTag::class,
-    Serializers.ForIntArrayTag::class,
-    Serializers.ForLongArrayTag::class,
-    Serializers.ForStringTag::class,
-    Serializers.ForListTag::class
+    ForUuid::class,
+    ForBlockPos::class,
+    ForIdentifier::class,
+    ForByteTag::class,
+    ForShortTag::class,
+    ForIntTag::class,
+    ForLongTag::class,
+    ForFloatTag::class,
+    ForDoubleTag::class,
+    ForEndTag::class,
+    ForByteArrayTag::class,
+    ForIntArrayTag::class,
+    ForLongArrayTag::class,
+    ForStringTag::class,
+    ForListTag::class,
+    ForCompoundTag::class,
+    ForItemStack::class
 )
 
 package utils
 
-import drawer.Serializers
+import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -96,21 +99,6 @@ data class IntArrayTagWrapper(
     val byteArray: ByteArrayTag,
     val intArray: IntArrayTag,
     val longArray: LongArrayTag
-)
-
-@Serializable
-data class AbstractTags(
-    val tag1: Tag,
-    val tag2: Tag,
-    val tag3: Tag,
-    val tag4: Tag,
-    val tag5: Tag,
-    val tag6: Tag,
-    val tag7: Tag,
-    val tag8: Tag,
-    val tag9: Tag,
-    val tag10: Tag,
-    val tag11: Tag
 )
 
 
@@ -349,6 +337,24 @@ val intArrayTagWrapper = IntArrayTagWrapper(
     IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L))
 )
 
+@Serializable
+data class AbstractTags(
+    val tag1: Tag,
+    val tag2: Tag,
+    val tag3: Tag,
+    val tag4: Tag,
+    val tag5: Tag,
+    val tag6: Tag,
+    val tag7: Tag,
+    val tag8: Tag,
+    val tag9: Tag,
+    val tag10: Tag,
+    val tag11: Tag,
+    val tag12: Tag,
+    val tag13: Tag
+)
+
+
 val abstractTags = AbstractTags(
     ByteTag(0),
     ShortTag(1),
@@ -360,7 +366,9 @@ val abstractTags = AbstractTags(
     EndTag(),
     ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     IntArrayTag(listOf(8, 9, 10)),
-    LongArrayTag(listOf(11L, 12L, 13L))
+    LongArrayTag(listOf(11L, 12L, 13L)),
+    ListTag().apply { add(LongTag(2L)) },
+    CompoundTag().apply { putBoolean("as", false) }
 )
 
 @Serializable
@@ -370,10 +378,16 @@ val lessAbstractTags = LessAbstractTags(IntArrayTag(listOf(8, 9, 10)))
 
 
 @Serializable
-data class ComposedTags(val listTag1: ListTag, val listTag2: ListTag, val listTag3: ListTag)
+data class ListTags(
+    val listTag1: ListTag,
+    val listTag2: ListTag,
+    val listTag3: ListTag,
+    val listTag4: ListTag,
+    val listTag5: ListTag
+)
 
 //TODO: list tag of compound tag
-val composedTags = ComposedTags(ListTag().apply {
+val listTags = ListTags(ListTag().apply {
     add(IntTag(1))
     add(IntTag(2))
     add(IntTag(3))
@@ -385,6 +399,47 @@ val composedTags = ComposedTags(ListTag().apply {
         add(ByteArrayTag(listOf(1.toByte(), 2.toByte(), 3.toByte())))
         add(ByteArrayTag(listOf(2.toByte(), 4.toByte(), 3.toByte())))
         add(ByteArrayTag(listOf((-13).toByte(), 2.toByte(), 4.toByte())))
+    },
+    ListTag().apply {
+        add(ListTag().apply { add(ByteTag(1.toByte())) })
+        add(ListTag().apply { add(FloatTag(0.3f)) })
+    },
+    ListTag().apply {
+        CompoundTag().apply {
+            putInt("asdf", 1)
+        }
+        CompoundTag().apply {
+            putString("asdf", "ASdf")
+        }
     }
 
 )
+
+@Serializable
+data class CompoundTags(val compoundTag1: CompoundTag, val compoundTag2: CompoundTag)
+
+val compoundTags = CompoundTags(
+    CompoundTag().apply {
+        put("", tags.intArray)
+        put("asdfff", tags.double)
+        putUuid("amar", UUID(1, 2))
+    },
+    CompoundTag().apply {
+        put("heavy shit", listTags.listTag5)
+        putDouble("dd", 12.3)
+    }
+)
+
+@Serializable
+data class LessCompoundTags(val compoundTag1: CompoundTag/*, val compoundTag2 : CompoundTag*/)
+
+val lessCompoundTags = LessCompoundTags(
+    CompoundTag().apply {
+        putUuid("amar", UUID(1, 2))
+    }
+
+)
+
+//TODO: test this in spatial crafting because it can't be used in a non-minecraft context...
+@Serializable
+data class ItemStacks(val itemStack1 : ItemStack, val itemStack2: ItemStack, val itemStacks : List<ItemStack>)

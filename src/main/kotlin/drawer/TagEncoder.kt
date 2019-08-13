@@ -8,6 +8,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
 
+//TODO: make Serializers into a java object so you can do a * import. Remove Serializers as a class instead and just not have them nested???
 //TODO: test readme (example mod)
 //TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
 
@@ -21,19 +22,19 @@ import net.minecraft.nbt.*
 
 internal val TagModule = SerializersModule {
     polymorphic(Tag::class) {
-        ByteTag::class with Serializers.ForByteTag
-        ShortTag::class with Serializers.ForShortTag
-        IntTag::class with Serializers.ForIntTag
-        LongTag::class with Serializers.ForLongTag
-        FloatTag::class with Serializers.ForFloatTag
-        DoubleTag::class with Serializers.ForDoubleTag
-        StringTag::class with Serializers.ForStringTag
-        EndTag::class with Serializers.ForEndTag
-        ByteArrayTag::class with Serializers.ForByteArrayTag
-        IntArrayTag::class with Serializers.ForIntArrayTag
-        LongArrayTag::class with Serializers.ForLongArrayTag
-//            Tag::class with ForTag
-//            Tag::class with ForTag
+        ByteTag::class with ForByteTag
+        ShortTag::class with ForShortTag
+        IntTag::class with ForIntTag
+        LongTag::class with ForLongTag
+        FloatTag::class with ForFloatTag
+        DoubleTag::class with ForDoubleTag
+        StringTag::class with ForStringTag
+        EndTag::class with ForEndTag
+        ByteArrayTag::class with ForByteArrayTag
+        IntArrayTag::class with ForIntArrayTag
+        LongArrayTag::class with ForLongArrayTag
+        ListTag::class with ForListTag
+        CompoundTag::class with ForCompoundTag
     }
 }
 
@@ -58,7 +59,9 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
     }
 
 
-    internal inner class TagEncoder(val compoundTag: CompoundTag = CompoundTag()) : NamedValueEncoder() {
+    internal inner class TagEncoder(val compoundTag: CompoundTag = CompoundTag()) : NamedValueTagEncoder() {
+
+
         override val context: SerialModule = this@NbtFormat.context
 
         override fun encodeTaggedBoolean(tag: String, value: Boolean) = compoundTag.putBoolean(tag, value)
@@ -85,10 +88,24 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
         override fun encodeTaggedShort(tag: String, value: Short) = compoundTag.putShort(tag, value)
         override fun encodeTaggedString(tag: String, value: String) = compoundTag.putString(tag, value)
         override fun encodeTaggedUnit(tag: String) = compoundTag.putByte(tag, 2)
+        override fun encodeTaggedValue(tag: String, value: Any) {
+            if (value is Tag) {
+                compoundTag.put(tag, value)
+            } else {
+                throw SerializationException("Non-serializable ${value::class} is not supported by ${this::class} encoder")
+            }
+
+        }
+
+        override fun encodeTaggedTag(key: String, tag: Tag) {
+            compoundTag.put(key, tag)
+        }
 
     }
 
-    internal inner class TagDecoder(private val map: CompoundTag) : NamedValueDecoder() {
+    internal inner class TagDecoder(private val map: CompoundTag) : NamedValueTagDecoder() {
+
+
         override val context: SerialModule = this@NbtFormat.context
         override fun decodeCollectionSize(desc: SerialDescriptor): Int {
             return decodeTaggedInt(nested("size"))
@@ -106,9 +123,9 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
         override fun decodeTaggedLong(tag: String) = map.getLong(tag)
         override fun decodeTaggedNotNullMark(tag: String) = map.getByte(tag + "mark") != 0.toByte()
         override fun decodeTaggedShort(tag: String) = map.getShort(tag)
-
         override fun decodeTaggedString(tag: String): String = map.getString(tag)
         override fun decodeTaggedUnit(tag: String) = Unit
+        override fun decodeTaggedTag(key: String): Tag = map.getTag(key)!!
 
     }
 }

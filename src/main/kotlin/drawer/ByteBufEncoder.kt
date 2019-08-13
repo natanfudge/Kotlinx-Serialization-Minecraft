@@ -5,10 +5,16 @@ import kotlinx.serialization.internal.EnumDescriptor
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.plus
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.util.PacketByteBuf
 
 internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
-    inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder() {
+    inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder(), ICanEncodeCompoundTag{
+         override fun encodeCompoundTag(tag: CompoundTag) {
+            buf.writeCompoundTag(tag)
+        }
+
         override val context: SerialModule = this@ByteBufFormat.context
 
         override fun beginCollection(
@@ -70,7 +76,7 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         }
     }
 
-    inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder() {
+    inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder(), ICanDecodeCompoundTag {
         override val context: SerialModule = this@ByteBufFormat.context
 
         override fun decodeCollectionSize(desc: SerialDescriptor): Int = buf.readInt()
@@ -86,6 +92,7 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun decodeString(): String = buf.readString()
         override fun decodeEnum(enumDescription: EnumDescriptor): Int = buf.readInt()
         override fun decodeNull(): Nothing? = null
+        override fun decodeCompoundTag() : CompoundTag = buf.readCompoundTag()!!
     }
 
 

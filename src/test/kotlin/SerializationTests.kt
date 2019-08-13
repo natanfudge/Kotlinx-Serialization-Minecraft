@@ -140,5 +140,15 @@ class SerializationTests {
         assertEquals(data, back)
     }
 
+    @Test
+    fun `CompoundTags with a UUID can be encoded in a CompoundTag`(){
+        val tag = CompoundTag()
+        val data = lessCompoundTags
+        LessCompoundTags.serializer().put(data,tag)
+        val back = LessCompoundTags.serializer().getFrom(tag)
+        assertEquals(data, back)
+
+    }
+
 
 }
