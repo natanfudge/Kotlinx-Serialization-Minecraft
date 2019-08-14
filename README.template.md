@@ -1,5 +1,5 @@
 # Fabric Drawer
-![CurseForge](https://cf.way2muchnoise.eu/334410.svg)
+![CurseForge](https://cf.way2muchnoise.eu/fabric-drawer.svg)
 ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)
 ![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg) 
 ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
