@@ -147,12 +147,21 @@ However, if you try to put in a `UUID` or a `BlockPos`, for example:
 ```kotlin
 // Error!
 @Serializable
-data class myPlayer(val id : UUID)
+data class MyPlayer(val id : UUID)
 ```
 
 To fix this, put at the very top of the file:
 ```kotlin
 @file:UseSerializers(ForUuid::class, ForBlockPos::class)
+```
+
+Or, [because of a bug you should thumbs up the issue on](https://github.com/Kotlin/kotlinx.serialization/issues/533), specifically when using a `DefaultedList<>` you need to annotate every property that uses `DefaultedList<>` like this:
+```kotlin
+@Serializable
+data class MyPlayerInventory(
+    @Serializable(with = ForDefaultedList::class) val list1 : DefaultedList<ItemStack>,
+    @Serializable(with = ForDefaultedList::class) val list2 : DefaultedList<Ingredient>
+)
 ```
 
 Serializers for the following classes are available:
@@ -162,6 +171,7 @@ Serializers for the following classes are available:
 - All NBT classes
 - ItemStack (note: requires being in a Minecraft context as it accesses the registry)
 - Ingredient (note: requires being in a Minecraft context as it accesses the registry)
+- DefaultedList<> (note: bug requires special syntax, see above)
 
 Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#getFoo`, `PacketByteBuf#writeFoo` / `PacketByteBuf#readFoo` are also available for the mentioned classes when they are missing from the vanilla API.
 

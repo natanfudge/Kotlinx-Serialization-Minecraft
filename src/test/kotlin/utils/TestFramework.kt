@@ -11,32 +11,70 @@ data class TestResult(
     val ext: Any  // serialized (external) representation
 )
 
-data class Case<T : Any>(
-    val obj: T,
-    val serializer: KSerializer<T>,
-    val context: SerialModule = EmptyModule,
-    val name: String = obj.javaClass.simpleName,
-    val hasNulls: Boolean = false
-)
-val testCases: List<Case<*>> = listOf(
-    Case(CityData(1, "New York"), CityData.serializer()),
-    Case(StreetData(2, "Broadway", CityData(1, "New York")), StreetData.serializer()),
-    Case(StreetData2(2, "Broadway", CityData(1, "New York")), StreetData2.serializer()),
-    Case(StreetData2(2, "Broadway", null), StreetData2.serializer(), hasNulls = true),
-    Case(CountyData("US", listOf(CityData(1, "New York"), CityData(2, "Chicago"))), CountyData.serializer()),
-    Case(zoo, Zoo.serializer(), hasNulls = true),
-    Case(shop, Shop.serializer()),
-    Case(otherFormats, OtherFormats.serializer()),
-    Case(zeroNumbers, VariousNumbers.serializer()),
-    Case(nullableZeroNumbers, VariousNullableNumbers.serializer()),
-    Case(tags, Tags.serializer()),
-    Case(intArrayTagWrapper, IntArrayTagWrapper.serializer()),
-    Case(abstractTags, AbstractTags.serializer()),
-    Case(message, MessageWrapper.serializer(), messageModule),
-    Case(listTags, ListTags.serializer()),
-    Case(compoundTags,CompoundTags.serializer())
+interface Case<T : Any> {
+    val obj: T
+    val name: String
+    val context: SerialModule
+    val serializer: KSerializer<T>
+}
 
-)
+class TestCaseInit {
+    val cases = mutableListOf<Case<*>>()
+    infix fun <T : Any> T.with(serializer: KSerializer<T>) {
+        cases.add(EagerCase(this, serializer))
+    }
+
+    fun <T : Any> T.with(serializer: KSerializer<T>, module: SerialModule) {
+        cases.add(EagerCase(this, serializer, module))
+    }
+
+    infix fun <T : Any> (() -> T).with(serializer: KSerializer<T>) {
+        cases.add(LazyCase(this, serializer))
+    }
+
+//    class Moduleable
+}
+
+fun testCases(init: TestCaseInit.() -> Unit) = TestCaseInit().apply(init)
+
+data class LazyCase<T : Any>(
+    val lazyObj: () -> T,
+    override val serializer: KSerializer<T>,
+    override val context: SerialModule = EmptyModule
+) : Case<T> {
+    override val obj: T get() = lazyObj()
+    override val name: String get() = obj.javaClass.simpleName
+}
+
+data class EagerCase<T : Any>(
+    override val obj: T,
+    override val serializer: KSerializer<T>,
+    override val context: SerialModule = EmptyModule,
+    override val name: String = obj.javaClass.simpleName
+) : Case<T>
+
+val testCases = testCases {
+    CityData(1, "New York") with CityData.serializer()
+    StreetData(2, "Broadway", CityData(1, "New York")) with StreetData.serializer()
+    StreetData2(2, "Broadway", CityData(1, "New York")) with StreetData2.serializer()
+    StreetData2(2, "Broadway", null) with StreetData2.serializer()
+    CountyData("US", listOf(CityData(1, "New York"), CityData(2, "Chicago"))) with CountyData.serializer()
+    zoo with Zoo.serializer()
+    shop with Shop.serializer()
+    otherFormats with OtherFormats.serializer()
+    zeroNumbers with VariousNumbers.serializer()
+    nullableZeroNumbers with VariousNullableNumbers.serializer()
+    tags with Tags.serializer()
+    intArrayTagWrapper with IntArrayTagWrapper.serializer()
+    abstractTags with AbstractTags.serializer()
+    message.with(MessageWrapper.serializer(), messageModule)
+    listTags with ListTags.serializer()
+    compoundTags with CompoundTags.serializer()
+    itemStacks with ItemStacks.serializer()
+    ingredients with Ingredients.serializer()
+    defaultedLists with DefaultedLists.serializer()
+}.cases
+
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> testCase(
@@ -86,7 +124,6 @@ fun testMethod(
     var totalCount = 0
     var failCount = 0
     testCases.forEach { case ->
-        if (!supportsNull && case.hasNulls) return@forEach
         if (verbose) println()
         if (!testCase(case as Case<Any>, method, verbose))
             failCount++

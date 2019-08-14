@@ -1,14 +1,13 @@
 package drawer
 
-import drawer.util.bufferedPacketByteBuf
-import io.netty.buffer.Unpooled
+import drawer.util.bufferedPacket
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.*
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
+import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
-import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.math.BlockPos
 import java.util.*
 
@@ -277,7 +276,7 @@ object ForIngredient : KSerializer<Ingredient> {
             encoder.encodeIngredient(obj)
         } else {
             // This is the only choice to serialize Ingredient in other formats
-            val buf = bufferedPacketByteBuf()
+            val buf = bufferedPacket()
             obj.write(buf)
             val stackArrayLength = buf.readVarInt()
             val matchingStacks = List(stackArrayLength) { buf.readItemStack() }
@@ -286,14 +285,14 @@ object ForIngredient : KSerializer<Ingredient> {
     }
 
     override fun deserialize(decoder: Decoder): Ingredient {
-        if(decoder is ICanDecodeIngredient){
+        if (decoder is ICanDecodeIngredient) {
             return decoder.decodeIngredient()
-        }else{
+        } else {
             // This is the only choice to serialize Ingredient in other formats
             val matchingStacks = ArrayListSerializer(ForItemStack).deserialize(decoder)
-            val buf = bufferedPacketByteBuf().apply {
+            val buf = bufferedPacket().apply {
                 writeVarInt(matchingStacks.size)
-                for(matchingStack in matchingStacks){
+                for (matchingStack in matchingStacks) {
                     writeItemStack(matchingStack)
                 }
             }
@@ -302,6 +301,29 @@ object ForIngredient : KSerializer<Ingredient> {
     }
 }
 
+//TODO: optimizable by making the inner List<E> public with a setter mixin so we don't need to convert lists to array here
+
+/**
+ * Note: there is no guarantee that the default value will be saved since it's impossible to access it.
+ * Nontheless, the default value doesn't matter after the point the list has been initialized.
+ */
+@Serializer(forClass = DefaultedList::class)
+class ForDefaultedList<T>(private val elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>> {
+    override val descriptor: SerialDescriptor =
+        UnsealedListLikeDescriptorImpl(elementSerializer.descriptor, "DefaultedList")
+
+    override fun serialize(encoder: Encoder, obj: DefaultedList<T>) =
+        ArrayListSerializer(elementSerializer).serialize(encoder, obj)
+
+    override fun deserialize(decoder: Decoder): DefaultedList<T> {
+        val list = ArrayListSerializer(elementSerializer).deserialize(decoder)
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "UNCHECKED_CAST")
+        list as java.util.Collection<T>
+
+        @Suppress("UNCHECKED_CAST")
+        return DefaultedList.copyOf(list.firstOrNull(), *list.toArray()) as DefaultedList<T>
+    }
+}
 
 @Serializer(forClass = UUID::class)
 object ForUuid : KSerializer<UUID> {
@@ -362,3 +384,5 @@ object ForUuid : KSerializer<UUID> {
         )
     }
 }
+
+

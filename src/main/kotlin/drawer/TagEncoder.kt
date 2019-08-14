@@ -8,17 +8,12 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
 
-//TODO: test the following things in the example mod:
-// - ItemStack
-// - Ingredient
-// - DefaultedList<ItemStack>
-// - DefaultedList<Ingredient>
+
+
 
 //TODO: test readme (example mod)
 //TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
 
-//TODO: figure out polymorphic serialization
-//TODO: Ingredient serializer -> DefaultedList<T> serializer(add to readme when done)
 
 //TODO: Later version:
 //TODO: Text serializer
@@ -105,6 +100,7 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
         override fun encodeTaggedTag(key: String, tag: Tag) {
             compoundTag.put(key, tag)
         }
+
 
     }
 

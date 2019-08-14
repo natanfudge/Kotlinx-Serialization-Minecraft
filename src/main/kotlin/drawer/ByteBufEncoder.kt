@@ -81,6 +81,7 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun encodeCompoundTag(tag: CompoundTag) {
             buf.writeCompoundTag(tag)
         }
+
     }
 
     inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder(), ICanDecodeCompoundTag, ICanDecodeIngredient {

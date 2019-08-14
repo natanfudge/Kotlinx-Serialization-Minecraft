@@ -27,4 +27,4 @@ internal abstract class UnsealedListLikeDescriptor(val elementDesc: SerialDescri
     }
 }
 
-internal class UnsealedListLikeDescriptorImpl(elementDesc: SerialDescriptor,override val name : String) : UnsealedListLikeDescriptor(elementDesc)
+internal open class UnsealedListLikeDescriptorImpl(elementDesc: SerialDescriptor,override val name : String) : UnsealedListLikeDescriptor(elementDesc)

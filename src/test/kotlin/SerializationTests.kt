@@ -1,10 +1,10 @@
 import drawer.*
-import io.netty.buffer.Unpooled
+import drawer.util.bufferedPacket
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.modules.SerialModule
+import net.minecraft.Bootstrap
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.PacketByteBuf
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import utils.*
@@ -18,7 +18,7 @@ fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerialModule): Test
 }
 
 fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
-    val buf = PacketByteBuf(Unpooled.buffer())
+    val buf = bufferedPacket()
     serializer.write(obj, toBuf = buf, context = context)
     val back = serializer.readNullableFrom(buf, context = context)
     return TestResult(obj, back!!, "$buf")
@@ -26,13 +26,25 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): 
 
 
 class SerializationTests {
+    var initialized = false
     @Test
     fun `TagEncoder serializes and deserializes correctly`() {
+        if (!initialized) {
+            Bootstrap.initialize()
+            initialized = true
+        }
         testMethod(::testTag, supportsNull = true, verbose = false)
+
     }
+
+
 
     @Test
     fun `ByteBufEncoder serializes and deserializes correctly`() {
+        if (!initialized) {
+            Bootstrap.initialize()
+            initialized = true
+        }
         testMethod(::testByteBuf, supportsNull = true, verbose = false)
     }
 
@@ -107,7 +119,7 @@ class SerializationTests {
 
     @Test
     fun `Using readFrom on null is not allowed in ByteBufEncoder`() {
-        val buf = PacketByteBuf(Unpooled.buffer())
+        val buf = bufferedPacket()
         val data: CityData? = null
         CityData.serializer().write(data, buf)
         Assertions.assertThrows(SerializationException::class.java) {
@@ -118,7 +130,7 @@ class SerializationTests {
 
     @Test
     fun `You can use readNullableFrom on null in ByteBufEncoder`() {
-        val buf = PacketByteBuf(Unpooled.buffer())
+        val buf = bufferedPacket()
 
         val data: CityData? = null
 
@@ -131,7 +143,7 @@ class SerializationTests {
 
     @Test
     fun `Abstract array tags can be encoded in a ByteBuf`() {
-        val buf = PacketByteBuf(Unpooled.buffer())
+        val buf = bufferedPacket()
         val data = lessAbstractTags
         LessAbstractTags.serializer().write(data, buf)
         val back = LessAbstractTags.serializer().readNullableFrom(buf)
@@ -140,14 +152,25 @@ class SerializationTests {
     }
 
     @Test
-    fun `CompoundTags with a UUID can be encoded in a CompoundTag`(){
+    fun `CompoundTags with a UUID can be encoded in a CompoundTag`() {
         val tag = CompoundTag()
         val data = lessCompoundTags
-        LessCompoundTags.serializer().put(data,tag)
+        LessCompoundTags.serializer().put(data, tag)
         val back = LessCompoundTags.serializer().getFrom(tag)
         assertEquals(data, back)
 
     }
+
+//    @Test
+//    fun `ItemStack works if you `(){
+//        Bootstrap.initialize()
+//        val tag = CompoundTag()
+//        val data = itemStacks
+//        ItemStacks.serializer().put(data,tag)
+//        val back = ItemStacks.serializer().getFrom(tag)
+//        assertEquals(data,back)
+//
+//    }
 
 
 }

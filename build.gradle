@@ -49,8 +49,14 @@ dependencies {
     minecraft "com.mojang:minecraft:$minecraft_version"
     mappings "net.fabricmc:yarn:$yarn_mappings"
     modImplementation "net.fabricmc:fabric-loader:$loader_version"
+//
+    implementation('com.google.guava:guava:28.0-jre') {
+        force = true
+    }
+
 
     // Fabric API. This is technically optional, but you probably want it anyway.
+    // modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version"
 
@@ -227,13 +233,17 @@ task updateTemplate {
     group = "template"
     description = "Parses the README.template.md file and inserts the current version into a new README.md file."
     doLast {
-        if(!project.hasProperty("version")) throw new IllegalArgumentException("Please define a 'version' property in gradle.properties.")
+        if (!project.hasProperty("version")) throw new IllegalArgumentException("Please define a 'version' property in gradle.properties.")
         def readMeTemplateFile = new File("README.template.md")
-        if(!readMeTemplateFile.exists()) throw new FileNotFoundException("could not find $readMeTemplateFile.")
+        if (!readMeTemplateFile.exists()) throw new FileNotFoundException("could not find $readMeTemplateFile.")
         def readMeTemplateText = readMeTemplateFile.text
         def readMeFile = new File("README.md")
         readMeFile.write(readMeTemplateText.replace('$VERSION', project.version))
     }
 }
+
+bintrayUpload.dependsOn updateTemplate
+bintrayUpload.dependsOn "curseforge334410"
+/*.curseforge334410*/
 
 //compileKotlin.kotlinOptions.

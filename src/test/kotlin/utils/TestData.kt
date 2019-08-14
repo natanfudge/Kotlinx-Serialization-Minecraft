@@ -15,7 +15,8 @@
     ForStringTag::class,
     ForListTag::class,
     ForCompoundTag::class,
-    ForItemStack::class
+    ForItemStack::class,
+    ForIngredient::class
 )
 
 package utils
@@ -25,7 +26,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.nbt.*
+import net.minecraft.recipe.Ingredient
+import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import java.util.*
@@ -440,6 +444,96 @@ val lessCompoundTags = LessCompoundTags(
 
 )
 
-//TODO: test this in spatial crafting because it can't be used in a non-minecraft context...
 @Serializable
-data class ItemStacks(val itemStack1 : ItemStack, val itemStack2: ItemStack, val itemStacks : List<ItemStack>)
+data class ItemStacks(val itemStack1: ItemStack, val itemStack2: ItemStack, val itemStack3: ItemStack) {
+    override fun equals(other: Any?): Boolean = other is ItemStacks
+            && ItemStack.areEqualIgnoreDamage(this.itemStack1, other.itemStack1)
+            && ItemStack.areEqualIgnoreDamage(this.itemStack2, other.itemStack2)
+            && ItemStack.areEqualIgnoreDamage(this.itemStack3, other.itemStack3)
+
+    override fun hashCode(): Int {
+        var result = itemStack1.hashCode()
+        result = 31 * result + itemStack2.hashCode()
+        result = 31 * result + itemStack3.hashCode()
+        return result
+    }
+}
+
+val itemStacks = {
+    ItemStacks(ItemStack(Items.ACACIA_WOOD, 2), ItemStack.EMPTY, ItemStack.fromTag(
+        CompoundTag().apply {
+            putString("id", "birch_planks")
+            putByte("Count", 64)
+            put("tag", CompoundTag().apply {
+                putString("aaa", "hello")
+                putInt("waefwe", 222)
+            })
+
+        }
+    ))
+
+}
+
+@Serializable
+data class Ingredients(val ingredient1: Ingredient, val ingredient2: Ingredient, val ingredient3: Ingredient) {
+    override fun equals(other: Any?) = other is Ingredients &&
+            ingredient1 actuallyEquals ingredient2 &&
+            ingredient2 actuallyEquals ingredient2 &&
+            ingredient3 actuallyEquals ingredient3
+
+    override fun hashCode(): Int {
+        var result = ingredient1.hashCode()
+        result = 31 * result + ingredient2.hashCode()
+        result = 31 * result + ingredient3.hashCode()
+        return result
+    }
+}
+
+infix fun Ingredient.actuallyEquals(other: Ingredient): Boolean {
+    return other.stackArray.zip(other.stackArray)
+        .all { (stack1, stack2) -> ItemStack.areEqualIgnoreDamage(stack1, stack2) }
+}
+
+val ingredients = {
+    Ingredients(
+        Ingredient.EMPTY,
+        Ingredient.ofStacks(itemStacks().itemStack1, itemStacks().itemStack2, itemStacks().itemStack3),
+        Ingredient.ofItems(Items.CARROT, Items.IRON_CHESTPLATE, Items.SPAWNER)
+    )
+}
+
+
+@Serializable
+data class DefaultedLists(
+    @Serializable(with = ForDefaultedList::class) val itemStackList: DefaultedList<ItemStack>,
+    @Serializable(with = ForDefaultedList::class) val ingredientList: DefaultedList<Ingredient>,
+    @Serializable(with = ForDefaultedList::class) val intList: DefaultedList<Int>
+){
+    override fun equals(other: Any?): Boolean {
+        return other is DefaultedLists &&
+                this.itemStackList.zip(other.itemStackList).all { (thisStack,otherStack) -> ItemStack.areEqualIgnoreDamage(thisStack,otherStack) }
+                && this.ingredientList.zip(other.ingredientList).all { (thisIngredient,otherIngredient) -> thisIngredient actuallyEquals otherIngredient }
+                && this.intList == other.intList
+    }
+
+    override fun hashCode(): Int {
+        var result = itemStackList.hashCode()
+        result = 31 * result + ingredientList.hashCode()
+        result = 31 * result + intList.hashCode()
+        return result
+    }
+}
+
+val defaultedLists = {
+    DefaultedLists(
+        DefaultedList.copyOf(
+            ItemStack.EMPTY,
+            itemStacks().itemStack3,
+            itemStacks().itemStack1,
+            ItemStack.EMPTY,
+            ItemStack(Items.ITEM_FRAME)
+        ),
+        DefaultedList.ofSize(10, Ingredient.EMPTY),
+        DefaultedList.copyOf(0, 1,2,3,4,5,6,7,8)
+    )
+}
