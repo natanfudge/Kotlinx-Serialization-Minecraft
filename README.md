@@ -1,5 +1,5 @@
 # Fabric Drawer
-![CurseForge](https://cf.way2muchnoise.eu/versions/fabric-drawer.svg)
+![CurseForge](https://cf.way2muchnoise.eu/fabric-drawer.svg)
 ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)
 ![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg) 
 ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
@@ -19,7 +19,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.22")
+    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.2")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
