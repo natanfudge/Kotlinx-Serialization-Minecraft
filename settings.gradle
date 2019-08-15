@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         jcenter()
         maven {
             name = 'Fabric'
@@ -13,9 +14,9 @@ pluginManagement {
             if (requested.id.namespace != null && requested.id.namespace.startsWith("org.jetbrains.kotlin")) {
                 useVersion kotlin_version
             }
-            if (requested.id.toString() == "fabric-loom") {
-                useVersion loom_version
-            }
+//            if (requested.id.toString() == "fabric-loom") {
+//                useVersion loom_version
+//            }
             if (requested.id.id == "kotlinx-serialization") {
                 useModule("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}")
             }

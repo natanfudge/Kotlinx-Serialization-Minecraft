@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom'
+    id 'fabric-loom' version "0.2.9999-SNAPSHOT"
     id 'maven-publish'
     id "org.jetbrains.kotlin.jvm"
     id "kotlinx-serialization"
@@ -49,11 +49,6 @@ dependencies {
     minecraft "com.mojang:minecraft:$minecraft_version"
     mappings "net.fabricmc:yarn:$yarn_mappings"
     modImplementation "net.fabricmc:fabric-loader:$loader_version"
-//
-    implementation('com.google.guava:guava:28.0-jre') {
-        force = true
-    }
-
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     // modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -63,6 +58,9 @@ dependencies {
     modApi "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
     include "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
 
+    testImplementation('com.google.guava:guava:28.0-jre') {
+        force = true
+    }
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
@@ -85,12 +83,7 @@ processResources {
 }
 
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
+
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 // if it is present.
@@ -99,32 +92,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = "sources"
     from sourceSets.main.allSource
 }
-
-jar {
-    from "LICENSE"
-}
-
-// configure the maven publication
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            // add all the jars that should be included when publishing to maven
-//            artifact(jar) {
-//                builtBy remapJar
-//            }
-//            artifact(sourcesJar) {
-//                builtBy remapSourcesJar
-//            }
-//        }
-//    }
-//
-//    // select the repositories you want to publish to
-//    repositories {
-//        // uncomment to publish to the local maven
-//        // mavenLocal()
-//    }
-//}
-
 
 curseforge {
     apiKey = project.hasProperty("curseforge_api_key") ? project.curseforge_api_key : ""
@@ -137,11 +104,7 @@ curseforge {
         changelogType = "markdown"
         changelog = file("changelog.md")
 
-        relations {
-            requiredLibrary "fabric-api"
-        }
-
-        mainArtifact(jar) {
+        mainArtifact(remapJar) {
             displayName = "Fabric Drawer $project.mod_version"
         }
         addArtifact sourcesJar
@@ -156,43 +119,21 @@ curseforge {
         forgeGradleIntegration = false
     }
 }
-//
-//task javadocs(type: Javadoc) {
-//	source = sourceSets.main.allSource
-//}
-//
-//task javadocsJar(type: Jar, dependsOn: javadocs) {
-//	classifier = "javadocs"
-//	from javadocs.destinationDir
-//}
 
-publishing {
-    publications {
-        DrawerPublication(MavenPublication) {
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-//            from components.kotlin
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-//            artifact javadocsJar
-            groupId project.maven_group
-            artifactId project.archives_base_name
-            version project.mod_version
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', 'Fabric mod that adds NBT and PacketByteBuf to kotlinx.serialization')
-                root.appendNode('name', 'Fabric-Drawer')
-                root.appendNode('url', project.github_url)
-                root.children().last() + pomConfig
-            }
-        }
-    }
+
+
+// ensure that the encoding is set to UTF-8, no matter what the system default is
+// this fixes some edge cases with special characters not displaying correctly
+// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
 
-println("user = ${project.property('bintray_user')}")
-println("key = ${project.property('bintray_api_key')}")
+
+
+jar {
+    from "LICENSE"
+}
 
 bintray {
     user = project.hasProperty('bintray_user') ? project.property('bintray_user') : ""
@@ -215,6 +156,32 @@ bintray {
         }
     }
 
+}
+
+
+
+publishing {
+    publications {
+        DrawerPublication(MavenPublication) {
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(kotlinSourcesJar) {
+                classifier = "sources"
+                builtBy remapSourcesJar
+            }
+            groupId project.maven_group
+            artifactId project.archives_base_name
+            version project.mod_version
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Fabric mod that adds NBT and PacketByteBuf to kotlinx.serialization')
+                root.appendNode('name', 'Fabric-Drawer')
+                root.appendNode('url', project.github_url)
+                root.children().last() + pomConfig
+            }
+        }
+    }
 }
 
 
@@ -244,6 +211,4 @@ task updateTemplate {
 
 bintrayUpload.dependsOn updateTemplate
 bintrayUpload.dependsOn "curseforge334410"
-/*.curseforge334410*/
 
-//compileKotlin.kotlinOptions.

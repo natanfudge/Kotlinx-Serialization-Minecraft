@@ -6,12 +6,12 @@ import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.Tag
 import net.minecraft.recipe.Ingredient
 import net.minecraft.util.PacketByteBuf
 
 internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
-    inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder(), ICanEncodeCompoundTag, ICanEncodeIngredient{
+    inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder(), ICanEncodeCompoundTag,
+        ICanEncodeIngredient {
 
 
         override val context: SerialModule = this@ByteBufFormat.context
@@ -84,7 +84,8 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
 
     }
 
-    inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder(), ICanDecodeCompoundTag, ICanDecodeIngredient {
+    inner class ByteBufDecoder(private val buf: PacketByteBuf) : ElementValueDecoder(), ICanDecodeCompoundTag,
+        ICanDecodeIngredient {
 
 
         override val context: SerialModule = this@ByteBufFormat.context
@@ -99,15 +100,16 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun decodeFloat(): Float = buf.readFloat()
         override fun decodeDouble(): Double = buf.readDouble()
         override fun decodeChar(): Char = buf.readChar()
-        override fun decodeString(): String = buf.readString()
+        override fun decodeString(): String = buf.readString(StringLengthCap)
         override fun decodeEnum(enumDescription: EnumDescriptor): Int = buf.readInt()
         override fun decodeNull(): Nothing? = null
-        override fun decodeCompoundTag() : CompoundTag = buf.readCompoundTag()!!
-        override fun decodeIngredient(): Ingredient  = Ingredient.fromPacket(buf)
+        override fun decodeCompoundTag(): CompoundTag = buf.readCompoundTag()!!
+        override fun decodeIngredient(): Ingredient = Ingredient.fromPacket(buf)
 
     }
 
 
 }
 
+private const val StringLengthCap = 32767
 
