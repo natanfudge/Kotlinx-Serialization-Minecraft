@@ -64,12 +64,12 @@ fun fillData(){
 // Or make myInfo nullable without lateinit and use getFromNullable if initializing it at first placement is not guaranteed
 lateinit var myInfo : BlockInfo
     private set
-fun toTag(tag: CompoundTag){
+override fun toTag(tag: CompoundTag) : CompoundTag {
     // Serialize
     BlockInfo.serializer().put(myInfo, inTag = tag)
 }
 
-fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : CompoundTag){
     // Deserialize
     myInfo = BlockInfo.serializer.getFrom(tag)
 }
