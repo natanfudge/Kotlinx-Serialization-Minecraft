@@ -72,7 +72,7 @@ override fun toTag(tag: CompoundTag) : CompoundTag {
 
 override fun fromTag(tag : CompoundTag){
     // Deserialize
-    myInfo = BlockInfo.serializer.getFrom(tag)
+    myInfo = BlockInfo.serializer().getFrom(tag)
 }
 ```
 
