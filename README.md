@@ -105,12 +105,12 @@ An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-ex
 ```kotlin
 val myInfo1 = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, timeOfPlacement = 9999, nameOfFirstPersonClicked = "you")
-fun toTag(tag: CompoundTag){
+override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : CompoundTag){
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
