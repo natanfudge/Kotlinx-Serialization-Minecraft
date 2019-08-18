@@ -99,8 +99,7 @@ curseforge {
         id = '334410'
         changelog = 'First Release'
         releaseType = 'beta'
-        //TODO: change this to "Fabric" when cursegradle allows it
-        addGameVersion project.minecraft_version
+        addGameVersion "Fabric"
         changelogType = "markdown"
         changelog = file("changelog.md")
 

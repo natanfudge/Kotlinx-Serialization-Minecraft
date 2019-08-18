@@ -161,16 +161,5 @@ class SerializationTests {
 
     }
 
-//    @Test
-//    fun `ItemStack works if you `(){
-//        Bootstrap.initialize()
-//        val tag = CompoundTag()
-//        val data = itemStacks
-//        ItemStacks.serializer().put(data,tag)
-//        val back = ItemStacks.serializer().getFrom(tag)
-//        assertEquals(data,back)
-//
-//    }
-
 
 }
