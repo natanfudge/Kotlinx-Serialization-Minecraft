@@ -1,6 +1,7 @@
 package drawer
 
 import kotlinx.serialization.*
+import kotlinx.serialization.internal.makeNullable
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 import net.minecraft.nbt.CompoundTag
@@ -25,7 +26,6 @@ fun <T> SerializationStrategy<T>.put(obj: T?, inTag: CompoundTag, key: String? =
     }
     if (obj != null) inTag.put(usedKey, NbtFormat(context).serialize(this, obj))
 }
-
 
 /**
  * Retrieves the object the tag that was stored in [tag] with [put] and converts it into the original object.
@@ -85,3 +85,19 @@ fun <T> DeserializationStrategy<T>.readNullableFrom(buf: PacketByteBuf, context:
     } else null
 }
 
+
+//TODO: renamings
+inline fun <reified T> DeserializationStrategy<T>.readFromSafe(
+    buf: PacketByteBuf,
+    context: SerialModule = EmptyModule
+): T {
+    val value = readFrom(buf, context)
+    if (null is T) return value as T
+    throw SerializationException(
+        "Could not deserialize empty PacketByteBuf to null, as a non-nullable serializer was used. " +
+                "If your value is nullable you need to use a nullable serialize using .nullable." +
+                "Otherwise, you can ignore this as an invalid packet."
+    )
+
+}
+val <T : Any> KSerializer<T>.nullable get() = makeNullable(this)

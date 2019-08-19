@@ -1,16 +1,25 @@
 package drawer
 
 import kotlinx.serialization.*
+import kotlinx.serialization.CompositeDecoder.Companion.READ_ALL
 import kotlinx.serialization.internal.EnumDescriptor
+import kotlinx.serialization.json.JsonUnknownKeyException
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
+//TODO: document .nullable
+//TODO: think if we want direct tags or nested ones (probably direct to avoid boilerplate)
+//TODO: instruct to not use pos, and throw an error if they try to put when one already exists (somehow)
+//TODO: tell not to use primitive serializers and point to issue
 
+//TODO: handle invalid state (have a look at @Optional)
+//TODO: test invalid state
 
-
-
+//TODO: explain in readme how the packet handler already catches errors for you
+//TODO: explain that you still need to check the validity of the packet
+//TODO: explain in readme why we must have nulls everywhere and be careful
 //TODO: test readme (example mod)
 //TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
 
@@ -19,6 +28,7 @@ import net.minecraft.nbt.*
 //TODO: Text serializer
 //TODO: getNullableFrom / readNullableFrom extension methods for all types  + optional key for all types
 //TODO: "Identifiable" serializer
+//TODO: SimpleFixedItemInv serializer
 
 internal val TagModule = SerializersModule {
     polymorphic(Tag::class) {
@@ -105,8 +115,7 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
     }
 
     internal inner class TagDecoder(private val map: CompoundTag) : NamedValueTagDecoder() {
-
-
+        private var currentIndex = -1
         override val context: SerialModule = this@NbtFormat.context
         override fun decodeCollectionSize(desc: SerialDescriptor): Int {
             return decodeTaggedInt(nested("size"))
@@ -121,6 +130,7 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
 
         override fun decodeTaggedFloat(tag: String) = map.getFloat(tag)
         override fun decodeTaggedInt(tag: String) = map.getInt(tag)
+
         override fun decodeTaggedLong(tag: String) = map.getLong(tag)
         override fun decodeTaggedNotNullMark(tag: String) = map.getByte(tag + "mark") != 0.toByte()
         override fun decodeTaggedShort(tag: String) = map.getShort(tag)
@@ -128,8 +138,35 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
         override fun decodeTaggedUnit(tag: String) = Unit
         override fun decodeTaggedTag(key: String): Tag = map.getTag(key)!!
 
+
+
+        override fun decodeElementIndex(desc: SerialDescriptor): Int {
+//            return READ_ALL
+            while (true) {
+                currentIndex++
+                if(currentIndex == desc.elementsCount) return CompositeDecoder.READ_DONE
+                if(map.containsKey(desc.getElementName(currentIndex))){
+                    return currentIndex
+                }
+//
+////                if (!reader.canBeginValue) return CompositeDecoder.READ_DONE
+//                val key = reader.takeString()
+//                reader.requireTokenClass(TC_COLON) { "Expected ':'" }
+//                reader.nextToken()
+//                val index = desc.getElementIndex(key)
+//                if (index != CompositeDecoder.UNKNOWN_NAME) {
+//                    return index
+//                }
+//                if (configuration.strictMode) throw JsonUnknownKeyException(key)
+//                else reader.skipElement()
+
+            }
+        }
     }
+    //TODO: support default values
+
 }
+
 
 
 

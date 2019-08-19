@@ -1,8 +1,14 @@
 package utils
 
+import drawer.*
+import io.netty.buffer.Unpooled
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.PacketByteBuf
 import kotlin.reflect.KFunction
 
 data class TestResult(
@@ -139,4 +145,31 @@ fun testMethod(
     }
     if (failCount > 0) throw Exception("Not all tests passed!")
     return Pair(failCount, totalCount)
+}
+
+interface SerialContainer<T> {
+    fun serialize(obj: T)
+    fun deserialize(): T
+    val serializer: KSerializer<T>
+}
+
+class TagSerialContainer<T>(override val serializer: KSerializer<T>,val tag: CompoundTag = CompoundTag()) : SerialContainer<T> {
+    override fun serialize(obj: T) = serializer.put(obj, tag)
+    override fun deserialize(): T = serializer.getFrom(tag)
+    val innerTag : CompoundTag get() = tag.getTag(serializer.descriptor.name) as CompoundTag
+}
+
+class BufSerialContainer<T>(override val serializer: KSerializer<T>, val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) : SerialContainer<T> {
+    override fun serialize(obj: T) = serializer.write(obj, buf)
+    override fun deserialize(): T = serializer.readFrom(buf) as T
+}
+
+
+fun <T> testSerializers(serializer: KSerializer<T>,  bufOnly : Boolean = false, tagOnly:Boolean = false,init: SerialContainer<T>.() -> Unit) {
+    if(!bufOnly) TagSerialContainer(serializer).init()
+    if(!tagOnly) BufSerialContainer(serializer).init()
+}
+
+fun <T> testTagSerializer(serializer: KSerializer<T>,  init: TagSerialContainer<T>.() -> Unit) {
+    TagSerialContainer(serializer).init()
 }
