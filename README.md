@@ -26,7 +26,7 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id("kotlinx.serialization")
+    id("kotlinx-serialization")
 }
 ```
 Since "the serialization plugin is not published to Gradle plugin portal yet" , you'll need to add plugin resolution rules to your settings.gradle:
@@ -58,21 +58,24 @@ data class BlockInfo(var timesClicked : Int, val timeOfPlacement : Long, val nam
 Then you can serialize it back and forth.
 #### In a block entity
 ```kotlin
-fun fillData(){
-    myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
-}
-// Or make myInfo nullable without lateinit and use getFromNullable if initializing it at first placement is not guaranteed
-lateinit var myInfo : BlockInfo
-    private set
-fun toTag(tag: CompoundTag){
-    // Serialize
-    BlockInfo.serializer().put(myInfo, inTag = tag)
-}
+    fun fillData(){
+        myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
+    }
+    // Or make myInfo nullable without lateinit and use getFromNullable if initializing it at first placement is not guaranteed
+    lateinit var myInfo : BlockInfo
+        private set
 
-fun fromTag(tag : CompoundTag){
-    // Deserialize
-    myInfo = BlockInfo.serializer.getFrom(tag)
-}
+    override fun toTag(tag: CompoundTag): CompoundTag {
+        // Serialize
+        BlockInfo.serializer().put(myInfo, inTag = tag)
+        return super.toTag(tag)
+    }
+
+    override fun fromTag(tag: CompoundTag) {
+        super.fromTag(tag)
+        // Deserialize
+        myInfo = BlockInfo.serializer().getFrom(tag)
+    }
 ```
 
 #### In a packet
@@ -105,12 +108,12 @@ An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-ex
 ```kotlin
 val myInfo1 = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, timeOfPlacement = 9999, nameOfFirstPersonClicked = "you")
-fun toTag(tag: CompoundTag){
+override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : CompoundTag){
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
