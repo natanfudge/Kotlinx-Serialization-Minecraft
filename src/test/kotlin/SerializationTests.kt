@@ -1,7 +1,7 @@
 import drawer.*
 import drawer.util.bufferedPacket
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationException
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerialModule
 import net.minecraft.Bootstrap
 import net.minecraft.nbt.CompoundTag
@@ -13,17 +13,25 @@ import kotlin.test.assertEquals
 fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
     val tag = CompoundTag()
     serializer.put(obj, tag, context = context)
-    val back = serializer.getFrom(tag, context = context)!!
+    val back = serializer.getFrom(tag, context = context)
     return TestResult(obj, back, "$tag")
 }
 
 fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
     val buf = bufferedPacket()
     serializer.write(obj, toBuf = buf, context = context)
-    val back = serializer.readFrom(buf, context = context)!!
+    val back = serializer.readFrom(buf, context = context)
     return TestResult(obj, back, "$buf")
 }
 
+@Serializable
+data class SimpleData(val name: String, val age: Int)
+
+@Serializable
+data class SimpleList(val names: List<String>)
+
+@Serializable
+data class NestedData(val nested: SimpleData, val primitive : Long)
 
 class SerializationTests {
     var initialized = false
@@ -48,6 +56,33 @@ class SerializationTests {
         testMethod(::testByteBuf, supportsNull = true, verbose = false)
     }
 
+    @Test
+    fun `TagEncoder can serialize simple data`() {
+        val obj = SimpleData("amar", 2)
+        val existing = CompoundTag()
+        SimpleData.serializer().put(obj, existing)
+        val back = SimpleData.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `TagEncoder can serialize lists`() {
+        val obj = SimpleList(listOf("asd","Wef","1232"))
+        val existing = CompoundTag()
+        SimpleList.serializer().put(obj, existing)
+        val back = SimpleList.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `TagEncoder can serialize nested data`() {
+        val obj = NestedData(SimpleData("amar", 2),123123L)
+        val existing = CompoundTag()
+        NestedData.serializer().put(obj, existing)
+        val back = NestedData.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
 
     @Test
     fun `TagEncoder can also serialize into an existing tag using put and getFromTag`() {
@@ -65,18 +100,21 @@ class SerializationTests {
     }
 
     @Test
-    fun `TagEncoder cannot encode multiple instances of the same class without using a key`() = testSerializers(CityData.serializer(),tagOnly = true, init = {
+    fun `TagEncoder cannot encode multiple instances of the same class without using a key`() {
+        val existing = CompoundTag()
         val cityData1 = CityData(1, "amar")
         val cityData2 = CityData(2, "oomer")
-        serialize(cityData1)
+        CityData.serializer().put(cityData1, inTag = existing)
 
         Assertions.assertThrows(IllegalArgumentException::class.java) {
-            serialize(cityData2)
+            CityData.serializer().put(cityData2, inTag = existing)
         }
-    })
+
+
+    }
 
     @Test
-    fun `Can encode multiple instances of the same class using a key`() {
+    fun `TagEncoder can encode multiple instances of the same class using a key`() {
         val existing = CompoundTag()
         val cityData1 = CityData(1, "amar")
         val cityData2 = CityData(2, "oomer")
@@ -93,28 +131,41 @@ class SerializationTests {
     }
 
     @Test
-    fun `You can use getNullableFrom on null`()  = testSerializers(CityData.serializer()){
-        val data: CityData = CityData(1,"As")
+    fun `You can use getNullableFrom on null`() = testSerializers(CityData.serializer().nullable) {
+        val data: CityData? = null
         serialize(data)
         val back = deserialize()
 
-        assertEquals(data, back)
+        assertEquals(back, CityData(2, "As"))
     }
 
+
     @Test
-    fun `Abstract array tags can be encoded`()  = testSerializers(LessAbstractTags.serializer()){
+    fun `Abstract array tags can be encoded in a ByteBuf`() {
+        val buf = bufferedPacket()
         val data = lessAbstractTags
-        serialize(data)
-        val back = deserialize()
+        LessAbstractTags.serializer().write(data, buf)
+        val back = LessAbstractTags.serializer().readFrom(buf)
 
         assertEquals(data, back)
     }
 
     @Test
-    fun `CompoundTags with a UUID can be encoded`()  = testSerializers(LessCompoundTags.serializer()){
+    fun `Abstract array tags can be encoded in a Tag`() {
+        val buf = CompoundTag()
+        val data = lessAbstractTags
+        LessAbstractTags.serializer().put(data, buf)
+        val back = LessAbstractTags.serializer().getFrom(buf)
+
+        assertEquals(data, back)
+    }
+
+    @Test
+    fun `CompoundTags with a UUID can be encoded in a CompoundTag`() {
+        val tag = CompoundTag()
         val data = lessCompoundTags
-        serialize(data)
-        val back = deserialize()
+        LessCompoundTags.serializer().put(data, tag)
+        val back = LessCompoundTags.serializer().getFrom(tag)
         assertEquals(data, back)
 
     }

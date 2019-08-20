@@ -1,176 +1,167 @@
-package drawer
-
-import kotlinx.serialization.*
-import kotlinx.serialization.CompositeDecoder.Companion.READ_ALL
-import kotlinx.serialization.internal.EnumDescriptor
-import kotlinx.serialization.json.JsonUnknownKeyException
-import kotlinx.serialization.modules.EmptyModule
-import kotlinx.serialization.modules.SerialModule
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.plus
-import net.minecraft.nbt.*
-//TODO: document .nullable
-//TODO: think if we want direct tags or nested ones (probably direct to avoid boilerplate)
-//TODO: instruct to not use pos, and throw an error if they try to put when one already exists (somehow)
-//TODO: tell not to use primitive serializers and point to issue
-
-//TODO: handle invalid state (have a look at @Optional)
-//TODO: test invalid state
-
-//TODO: explain in readme how the packet handler already catches errors for you
-//TODO: explain that you still need to check the validity of the packet
-//TODO: explain in readme why we must have nulls everywhere and be careful
-//TODO: test readme (example mod)
-//TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
-
-
-//TODO: Later version:
-//TODO: Text serializer
-//TODO: getNullableFrom / readNullableFrom extension methods for all types  + optional key for all types
-//TODO: "Identifiable" serializer
-//TODO: SimpleFixedItemInv serializer
-
-internal val TagModule = SerializersModule {
-    polymorphic(Tag::class) {
-        ByteTag::class with ForByteTag
-        ShortTag::class with ForShortTag
-        IntTag::class with ForIntTag
-        LongTag::class with ForLongTag
-        FloatTag::class with ForFloatTag
-        DoubleTag::class with ForDoubleTag
-        StringTag::class with ForStringTag
-        EndTag::class with ForEndTag
-        ByteArrayTag::class with ForByteArrayTag
-        IntArrayTag::class with ForIntArrayTag
-        LongArrayTag::class with ForLongArrayTag
-        ListTag::class with ForListTag
-        CompoundTag::class with ForCompoundTag
-    }
-}
-
-/**
- * Keeping this class public for now in case you want to serializer an object directly to tag and vise versa.
- */
-class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
-
-    /**
-     * Converts [obj] into a [CompoundTag] that represents [obj].
-     * Later [deserialize] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
-     *
-     * These functions are not documented because I think they would be confusing.
-     * Do you want these to be an official part of the API? Please make an issue.
-     */
-    fun <T> serialize(serializer: SerializationStrategy<T>, obj: T): CompoundTag {
-        return TagEncoder().also { it.encode(serializer, obj) }.compoundTag
-    }
-
-    fun <T> deserialize(deserializer: DeserializationStrategy<T>, tag: CompoundTag): T {
-        return TagDecoder(tag).decode(deserializer)
-    }
-
-
-    internal inner class TagEncoder(val compoundTag: CompoundTag = CompoundTag()) : NamedValueTagEncoder() {
-
-
-        override val context: SerialModule = this@NbtFormat.context
-
-        override fun encodeTaggedBoolean(tag: String, value: Boolean) = compoundTag.putBoolean(tag, value)
-        override fun beginCollection(desc: SerialDescriptor, collectionSize: Int, vararg typeParams: KSerializer<*>):
-                CompositeEncoder {
-            encodeTaggedInt(nested("size"), collectionSize)
-            return this
-        }
-
-        override fun encodeTaggedByte(tag: String, value: Byte) = compoundTag.putByte(tag, value)
-        override fun encodeTaggedChar(tag: String, value: Char) = compoundTag.putString(tag, value.toString())
-        override fun encodeTaggedDouble(tag: String, value: Double) = compoundTag.putDouble(tag, value)
-        override fun encodeTaggedEnum(tag: String, enumDescription: EnumDescriptor, ordinal: Int) =
-            compoundTag.putInt(tag, ordinal)
-
-        override fun encodeTaggedFloat(tag: String, value: Float) = compoundTag.putFloat(tag, value)
-        override fun encodeTaggedInt(tag: String, value: Int) = compoundTag.putInt(tag, value)
-        override fun encodeTaggedLong(tag: String, value: Long) = compoundTag.putLong(tag, value)
-        override fun encodeTaggedNotNullMark(tag: String) = compoundTag.putByte(tag + "mark", 1)
-        override fun encodeTaggedNull(tag: String) {
-            compoundTag.putByte(tag + "mark", 0)
-        }
-
-        override fun encodeTaggedShort(tag: String, value: Short) = compoundTag.putShort(tag, value)
-        override fun encodeTaggedString(tag: String, value: String) = compoundTag.putString(tag, value)
-        override fun encodeTaggedUnit(tag: String) = compoundTag.putByte(tag, 2)
-        override fun encodeTaggedValue(tag: String, value: Any) {
-            if (value is Tag) {
-                compoundTag.put(tag, value)
-            } else {
-                throw SerializationException("Non-serializable ${value::class} is not supported by ${this::class} encoder")
-            }
-
-        }
-
-        override fun encodeTaggedTag(key: String, tag: Tag) {
-            compoundTag.put(key, tag)
-        }
-
-
-    }
-
-    internal inner class TagDecoder(private val map: CompoundTag) : NamedValueTagDecoder() {
-        private var currentIndex = -1
-        override val context: SerialModule = this@NbtFormat.context
-        override fun decodeCollectionSize(desc: SerialDescriptor): Int {
-            return decodeTaggedInt(nested("size"))
-        }
-
-        override fun decodeTaggedBoolean(tag: String) = map.getBoolean(tag)
-        override fun decodeTaggedByte(tag: String) = map.getByte(tag)
-        override fun decodeTaggedChar(tag: String) = map.getString(tag).toCharArray()[0]
-        override fun decodeTaggedDouble(tag: String) = map.getDouble(tag)
-        override fun decodeTaggedEnum(tag: String, enumDescription: EnumDescriptor) =
-            map.getInt(tag)
-
-        override fun decodeTaggedFloat(tag: String) = map.getFloat(tag)
-        override fun decodeTaggedInt(tag: String) = map.getInt(tag)
-
-        override fun decodeTaggedLong(tag: String) = map.getLong(tag)
-        override fun decodeTaggedNotNullMark(tag: String) = map.getByte(tag + "mark") != 0.toByte()
-        override fun decodeTaggedShort(tag: String) = map.getShort(tag)
-        override fun decodeTaggedString(tag: String): String = map.getString(tag)
-        override fun decodeTaggedUnit(tag: String) = Unit
-        override fun decodeTaggedTag(key: String): Tag = map.getTag(key)!!
-
-
-
-        override fun decodeElementIndex(desc: SerialDescriptor): Int {
-//            return READ_ALL
-            while (true) {
-                currentIndex++
-                if(currentIndex == desc.elementsCount) return CompositeDecoder.READ_DONE
-                if(map.containsKey(desc.getElementName(currentIndex))){
-                    return currentIndex
-                }
+//package drawer
 //
-////                if (!reader.canBeginValue) return CompositeDecoder.READ_DONE
-//                val key = reader.takeString()
-//                reader.requireTokenClass(TC_COLON) { "Expected ':'" }
-//                reader.nextToken()
-//                val index = desc.getElementIndex(key)
-//                if (index != CompositeDecoder.UNKNOWN_NAME) {
-//                    return index
-//                }
-//                if (configuration.strictMode) throw JsonUnknownKeyException(key)
-//                else reader.skipElement()
-
-            }
-        }
-    }
-    //TODO: support default values
-
-}
-
-
-
-
-
-
-
-
+//
+///*
+// * Copyright 2017-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+// */
+//
+//
+//import kotlinx.serialization.*
+//import kotlinx.serialization.internal.EnumDescriptor
+//import kotlinx.serialization.json.*
+//import kotlinx.serialization.modules.SerialModule
+//import net.minecraft.nbt.*
+//import kotlin.collections.set
+//
+////internal fun <T> Json.writeJson(value: T, serializer: SerializationStrategy<T>): Tag {
+////    lateinit var result: Tag
+////    val encoder = TagEncoder(this) { result = it }
+////    encoder.encode(serializer, value)
+////    return result
+////}
+//
+//private sealed class AbstractTagEncoder(
+//    val format: NbtFormat,
+//    val nodeConsumer: (Tag) -> Unit
+//) : NamedValueTagEncoder() {
+//
+//    final override val context: SerialModule
+//        get() = format.context
+//
+//    private var writePolymorphic = false
+//
+//
+//    override fun composeName(parentName: String, childName: String): String = childName
+//    abstract fun putElement(key: String, element: Tag)
+//    abstract fun getCurrent(): Tag
+//
+////            override fun encodeTaggedNotNullMark(tag: String) = compoundTag.putByte(tag + "mark", 1)
+////    override fun encodeTaggedNull(tag: String) {
+////        compoundTag.putByte(tag + "mark", 0)
+////    }
+//    override fun encodeTaggedNull(tag: String) = putElement(tag + "mark", ByteTag(0))
+//override fun encodeTaggedNotNullMark(tag: String) = putElement(tag + "mark", ByteTag(1))
+//
+//    override fun encodeTaggedInt(tag: String, value: Int) = putElement(tag, IntTag(value))
+//    override fun encodeTaggedByte(tag: String, value: Byte) = putElement(tag, ByteTag(value))
+//    override fun encodeTaggedShort(tag: String, value: Short) = putElement(tag, ShortTag(value))
+//    override fun encodeTaggedLong(tag: String, value: Long) = putElement(tag, LongTag(value))
+//
+//    override fun encodeTaggedFloat(tag: String, value: Float) = putElement(tag, FloatTag(value))
+//
+//
+////    override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
+////        // Writing non-structured data (i.e. primitives) on top-level (e.g. without any tag) requires special output
+////        if (currentTagOrNull != null || serializer.descriptor.kind !is PrimitiveKind && serializer.descriptor.kind !== UnionKind.ENUM_KIND) {
+////            encodePolymorphically(serializer, value) { writePolymorphic = true }
+////        } else JsonPrimitiveOutput(format, nodeConsumer).apply {
+////            encodeSerializableValue(serializer, value)
+////            endEncode(serializer.descriptor)
+////        }
+////    }
+//
+//    override fun encodeTaggedDouble(tag: String, value: Double) = putElement(tag, DoubleTag(value))
+//
+//    override fun encodeTaggedBoolean(tag: String, value: Boolean) = putElement(tag, ByteTag(value))
+//    override fun encodeTaggedChar(tag: String, value: Char) = putElement(tag, JsonLiteral(value.toString()))
+//    override fun encodeTaggedString(tag: String, value: String) = putElement(tag, JsonLiteral(value))
+//    override fun encodeTaggedEnum(
+//        tag: String,
+//        enumDescription: EnumDescriptor,
+//        ordinal: Int
+//    ) = putElement(tag, JsonLiteral(enumDescription.getElementName(ordinal)))
+//
+//    override fun encodeTaggedValue(tag: String, value: Any) {
+//        putElement(tag, JsonLiteral(value.toString()))
+//    }
+//
+//    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
+//        val consumer =
+//            if (currentTagOrNull == null) nodeConsumer
+//            else { node -> putElement(currentTag, node) }
+//
+//        val encoder = when (desc.kind) {
+//            StructureKind.LIST, UnionKind.POLYMORPHIC -> JsonTreeListOutput(format, consumer)
+//            StructureKind.MAP -> JsonTreeMapOutput(format, consumer)
+//            else -> TagEncoder(format, consumer)
+//        }
+//
+//        if (writePolymorphic) {
+//            writePolymorphic = false
+//            encoder.putElement(configuration.classDiscriminator, JsonPrimitive(desc.name))
+//        }
+//
+//        return encoder
+//    }
+//
+//    override fun endEncode(desc: SerialDescriptor) {
+//        nodeConsumer(getCurrent())
+//    }
+//}
+//
+//internal const val PRIMITIVE_TAG = "primitive" // also used in JsonPrimitiveInput
+//
+//private class JsonPrimitiveOutput(json: Json, nodeConsumer: (Tag) -> Unit) :
+//    AbstractTagEncoder(json, nodeConsumer) {
+//    private var content: Tag? = null
+//
+//    init {
+//        pushTag(PRIMITIVE_TAG)
+//    }
+//
+//    override fun putElement(key: String, element: Tag) {
+//        require(key === PRIMITIVE_TAG) { "This output can only consume primitives with '$PRIMITIVE_TAG' tag" }
+//        require(content == null) { "Primitive element was already recorded. Does call to .encodeXxx happen more than once?" }
+//        content = element
+//    }
+//
+//    override fun getCurrent(): Tag =
+//        requireNotNull(content) { "Primitive element has not been recorded. Is call to .encodeXxx is missing in serializer?" }
+//}
+//
+//private open class TagEncoder(json: Json, nodeConsumer: (Tag) -> Unit) :
+//    AbstractTagEncoder(json, nodeConsumer) {
+//
+//    protected val content: MutableMap<String, Tag> = linkedMapOf()
+//
+//    override fun putElement(key: String, element: Tag) {
+//        content[key] = element
+//    }
+//
+//    override fun getCurrent(): Tag = JsonObject(content)
+//}
+//
+//private class JsonTreeMapOutput(json: Json, nodeConsumer: (Tag) -> Unit) : TagEncoder(json, nodeConsumer) {
+//    private lateinit var tag: String
+//
+//    override fun putElement(key: String, element: Tag) {
+//        val idx = key.toInt()
+//        if (idx % 2 == 0) { // writing key
+//            check(element is JsonLiteral) { "Expected JsonLiteral, but has $element" }
+//            tag = element.content
+//        } else {
+//            content[tag] = element
+//        }
+//    }
+//
+//    override fun getCurrent(): Tag {
+//        return JsonObject(content)
+//    }
+//
+//    override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
+//}
+//
+//private class JsonTreeListOutput(json: Json, nodeConsumer: (Tag) -> Unit) :
+//    AbstractTagEncoder(json, nodeConsumer) {
+//    private val array: ArrayList<Tag> = arrayListOf()
+//
+//    override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
+//
+//    override fun putElement(key: String, element: Tag) {
+//        val idx = key.toInt()
+//        array.add(idx, element)
+//    }
+//
+//    override fun getCurrent(): Tag = JsonArray(array)
+//}
+//
