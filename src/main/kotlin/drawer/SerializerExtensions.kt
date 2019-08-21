@@ -16,7 +16,12 @@ import net.minecraft.util.PacketByteBuf
  * The same key must be used in [getFrom].
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
-fun <T> SerializationStrategy<T>.put(obj: T?, inTag: CompoundTag, key: String? = null, context: SerialModule = EmptyModule) {
+fun <T> SerializationStrategy<T>.put(
+    obj: T?,
+    inTag: CompoundTag,
+    key: String? = null,
+    context: SerialModule = EmptyModule
+) {
     val usedKey = key ?: this.descriptor.name
     require(!inTag.containsKey(usedKey)) {
         """A '${this.descriptor.name}' appears twice in the CompoundTag.
@@ -35,21 +40,26 @@ fun <T> SerializationStrategy<T>.put(obj: T?, inTag: CompoundTag, key: String? =
  * The same key must be used in [put].
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
-fun <T> DeserializationStrategy<T>.getNullableFrom(tag: CompoundTag, key: String? = null, context: SerialModule = EmptyModule): T? {
-    val deserializedTag = tag.getTag(key ?: this.descriptor.name) ?: return null
+fun <T> DeserializationStrategy<T>.getFrom(
+    tag: CompoundTag,
+    key: String? = null,
+    context: SerialModule = EmptyModule
+): T {
+    val deserializedTag =
+        tag.getTag(key ?: this.descriptor.name) ?: if (descriptor.isNullable) return null as T else CompoundTag()
     return NbtFormat(context).deserialize(this, deserializedTag as CompoundTag)
 }
 
-/**
- * Retrieves the object the tag that was stored in [tag] with [put] and converts it into the original object.
- * That object cannot be null. If you need it to be nullable use [getNullableFrom] instead.
- *
- * @param key If you are serializing two objects of the same type, you MUST specify a key.
- * The same key must be used in [put].
- * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
- */
-fun <T> DeserializationStrategy<T>.getFrom(tag: CompoundTag, key: String? = null, context: SerialModule = EmptyModule): T = getNullableFrom(tag, key,context)
-    ?: throw SerializationException("getFrom cannot be used on a nullable value. Use getNullableFrom instead.")
+///**
+// * Retrieves the object the tag that was stored in [tag] with [put] and converts it into the original object.
+// * That object cannot be null. If you need it to be nullable use [getNullableFrom] instead.
+// *
+// * @param key If you are serializing two objects of the same type, you MUST specify a key.
+// * The same key must be used in [put].
+// * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
+// */
+//fun <T> DeserializationStrategy<T>.getFrom(tag: CompoundTag, key: String? = null, context: SerialModule = EmptyModule): T = getNullableFrom(tag, key,context)
+//    ?: throw SerializationException("getFrom cannot be used on a nullable value. Use getNullableFrom instead.")
 
 
 /**
@@ -65,39 +75,24 @@ fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: S
     }
 }
 
-/**
- * Retrieves the object that was stored in the [buf] previously with [write].
- * Must be used on non-null values only. For nullable values use [readNullableFrom].
- *  @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
- */
-fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerialModule = EmptyModule): T = readNullableFrom(buf,context)
-    ?: throw SerializationException("readFrom cannot be used on a nullable value. Use readNullableFrom instead.")
+///**
+// * Retrieves the object that was stored in the [buf] previously with [write].
+// * Must be used on non-null values only. For nullable values use [readNullableFrom].
+// *  @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
+// */
+//fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerialModule = EmptyModule): T =
+//    readNullableFrom(buf, context)
+//        ?: throw SerializationException("readFrom cannot be used on a nullable value. Use readNullableFrom instead.")
 
 /**
  * Retrieves the object that was stored in the [buf] previously with [write].
  * For non-null values use [readFrom].
  *  @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
-fun <T> DeserializationStrategy<T>.readNullableFrom(buf: PacketByteBuf, context: SerialModule = EmptyModule): T? {
+fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerialModule = EmptyModule): T {
     val decoder = ByteBufFormat(context).ByteBufDecoder(buf)
     return if (decoder.decodeNotNullMark()) {
         decoder.decode(this)
-    } else null
+    } else if(descriptor.isNullable) null as T else throw SerializationException("You need to use a nullable serializer to be able to read a nullable value. Use the .nullable extension property.")
 }
 
-
-//TODO: renamings
-inline fun <reified T> DeserializationStrategy<T>.readFromSafe(
-    buf: PacketByteBuf,
-    context: SerialModule = EmptyModule
-): T {
-    val value = readFrom(buf, context)
-    if (null is T) return value as T
-    throw SerializationException(
-        "Could not deserialize empty PacketByteBuf to null, as a non-nullable serializer was used. " +
-                "If your value is nullable you need to use a nullable serialize using .nullable." +
-                "Otherwise, you can ignore this as an invalid packet."
-    )
-
-}
-val <T : Any> KSerializer<T>.nullable get() = makeNullable(this)

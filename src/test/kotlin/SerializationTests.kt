@@ -1,13 +1,19 @@
+
 import drawer.*
 import drawer.util.bufferedPacket
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.IntTag
+import net.minecraft.nbt.Tag
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import utils.*
+import java.util.*
 import kotlin.test.assertEquals
 
 fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
@@ -24,18 +30,12 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): 
     return TestResult(obj, back, "$buf")
 }
 
-@Serializable
-data class SimpleData(val name: String, val age: Int)
 
-@Serializable
-data class SimpleList(val names: List<String>)
 
-@Serializable
-data class NestedData(val nested: SimpleData, val primitive : Long)
 
 class SerializationTests {
     var initialized = false
-    //TODO: doesn't work
+    //TODO: doesn't workj
     @Test
     fun `TagEncoder serializes and deserializes correctly`() {
         if (!initialized) {
@@ -56,33 +56,19 @@ class SerializationTests {
         testMethod(::testByteBuf, supportsNull = true, verbose = false)
     }
 
+
+
+
     @Test
-    fun `TagEncoder can serialize simple data`() {
-        val obj = SimpleData("amar", 2)
+    fun `TagEncoder can serialize a zoo`() {
+        val obj = zoo
         val existing = CompoundTag()
-        SimpleData.serializer().put(obj, existing)
-        val back = SimpleData.serializer().getFrom(existing)
+        Zoo.serializer().put(obj, existing)
+        val back = Zoo.serializer().getFrom(existing)
         assertEquals(obj, back)
     }
 
-    @Test
-    fun `TagEncoder can serialize lists`() {
-        val obj = SimpleList(listOf("asd","Wef","1232"))
-        val existing = CompoundTag()
-        SimpleList.serializer().put(obj, existing)
-        val back = SimpleList.serializer().getFrom(existing)
-        assertEquals(obj, back)
-    }
-
-    @Test
-    fun `TagEncoder can serialize nested data`() {
-        val obj = NestedData(SimpleData("amar", 2),123123L)
-        val existing = CompoundTag()
-        NestedData.serializer().put(obj, existing)
-        val back = NestedData.serializer().getFrom(existing)
-        assertEquals(obj, back)
-    }
-
+    //TODO: uuid is broken
 
     @Test
     fun `TagEncoder can also serialize into an existing tag using put and getFromTag`() {
@@ -131,12 +117,12 @@ class SerializationTests {
     }
 
     @Test
-    fun `You can use getNullableFrom on null`() = testSerializers(CityData.serializer().nullable) {
+    fun `You can use getFrom / readFrom on null`() = testSerializers(CityData.serializer().nullable) {
         val data: CityData? = null
         serialize(data)
         val back = deserialize()
 
-        assertEquals(back, CityData(2, "As"))
+        assertEquals(back, null)
     }
 
 

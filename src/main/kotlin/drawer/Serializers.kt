@@ -195,72 +195,12 @@ object ForItemStack : KSerializer<ItemStack> {
         }
     }
 
-//    private const val IdIndex = 0
-//    private const val CountIndex = 1
-//    private const val TagNullabilityIndex = 2
-//    private const val TagIndex = 3
-//
-//    private const val NullValue = 0.toByte()
-//    private const val NonNullValue = 1.toByte()
-
-
     override fun serialize(encoder: Encoder, obj: ItemStack) {
         ForCompoundTag.serialize(encoder, obj.toTag(CompoundTag()))
-//        val compositeOutput = encoder.beginStructure(descriptor)
-//        compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(obj.item).toString())
-//        compositeOutput.encodeByteElement(descriptor, CountIndex, obj.count.toByte())
-//        compositeOutput.encodeByteElement(
-//            descriptor,
-//            TagNullabilityIndex,
-//            if (obj.tag == null) NullValue else NonNullValue
-//        )
-//        if(obj.tag != null){
-//            compositeOutput.encodeSerializableElement(descriptor, TagIndex, ForCompoundTag, obj.tag!!)
-//        }else{
-//            compositeOutput.encodeSerializableElement(descriptor, TagIndex, ForCompoundTag, CompoundTag())
-//        }
-//
-//        compositeOutput.endStructure(descriptor)
     }
 
     override fun deserialize(decoder: Decoder): ItemStack {
         return ItemStack.fromTag(ForCompoundTag.deserialize(decoder))
-//        val dec: CompositeDecoder = decoder.beginStructure(descriptor)
-//
-//        val index = dec.decodeElementIndex(descriptor)
-//        if (index == CompositeDecoder.READ_ALL) {
-//            val itemId = dec.decodeStringElement(descriptor, IdIndex)
-//            val count = dec.decodeByteElement(descriptor, CountIndex)
-//            val tagNullability = dec.decodeByteElement(descriptor, TagNullabilityIndex)
-//            val tag = dec.decodeSerializableElement(descriptor, TagIndex, ForCompoundTag)
-//            dec.endStructure(descriptor)
-//
-//
-//            return ItemStack(Registry.ITEM.get(itemId),)
-//        } else {
-//            var most: Long? = null // consider using flags or bit mask if you
-//            var least: Long? = null // need to read nullable non-optional properties
-//            when (index) {
-//                CompositeDecoder.READ_DONE -> throw SerializationException("Read should not be done yet.")
-//                ForUuid.MostIndex -> most = dec.decodeLongElement(descriptor, index)
-//                ForUuid.LeastIndex -> least = dec.decodeLongElement(descriptor, index)
-//                else -> throw SerializationException("Unknown index $index")
-//            }
-//
-//            loop@ while (true) {
-//                when (val i = dec.decodeElementIndex(ForUuid.descriptor)) {
-//                    CompositeDecoder.READ_DONE -> break@loop
-//                    ForUuid.MostIndex -> most = dec.decodeLongElement(descriptor, i)
-//                    ForUuid.LeastIndex -> least = dec.decodeLongElement(descriptor, i)
-//                    else -> throw SerializationException("Unknown index $i")
-//                }
-//            }
-//            dec.endStructure(ForUuid.descriptor)
-//            return UUID(
-//                most ?: throw MissingFieldException("most"),
-//                least ?: throw MissingFieldException("least")
-//            )
-//        }
     }
 
 
@@ -331,6 +271,8 @@ object ForUuid : KSerializer<UUID> {
         init {
             addElement("most") // most will have index 0
             addElement("least") // least will have index 1
+//            pushDescriptor(LongDescriptor)
+//            pushDescriptor(LongDescriptor)
         }
     }
 
