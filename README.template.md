@@ -86,7 +86,6 @@ val data = BlockInfo(timesClicked = 0, placementTime = 420, firstToClick = null)
 val packetData = PacketByteBuf(Unpooled.buffer())
 // Serialize
 BlockInfo.serializer().write(data, toBuf = packetData)
-
     
 for (player in PlayerStream.all(world.server)) {
     ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, "packetId", packetData)
@@ -108,6 +107,7 @@ An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-ex
 ```kotlin
 val myInfo1 = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, placementTime = 9999, firstToClick = "you")
+
 override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
