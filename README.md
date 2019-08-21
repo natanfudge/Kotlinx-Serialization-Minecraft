@@ -52,7 +52,7 @@ Annotate any class with `@Serializable` to make it serializable. **Make sure tha
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BlockInfo(var timesClicked : Int = 0, val timeOfPlacement : Long = 0, val nameOfFirstPersonClicked : String? = null)
+data class BlockInfo(var timesClicked : Int = 0, val placementTime : Long = 0, val firstToClick : String? = null)
 ```
 
 Then you can serialize it back and forth.
