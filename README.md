@@ -59,7 +59,7 @@ Then you can serialize it back and forth.
 #### In a block entity
 ```kotlin
 fun fillData(){
-    myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
+    myInfo = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 }
 // Or make myInfo lateinit if initializing it at first placement is guaranteed
 var myInfo : BlockInfo = BlockInfo()
@@ -81,7 +81,7 @@ override fun fromTag(tag: CompoundTag) {
 #### In a packet
 
 ```kotlin
-val data = BlockInfo(timesClicked = 0, timeOfPlacement = 420, nameOfFirstPersonClicked = null)
+val data = BlockInfo(timesClicked = 0, placementTime = 420, firstToClick = null)
 
 val packetData = PacketByteBuf(Unpooled.buffer())
 // Serialize
@@ -106,8 +106,8 @@ An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-ex
  If you are putting two objects of the same type in one CompoundTag you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
  For example:
 ```kotlin
-val myInfo1 = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
-val myInfo2 = BlockInfo(timesClicked = 3, timeOfPlacement = 9999, nameOfFirstPersonClicked = "you")
+val myInfo1 = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
+val myInfo2 = BlockInfo(timesClicked = 3, placementTime = 9999, firstToClick = "you")
 override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
