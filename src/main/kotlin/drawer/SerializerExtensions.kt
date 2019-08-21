@@ -11,6 +11,7 @@ import net.minecraft.util.PacketByteBuf
 /**
  * Puts [obj] into the [CompoundTag] instance of [inTag].
  * Later [getFrom] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
+ * For nullable values you SHOULD NOT use the .nullable serializer. It is not needed and does not work.
  *
  * @param key If you are serializing two objects of the same type, you MUST  specify a key.
  * The same key must be used in [getFrom].

@@ -51,6 +51,16 @@ class InvalidDataTests {
         }
 
 
+    @Test
+    fun `If the tag is empty you will get the default value instead`() =
+        testTagSerializer(DefaultedData.serializer()) {
+            val result = deserialize()
+
+            assertEquals(result,DefaultedData())
+
+        }
+
+
 
 
 }

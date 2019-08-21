@@ -271,8 +271,6 @@ object ForUuid : KSerializer<UUID> {
         init {
             addElement("most") // most will have index 0
             addElement("least") // least will have index 1
-//            pushDescriptor(LongDescriptor)
-//            pushDescriptor(LongDescriptor)
         }
     }
 
@@ -320,7 +318,6 @@ object ForUuid : KSerializer<UUID> {
             }
         }
         dec.endStructure(descriptor)
-        //TODO: determine whether we should throw or default to 0 here (probably crash because that's the behavior for any other serializer)
         return UUID(
             most ?: throw MissingFieldException("most"),
             least ?: throw MissingFieldException("least")

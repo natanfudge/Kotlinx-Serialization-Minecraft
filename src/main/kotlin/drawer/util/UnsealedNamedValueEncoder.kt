@@ -201,7 +201,7 @@ abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDecoder {
 
     // ---- Implementation of low-level API ----
 
-    final override fun decodeNotNullMark(): Boolean = decodeTaggedNotNullMark(currentTag)
+    final override fun decodeNotNullMark(): Boolean =if(tagStack.isEmpty()) true else decodeTaggedNotNullMark(currentTag)
     final override fun decodeNull(): Nothing? = null
 
     final override fun decodeUnit() = decodeTaggedUnit(popTag())

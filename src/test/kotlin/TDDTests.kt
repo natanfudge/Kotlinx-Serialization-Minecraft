@@ -2,6 +2,7 @@
 
 import drawer.ForUuid
 import drawer.getFrom
+import drawer.nullable
 import drawer.put
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -10,7 +11,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
 import net.minecraft.nbt.Tag
 import org.junit.jupiter.api.Test
-import utils.Tree
+import utils.CityData
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -51,7 +52,8 @@ data class PolymorphicTag(val tag: Tag)
 @Serializable
 data class NullableString(val stringN: String?)
 
-@Serializable data class SimpleTree(val down : SimpleTree?)
+@Serializable
+data class SimpleTree(val down: SimpleTree?)
 
 @Serializable
 data class TreeHolder(
@@ -149,6 +151,43 @@ class TDDTests {
         val existing = CompoundTag()
         TreeHolder.serializer().put(obj, existing)
         val back = TreeHolder.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+
+    @Test
+    fun `TagEncoder can serialize a nullable value`() {
+        val obj: CityData? = CityData(1, "asd")
+        val existing = CompoundTag()
+        CityData.serializer().put(obj, existing)
+        val back = CityData.serializer().nullable.getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `ByteBufEncoder can serialize a nullable value`() {
+        val obj: CityData? = CityData(1, "asd")
+        val existing = CompoundTag()
+        CityData.serializer().put(obj, existing)
+        val back = CityData.serializer().nullable.getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `TagEncoder can serialize null`() {
+        val obj: CityData? = null
+        val existing = CompoundTag()
+        CityData.serializer().put(obj, existing)
+        val back = CityData.serializer().nullable.getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `ByteBufEncoder can serialize null`() {
+        val obj: CityData? = null
+        val existing = CompoundTag()
+        CityData.serializer().put(obj, existing)
+        val back = CityData.serializer().nullable.getFrom(existing)
         assertEquals(obj, back)
     }
 }

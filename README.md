@@ -19,7 +19,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.27")
+    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.28")
 }
 ```
 Add the kotlinx.serialization gradle plugin:

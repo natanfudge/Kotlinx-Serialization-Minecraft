@@ -42,7 +42,7 @@ class SerializationTests {
             Bootstrap.initialize()
             initialized = true
         }
-        testMethod(::testTag, supportsNull = true, verbose = false)
+        testMethod(::testTag,  verbose = false)
 
     }
 
@@ -53,7 +53,7 @@ class SerializationTests {
             Bootstrap.initialize()
             initialized = true
         }
-        testMethod(::testByteBuf, supportsNull = true, verbose = false)
+        testMethod(::testByteBuf,  verbose = false)
     }
 
 
