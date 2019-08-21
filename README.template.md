@@ -47,12 +47,12 @@ It's recommended you update the IDEA Kotlin plugin to 1.3.50 by going to `Tools 
 
 ## Usage
 
-Annotate any class with `@Serializable` to make it serializable:
+Annotate any class with `@Serializable` to make it serializable. **Make sure that every property has a usable default value when storing data for a block entity.** More information on this farther down.
 ```kotlin
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BlockInfo(var timesClicked : Int, val timeOfPlacement : Long, val nameOfFirstPersonClicked : String?)
+data class BlockInfo(var timesClicked : Int = 0, val timeOfPlacement : Long = 0, val nameOfFirstPersonClicked : String? = null)
 ```
 
 Then you can serialize it back and forth.
@@ -61,8 +61,8 @@ Then you can serialize it back and forth.
     fun fillData(){
         myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
     }
-    // Or make myInfo nullable without lateinit and use getFromNullable if initializing it at first placement is not guaranteed
-    lateinit var myInfo : BlockInfo
+    // Or make myInfo lateinit if initializing it at first placement is guaranteed
+    var myInfo : BlockInfo = BlockInfo()
         private set
 
     override fun toTag(tag: CompoundTag): CompoundTag {
@@ -181,6 +181,18 @@ Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#ge
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
 
 You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
+
+### Why does every property need to have a default value when storing data for a block entity?
+There are 2 main reasons:
+1. Nbt data is volatile. It can change at any time, via modifying the save file, or by using the `/data` command.
+This means you can never trust the information provided to by the NBT to be valid, or the server might crash endlessly on startup trying to deserialize non-existent nbt data.
+Having a default value avoids this problem by simply using those default values when the data is invalid.
+2. Sometimes you only want to store data on the server, so you don't use `BlockEntityClientSerializable`.
+Your data will (usually, see point 1.) be restored on the server just fine.  
+However, Minecraft will also call `fromTag` on the client, in an attempt to sync the data to him as well.
+You don't send him any of the nbt data required to load your `@Serializable` classes, so if there are no default values, it will simply crash.
+
+Make sure that the default values are **usable**, meaning trying to use them in your mod will never crash!
 
 ### Polymorphic serialization
 - Read [this](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md) first. 
