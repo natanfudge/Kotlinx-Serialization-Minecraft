@@ -35,7 +35,7 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): 
 
 class SerializationTests {
     var initialized = false
-    //TODO: doesn't workj
+
     @Test
     fun `TagEncoder serializes and deserializes correctly`() {
         if (!initialized) {
@@ -67,8 +67,6 @@ class SerializationTests {
         val back = Zoo.serializer().getFrom(existing)
         assertEquals(obj, back)
     }
-
-    //TODO: uuid is broken
 
     @Test
     fun `TagEncoder can also serialize into an existing tag using put and getFromTag`() {
@@ -117,7 +115,7 @@ class SerializationTests {
     }
 
     @Test
-    fun `You can use getFrom / readFrom on null`() = testSerializers(CityData.serializer().nullable) {
+    fun `You can use getFrom or readFrom on null`() = testSerializers(CityData.serializer().nullable) {
         val data: CityData? = null
         serialize(data)
         val back = deserialize()

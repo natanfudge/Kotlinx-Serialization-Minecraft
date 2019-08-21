@@ -117,12 +117,10 @@ fun testCase(
 
 }
 
-class TestException(message: String) : java.lang.Exception(message)
 
 @Suppress("UNCHECKED_CAST")
 fun testMethod(
     method: (KSerializer<Any>, Any, SerialModule) -> TestResult,
-    supportsNull: Boolean = true,
     verbose: Boolean = true
 ): Pair<Int, Int> {
     if (verbose) println("==============================================")
