@@ -58,24 +58,24 @@ data class BlockInfo(var timesClicked : Int = 0, val timeOfPlacement : Long = 0,
 Then you can serialize it back and forth.
 #### In a block entity
 ```kotlin
-    fun fillData(){
-        myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
-    }
-    // Or make myInfo lateinit if initializing it at first placement is guaranteed
-    var myInfo : BlockInfo = BlockInfo()
-        private set
+fun fillData(){
+    myInfo = BlockInfo(timesClicked = 7, timeOfPlacement = 1337, nameOfFirstPersonClicked = "fudge")
+}
+// Or make myInfo lateinit if initializing it at first placement is guaranteed
+var myInfo : BlockInfo = BlockInfo()
+    private set
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        // Serialize
-        BlockInfo.serializer().put(myInfo, inTag = tag)
-        return super.toTag(tag)
-    }
+override fun toTag(tag: CompoundTag): CompoundTag {
+    // Serialize
+    BlockInfo.serializer().put(myInfo, inTag = tag)
+    return super.toTag(tag)
+}
 
-    override fun fromTag(tag: CompoundTag) {
-        super.fromTag(tag)
-        // Deserialize
-        myInfo = BlockInfo.serializer().getFrom(tag)
-    }
+override fun fromTag(tag: CompoundTag) {
+    super.fromTag(tag)
+    // Deserialize
+    myInfo = BlockInfo.serializer().getFrom(tag)
+}
 ```
 
 #### In a packet
