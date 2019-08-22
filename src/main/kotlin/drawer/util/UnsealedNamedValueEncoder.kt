@@ -11,13 +11,6 @@ import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 import kotlinx.serialization.internal.EnumDescriptor
 
-@SerialInfo
-@Target(AnnotationTarget.PROPERTY)
-annotation class SerialId(val id: Int)
-
-@SerialInfo
-@Target(AnnotationTarget.PROPERTY)
-annotation class SerialTag(val tag: String)
 
 
 abstract class UnsealedTaggedEncoder<Tag : Any?> : Encoder, CompositeEncoder {

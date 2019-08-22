@@ -10,6 +10,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
 
+//TODO: go through everything and make sure it's needed
 //TODO: document .nullable
 //TODO: think if we want direct tags or nested ones (probably direct to avoid boilerplate)
 //TODO: instruct to not use pos, and throw an error if they try to put when one already exists (somehow)

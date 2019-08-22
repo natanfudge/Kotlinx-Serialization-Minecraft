@@ -16,7 +16,8 @@
     ForListTag::class,
     ForCompoundTag::class,
     ForItemStack::class,
-    ForIngredient::class
+    ForIngredient::class,
+    ForVec3d::class
 )
 
 package utils
@@ -32,6 +33,7 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import java.util.*
 
 // simple data objects
@@ -137,7 +139,8 @@ data class OtherFormats(
     val uuidList: List<UUID>,
     val blockPos: BlockPos,
     val blockPosList: List<BlockPos>,
-    val id: Identifier
+    val id: Identifier,
+    val vec3d : Vec3d
 )
 
 
@@ -305,7 +308,8 @@ val otherFormats = OtherFormats(
     listOf(UUID(2, 3), UUID(4, 5), UUID(11111111111111111, 9)),
     BlockPos(78, 12, 2),
     listOf(BlockPos(4, 5, 6), BlockPos(7, 8, 9), BlockPos(10, 11, 12)),
-    Identifier("spatialcrafting", "x2crafter_piece")
+    Identifier("spatialcrafting", "x2crafter_piece"),
+    Vec3d(0.2,-123.0,2323.3)
 )
 
 val zeroNumbers = VariousNumbers(0, 0, 0, 0f, 0, 0.0)

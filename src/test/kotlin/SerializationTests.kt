@@ -36,6 +36,7 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): 
 class SerializationTests {
     var initialized = false
 
+    //TODO: ERROR: Update is not supported for Identifier
     @Test
     fun `TagEncoder serializes and deserializes correctly`() {
         if (!initialized) {

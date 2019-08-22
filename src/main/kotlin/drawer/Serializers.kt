@@ -9,6 +9,7 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import java.util.*
 
 @Serializer(forClass = net.minecraft.util.math.BlockPos::class)
@@ -21,7 +22,7 @@ object ForBlockPos : KSerializer<BlockPos> {
 
 @Serializer(forClass = Identifier::class)
 object ForIdentifier : KSerializer<Identifier> {
-    override val descriptor: SerialDescriptor = LongDescriptor.withName("Identifier")
+    override val descriptor: SerialDescriptor = StringDescriptor.withName("Identifier")
     override fun serialize(encoder: Encoder, obj: Identifier) = encoder.encodeString(obj.toString())
     override fun deserialize(decoder: Decoder): Identifier = Identifier(decoder.decodeString())
 }
@@ -299,6 +300,7 @@ object ForUuid : KSerializer<UUID> {
         }
     }
 
+    //TODO: boxing can be avoided here
     private fun handleUnorthodoxInputOrdering(index: Int, dec: CompositeDecoder): UUID {
         var most: Long? = null // consider using flags or bit mask if you
         var least: Long? = null // need to read nullable non-optional properties
@@ -324,5 +326,76 @@ object ForUuid : KSerializer<UUID> {
         )
     }
 }
+
+
+@Serializer(forClass = Vec3d::class)
+object ForVec3d : KSerializer<Vec3d> {
+    //TODO: simplify these descriptors to a "compositedescriptor" class
+    override val descriptor: SerialDescriptor = object : SerialClassDescImpl("Vec3d") {
+        init {
+            addElement("x")
+            addElement("y")
+            addElement("z")
+        }
+    }
+
+    private const val XIndex = 0
+    private const val YIndex = 1
+    private const val ZIndex = 2
+
+    override fun serialize(encoder: Encoder, obj: Vec3d) {
+        val compositeOutput = encoder.beginStructure(descriptor)
+        compositeOutput.encodeDoubleElement(descriptor, XIndex, obj.x)
+        compositeOutput.encodeDoubleElement(descriptor, YIndex, obj.y)
+        compositeOutput.encodeDoubleElement(descriptor, ZIndex, obj.z)
+        compositeOutput.endStructure(descriptor)
+    }
+
+    override fun deserialize(decoder: Decoder): Vec3d {
+        val dec: CompositeDecoder = decoder.beginStructure(descriptor)
+
+        var x = 0.0
+        var y = 0.0
+        var z = 0.0
+        var xExists = false
+        var yExists = false
+        var zExists = false
+        loop@ while (true) {
+            when (val i = dec.decodeElementIndex(descriptor)) {
+                CompositeDecoder.READ_DONE -> break@loop
+                CompositeDecoder.READ_ALL -> {
+                    x = dec.decodeDoubleElement(descriptor, XIndex)
+                    y = dec.decodeDoubleElement(descriptor, YIndex)
+                    z = dec.decodeDoubleElement(descriptor, ZIndex)
+                    xExists = true
+                    yExists = true
+                    zExists = true
+                    break@loop
+                }
+
+                XIndex -> {
+                    x = dec.decodeDoubleElement(descriptor, i)
+                    xExists = true
+                }
+                YIndex -> {
+                    y = dec.decodeDoubleElement(descriptor, i)
+                    yExists = true
+                }
+                ZIndex -> {
+                    z = dec.decodeDoubleElement(descriptor, i)
+                    zExists = true
+                }
+                else -> throw SerializationException("Unknown index $i")
+            }
+        }
+
+        if (!xExists) throw MissingFieldException("x")
+        if (!yExists) throw MissingFieldException("y")
+        if (!zExists) throw MissingFieldException("z")
+
+        return Vec3d(x, y, z)
+    }
+}
+
 
 

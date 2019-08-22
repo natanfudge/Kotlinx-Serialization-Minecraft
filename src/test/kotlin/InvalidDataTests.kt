@@ -1,4 +1,4 @@
-@file:UseSerializers(ForBlockPos::class, ForUuid::class, ForIdentifier::class)
+@file:UseSerializers(ForBlockPos::class, ForUuid::class, ForIdentifier::class, ForVec3d::class)
 
 import drawer.*
 import kotlinx.serialization.Serializable
@@ -8,6 +8,7 @@ import kotlinx.serialization.json.JsonConfiguration
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
 import utils.CityData
 import utils.OtherFormats
@@ -22,8 +23,16 @@ data class DefaultedData(
     val identifier: Identifier = Identifier("minecraft", "carrot")
 )
 
+
 @Serializable
-data class NoDefaultIntData(val int: Int = 2)
+data class DefaultedOtherFormats(
+    val uuid: UUID = UUID(1,2),
+    val uuidList: List<UUID> = listOf(UUID(2,3)),
+    val blockPos: BlockPos = BlockPos(-1,2,33),
+    val blockPosList: List<BlockPos> = listOf(),
+    val id: Identifier = Identifier("asdf:6sss"),
+    val vec3d : Vec3d = Vec3d(777.0,123.0,-3.3)
+)
 
 class InvalidDataTests {
 
@@ -61,9 +70,17 @@ class InvalidDataTests {
         }
 
 
+    @Test
+    fun `Custom serializers properly default the values`() =
+        testTagSerializer(DefaultedOtherFormats.serializer()) {
+            val result = deserialize()
+
+            assertEquals(result,DefaultedOtherFormats())
+
+        }
+
+
 
 
 }
 
-@Serializable
-data class Defaulted(val int: Int = 2)
