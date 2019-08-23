@@ -1,5 +1,5 @@
 # Fabric Drawer
-![CurseForge](https://cf.way2muchnoise.eu/fabric-drawer.svg)
+![CurseForge](https://curse.nikky.moe/api/img/334410)
 ![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)
 ![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg) 
 ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
@@ -107,7 +107,7 @@ override fun fromTag(tag : CompoundTag){
 This is only true for when YOU are putting 2 instances of the same type. If a class has multiple of the same type that's OK.
 ```kotlin
 // No need for a key
-data class MyData(val int1: Int, val int2: Int)
+data class MyData(val int1: Int = 0, val int2: Int = 0)
 fun toTag(tag : CompoundTag){
     MyData.serializer().put(MyData(1,2))
 }
@@ -115,7 +115,7 @@ fun toTag(tag : CompoundTag){
 
 ```kotlin
 // Need a key
-data class MyData(val int1: Int, val int2: Int)
+data class MyData(val int1: Int = 0, val int2: Int = 0)
 fun toTag(tag : CompoundTag){
     MyData.serializer().put(MyData(1,2), key = "first")
     MyData.serializer().put(MyData(3,4), key = "second")
