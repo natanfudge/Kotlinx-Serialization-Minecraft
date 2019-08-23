@@ -73,7 +73,7 @@ val packetData = PacketByteBuf(Unpooled.buffer())
 BlockInfo.serializer().write(data, toBuf = packetData)
     
 for (player in PlayerStream.all(world.server)) {
-    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, "packetId", packetData)
+    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, Identifier("modid", "packetId"), packetData)
 }
 ```
 
