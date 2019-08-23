@@ -26,12 +26,9 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id("kotlinx-serialization") version "1.3.50" // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version "1.3.50" // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
-
-It's recommended you update the IDEA Kotlin plugin to 1.3.50 by going to `Tools -> Kotlin -> Configure Kotlin Plugin Updates`
- because it provides special syntax highlighting for kotlinx.serialization.
 
 ## Usage
 
