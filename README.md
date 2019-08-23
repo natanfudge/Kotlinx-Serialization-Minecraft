@@ -26,7 +26,7 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id("kotlinx-serialization") version 1.3.41 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id("kotlinx-serialization") version "1.3.50" // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -204,10 +204,6 @@ fun toTag(tag :CompoundTag){
 Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/issues/329) so we can have this syntax built-in to the library for all serializable classes! Having a common interface for serializable classes would also enable avoiding boilerplate in other places.
 
 - Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
-
-### Troubleshooting
-- It's saying `serializer()` is undefined!
-Refresh gradle (ReImport all Gradle projects button)
 
 ### Closing notes
 You are looking at the first revision of this library and its readme. 
