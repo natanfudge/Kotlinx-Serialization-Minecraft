@@ -19,26 +19,14 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:1.0.28")
+    modImplementation("com.lettuce.fudge:fabric-drawer:1.1.0-RC-1")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id("kotlinx-serialization")
-}
-```
-Since "the serialization plugin is not published to Gradle plugin portal yet" , you'll need to add plugin resolution rules to your settings.gradle:
-```groovy
-pluginManagement {
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "kotlinx-serialization") {
-                useModule("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}") // set kotlin_version to 1.3.40 for example in gradle.properties
-            }
-        }
-    }
+    id("kotlinx-serialization") version 1.3.41 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -170,13 +158,13 @@ data class MyPlayerInventory(
 Serializers for the following classes are available:
 - UUID
 - BlockPos
+- Vec3d
 - Identifier
 - All NBT classes
 - ItemStack (note: requires being in a Minecraft context as it accesses the registry)
 - Ingredient (note: requires being in a Minecraft context as it accesses the registry)
 - DefaultedList<> (note: bug requires special syntax, see above)
 
-Appropriate extension methods of the form `CompoundTag#putFoo` / `CompoundTag#getFoo`, `PacketByteBuf#writeFoo` / `PacketByteBuf#readFoo` are also available for the mentioned classes when they are missing from the vanilla API.
 
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
 

@@ -26,19 +26,7 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id("kotlinx-serialization")
-}
-```
-Since "the serialization plugin is not published to Gradle plugin portal yet" , you'll need to add plugin resolution rules to your settings.gradle:
-```groovy
-pluginManagement {
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "kotlinx-serialization") {
-                useModule("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}") // set kotlin_version to 1.3.40 for example in gradle.properties
-            }
-        }
-    }
+    id("kotlinx-serialization") version $KOTLIN_VERSION // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 

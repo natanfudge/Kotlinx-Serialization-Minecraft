@@ -204,7 +204,7 @@ task updateTemplate {
         if (!readMeTemplateFile.exists()) throw new FileNotFoundException("could not find $readMeTemplateFile.")
         def readMeTemplateText = readMeTemplateFile.text
         def readMeFile = new File("README.md")
-        readMeFile.write(readMeTemplateText.replace('$VERSION', project.version))
+        readMeFile.write(readMeTemplateText.replace('$VERSION', project.version).replace('$KOTLIN_VERSION',project.kotlin_version))
     }
 }
 
