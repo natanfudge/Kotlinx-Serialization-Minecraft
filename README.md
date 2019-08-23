@@ -73,12 +73,12 @@ val packetData = PacketByteBuf(Unpooled.buffer())
 BlockInfo.serializer().write(data, toBuf = packetData)
     
 for (player in PlayerStream.all(world.server)) {
-    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, Identifier("modid", "packetId"), packetData)
+    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, Identifier("modid", "packet_id"), packetData)
 }
 ```
 
 ```kotlin
-ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packetId")){ context, buf ->
+ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packet_id")){ context, buf ->
     // Deserialize
     val data = BlockInfo.serializer().readFrom(buf)
 }
