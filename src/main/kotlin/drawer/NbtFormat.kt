@@ -118,62 +118,19 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
 
     }
 
-    private enum class WriteMode {
-        Primitive,
-        List,
-        Compound
-    }
-
     companion object {
-        private val NonPrimitiveKinds = listOf(
-            StructureKind.LIST,
-            StructureKind.CLASS,
-            StructureKind.MAP,
-            UnionKind.POLYMORPHIC,
-            UnionKind.ENUM_KIND,
-            UnionKind.OBJECT,
-            UnionKind.SEALED
-        )
-
         private const val Null = 1.toByte()
-        private const val NotNull = 0.toByte()
 
     }
 
     internal inner class TagDecoder(private val map: CompoundTag) : NamedValueTagDecoder() {
 
-
         var posStack: IntStack = IntArrayList()
-
-        private var writeMode = WriteMode.Primitive
 
         override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
             posStack.push(0)
             return this
         }
-
-//            writeMode = when (desc.kind) {
-////                PrimitiveKind.INT -> TODO()
-////                PrimitiveKind.UNIT -> TODO()
-////                PrimitiveKind.BOOLEAN -> TODO()
-////                PrimitiveKind.BYTE -> TODO()
-////                PrimitiveKind.SHORT -> TODO()
-////                PrimitiveKind.LONG -> TODO()
-////                PrimitiveKind.FLOAT -> TODO()
-////                PrimitiveKind.DOUBLE -> TODO()
-////                PrimitiveKind.CHAR -> TODO()
-////                PrimitiveKind.STRING -> TODO()
-//                StructureKind.CLASS -> WriteMode.Compound
-//                StructureKind.LIST -> WriteMode.List
-//                StructureKind.MAP -> WriteMode.Compound
-//                else -> WriteMode.Compound
-////                UnionKind.OBJECT -> TODO()
-////                UnionKind.ENUM_KIND -> TODO()
-////                UnionKind.SEALED -> TODO()
-////                UnionKind.POLYMORPHIC -> TODO()
-//            }
-//            return this
-//        }
 
         override fun endStructure(desc: SerialDescriptor) {
             posStack.popInt()
@@ -206,18 +163,18 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
 
         private fun incrementPos() = posStack.push(posStack.popInt() + 1)
 
-        private fun buildDescriptionParts(): List<String> {
-            val parts = mutableListOf<String>()
+        private fun buildDescriptionParts(): Set<String> {
+            val parts = mutableSetOf<String>()
             for (key in map.keys) {
                 for (i in key.length - 1 downTo 0) {
                     if (key[i] == '.') parts.add(key.substring(0, i))
                 }
             }
-            return parts.distinct()
+            return parts
         }
 
         //TODO: hack, replace with a nested compound tag format
-        private val descriptionParts = buildDescriptionParts()
+        private val descriptionParts: Set<String> = buildDescriptionParts()
 
         override fun decodeElementIndex(desc: SerialDescriptor): Int {
             var position = posStack.topInt()
@@ -226,7 +183,8 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
                 incrementPos()
 
                 val name = desc.getTag(position)
-                if (name in map.keys || name in descriptionParts || name.nullMarked() in map.keys || name.nullMarked() in descriptionParts) {
+                if (map.containsKey(name) || name in descriptionParts
+                    || map.containsKey(name.nullMarked()) || name.nullMarked() in descriptionParts) {
                     return position
                 }
                 position = posStack.topInt()

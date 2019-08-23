@@ -1,5 +1,6 @@
 package drawer
 
+import drawer.util.CompositeDescriptor
 import drawer.util.bufferedPacket
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.*
@@ -12,8 +13,17 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.*
 
+//TODO: cache helper serializers for everything (see the last few serializers)
+
+/**
+ * Sometimes stuff crash with a NotSupportedException so this fixes it, probably a bad idea but I don't know what to do about it.
+ */
+private interface PatchFix<T> : KSerializer<T> {
+    override fun patch(decoder: Decoder, old: T): T = old
+}
+
 @Serializer(forClass = net.minecraft.util.math.BlockPos::class)
-object ForBlockPos : KSerializer<BlockPos> {
+object ForBlockPos : KSerializer<BlockPos>/*, PatchFix<BlockPos>*/ {
     override val descriptor: SerialDescriptor = LongDescriptor.withName("BlockPos")
     override fun serialize(encoder: Encoder, obj: BlockPos) = encoder.encodeLong(obj.asLong())
     override fun deserialize(decoder: Decoder): BlockPos = BlockPos.fromLong(decoder.decodeLong())
@@ -21,64 +31,68 @@ object ForBlockPos : KSerializer<BlockPos> {
 
 
 @Serializer(forClass = Identifier::class)
-object ForIdentifier : KSerializer<Identifier> {
+object ForIdentifier : KSerializer<Identifier>/*, PatchFix<Identifier>*/ {
     override val descriptor: SerialDescriptor = StringDescriptor.withName("Identifier")
     override fun serialize(encoder: Encoder, obj: Identifier) = encoder.encodeString(obj.toString())
     override fun deserialize(decoder: Decoder): Identifier = Identifier(decoder.decodeString())
+
+    override fun patch(decoder: Decoder, old: Identifier): Identifier {
+        return super.patch(decoder, old)
+    }
 }
 
 
 @Serializer(forClass = ByteTag::class)
-object ForByteTag : KSerializer<ByteTag> {
+object ForByteTag : KSerializer<ByteTag>/*, PatchFix<ByteTag>*/ {
     override val descriptor: SerialDescriptor = ByteDescriptor.withName("ByteTag")
     override fun serialize(encoder: Encoder, obj: ByteTag) = encoder.encodeByte(obj.byte)
     override fun deserialize(decoder: Decoder): ByteTag = ByteTag(decoder.decodeByte())
 }
 
 @Serializer(forClass = ShortTag::class)
-object ForShortTag : KSerializer<ShortTag> {
+object ForShortTag : KSerializer<ShortTag>/*, PatchFix<ShortTag>*/ {
     override val descriptor: SerialDescriptor = ShortDescriptor.withName("ShortTag")
     override fun serialize(encoder: Encoder, obj: ShortTag) = encoder.encodeShort(obj.short)
     override fun deserialize(decoder: Decoder): ShortTag = ShortTag(decoder.decodeShort())
 }
 
 @Serializer(forClass = IntTag::class)
-object ForIntTag : KSerializer<IntTag> {
+object ForIntTag : KSerializer<IntTag>/*, PatchFix<IntTag>*/ {
     override val descriptor: SerialDescriptor = IntDescriptor.withName("IntTag")
     override fun serialize(encoder: Encoder, obj: IntTag) = encoder.encodeInt(obj.int)
     override fun deserialize(decoder: Decoder): IntTag = IntTag(decoder.decodeInt())
 }
 
 @Serializer(forClass = LongTag::class)
-object ForLongTag : KSerializer<LongTag> {
+object ForLongTag : KSerializer<LongTag>/*, PatchFix<LongTag>*/ {
     override val descriptor: SerialDescriptor = LongDescriptor.withName("LongTag")
     override fun serialize(encoder: Encoder, obj: LongTag) = encoder.encodeLong(obj.long)
     override fun deserialize(decoder: Decoder): LongTag = LongTag(decoder.decodeLong())
 }
 
 @Serializer(forClass = FloatTag::class)
-object ForFloatTag : KSerializer<FloatTag> {
+object ForFloatTag : KSerializer<FloatTag>/*, PatchFix<FloatTag>*/ {
     override val descriptor: SerialDescriptor = FloatDescriptor.withName("FloatTag")
     override fun serialize(encoder: Encoder, obj: FloatTag) = encoder.encodeFloat(obj.float)
     override fun deserialize(decoder: Decoder): FloatTag = FloatTag(decoder.decodeFloat())
 }
 
 @Serializer(forClass = DoubleTag::class)
-object ForDoubleTag : KSerializer<DoubleTag> {
+object ForDoubleTag : KSerializer<DoubleTag>/*, PatchFix<DoubleTag>*/ {
     override val descriptor: SerialDescriptor = DoubleDescriptor.withName("DoubleTag")
     override fun serialize(encoder: Encoder, obj: DoubleTag) = encoder.encodeDouble(obj.double)
     override fun deserialize(decoder: Decoder): DoubleTag = DoubleTag(decoder.decodeDouble())
 }
 
 @Serializer(forClass = StringTag::class)
-object ForStringTag : KSerializer<StringTag> {
+object ForStringTag : KSerializer<StringTag>/*, PatchFix<StringTag>*/ {
     override val descriptor: SerialDescriptor = StringDescriptor.withName("StringTag")
     override fun serialize(encoder: Encoder, obj: StringTag) = encoder.encodeString(obj.asString())
     override fun deserialize(decoder: Decoder): StringTag = StringTag(decoder.decodeString())
 }
 
 @Serializer(forClass = EndTag::class)
-object ForEndTag : KSerializer<EndTag> {
+object ForEndTag : KSerializer<EndTag>/*, PatchFix<EndTag>*/ {
     override val descriptor: SerialDescriptor = ByteDescriptor.withName("EndTag")
     override fun serialize(encoder: Encoder, obj: EndTag) = encoder.encodeByte(0)
     override fun deserialize(decoder: Decoder): EndTag = EndTag().also { decoder.decodeByte() }
@@ -86,7 +100,7 @@ object ForEndTag : KSerializer<EndTag> {
 
 @Serializer(forClass = ByteArrayTag::class)
 //TODO: optimizable by making the inner byte array public with a getter mixin
-object ForByteArrayTag : KSerializer<ByteArrayTag> {
+object ForByteArrayTag : KSerializer<ByteArrayTag>/*, PatchFix<ByteArrayTag>*/ {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForByteTag.descriptor, "ByteArrayTag")
 
     override fun serialize(encoder: Encoder, obj: ByteArrayTag) =
@@ -98,7 +112,7 @@ object ForByteArrayTag : KSerializer<ByteArrayTag> {
 
 //TODO: optimizable by making the inner int array public with a getter mixin
 @Serializer(forClass = IntArrayTag::class)
-object ForIntArrayTag : KSerializer<IntArrayTag> {
+object ForIntArrayTag : KSerializer<IntArrayTag>/*, PatchFix<IntArrayTag>*/ {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForIntTag.descriptor, "IntArrayTag")
 
     override fun serialize(encoder: Encoder, obj: IntArrayTag) =
@@ -110,7 +124,7 @@ object ForIntArrayTag : KSerializer<IntArrayTag> {
 
 //TODO: optimizable by making the inner long array public with a getter mixin
 @Serializer(forClass = LongArrayTag::class)
-object ForLongArrayTag : KSerializer<LongArrayTag> {
+object ForLongArrayTag : KSerializer<LongArrayTag>/*, PatchFix<LongArrayTag>*/ {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForLongTag.descriptor, "LongArrayTag")
 
     override fun serialize(encoder: Encoder, obj: LongArrayTag) =
@@ -122,7 +136,7 @@ object ForLongArrayTag : KSerializer<LongArrayTag> {
 
 //TODO: optimizable by using the exisiting encoding system
 @Serializer(forClass = Tag::class)
-object ForTag : KSerializer<Tag> {
+object ForTag : KSerializer<Tag>/*, PatchFix<Tag>*/ {
     override val descriptor: SerialDescriptor = PolymorphicClassDescriptor
     override fun serialize(encoder: Encoder, obj: Tag) {
         if (encoder is ICanEncodeTag) encoder.encodeTag(obj)
@@ -140,7 +154,7 @@ object ForTag : KSerializer<Tag> {
  */
 //TODO: optimizable by making the inner List<Tag> public with a getter mixin
 @Serializer(forClass = ListTag::class)
-object ForListTag : KSerializer<ListTag> {
+object ForListTag : KSerializer<ListTag>/*, PatchFix<ListTag>*/ {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForTag.descriptor, "ListTag")
 
     override fun serialize(encoder: Encoder, obj: ListTag) {
@@ -156,7 +170,7 @@ object ForListTag : KSerializer<ListTag> {
 
 //TODO: optimizable by making the inner Map<String,Tag> public with a getter mixin
 @Serializer(forClass = CompoundTag::class)
-object ForCompoundTag : KSerializer<CompoundTag> {
+object ForCompoundTag : KSerializer<CompoundTag>/*, PatchFix<CompoundTag>*/ {
     override val descriptor: SerialDescriptor = HashMapClassDesc(StringDescriptor, ForTag.descriptor)
 
     override fun serialize(encoder: Encoder, obj: CompoundTag) {
@@ -187,7 +201,7 @@ object ForCompoundTag : KSerializer<CompoundTag> {
 // PacketByteBuf#writeItemStack, ItemStack#ToTag, etc, Using canEncodeItemStack interface the same way as in Tag.
 //TODO: optimizable by making the inner TagCompound public with a getter mixin
 @Serializer(forClass = ItemStack::class)
-object ForItemStack : KSerializer<ItemStack> {
+object ForItemStack : KSerializer<ItemStack>/*, PatchFix<ItemStack>*/ {
     override val descriptor: SerialDescriptor = object : SerialClassDescImpl("ItemStack") {
         init {
             addElement("id")
@@ -209,8 +223,10 @@ object ForItemStack : KSerializer<ItemStack> {
 
 //TODO: optimizable by making the inner Array<ItemStack> public with a getter mixin
 @Serializer(forClass = Ingredient::class)
-object ForIngredient : KSerializer<Ingredient> {
+object ForIngredient : KSerializer<Ingredient>/*, PatchFix<Ingredient>*/ {
     override val descriptor: SerialDescriptor = UnsealedListLikeDescriptorImpl(ForItemStack.descriptor, "Ingredient")
+
+    private val helperSerializer = ArrayListSerializer(ForItemStack)
 
     override fun serialize(encoder: Encoder, obj: Ingredient) {
         if (encoder is ICanEncodeIngredient) {
@@ -221,7 +237,7 @@ object ForIngredient : KSerializer<Ingredient> {
             obj.write(buf)
             val stackArrayLength = buf.readVarInt()
             val matchingStacks = List(stackArrayLength) { buf.readItemStack() }
-            ArrayListSerializer(ForItemStack).serialize(encoder, matchingStacks)
+            helperSerializer.serialize(encoder, matchingStacks)
         }
     }
 
@@ -230,7 +246,7 @@ object ForIngredient : KSerializer<Ingredient> {
             return decoder.decodeIngredient()
         } else {
             // This is the only choice to serialize Ingredient in other formats
-            val matchingStacks = ArrayListSerializer(ForItemStack).deserialize(decoder)
+            val matchingStacks = helperSerializer.deserialize(decoder)
             val buf = bufferedPacket().apply {
                 writeVarInt(matchingStacks.size)
                 for (matchingStack in matchingStacks) {
@@ -249,15 +265,18 @@ object ForIngredient : KSerializer<Ingredient> {
  * Nontheless, the default value doesn't matter after the point the list has been initialized.
  */
 @Serializer(forClass = DefaultedList::class)
-class ForDefaultedList<T>(private val elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>> {
+class ForDefaultedList<T>(private val elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>>,
+    PatchFix<DefaultedList<T>> {
     override val descriptor: SerialDescriptor =
         UnsealedListLikeDescriptorImpl(elementSerializer.descriptor, "DefaultedList")
 
+    private val helperSerializer = ArrayListSerializer(elementSerializer)
+
     override fun serialize(encoder: Encoder, obj: DefaultedList<T>) =
-        ArrayListSerializer(elementSerializer).serialize(encoder, obj)
+        helperSerializer.serialize(encoder, obj)
 
     override fun deserialize(decoder: Decoder): DefaultedList<T> {
-        val list = ArrayListSerializer(elementSerializer).deserialize(decoder)
+        val list = helperSerializer.deserialize(decoder)
         @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "UNCHECKED_CAST")
         list as java.util.Collection<T>
 
@@ -267,13 +286,8 @@ class ForDefaultedList<T>(private val elementSerializer: KSerializer<T>) : KSeri
 }
 
 @Serializer(forClass = UUID::class)
-object ForUuid : KSerializer<UUID> {
-    override val descriptor: SerialDescriptor = object : SerialClassDescImpl("Uuid") {
-        init {
-            addElement("most") // most will have index 0
-            addElement("least") // least will have index 1
-        }
-    }
+object ForUuid : KSerializer<UUID>/*, PatchFix<UUID>*/ {
+    override val descriptor: SerialDescriptor = CompositeDescriptor("Uuid", "most", "least")
 
     private const val MostIndex = 0
     private const val LeastIndex = 1
@@ -329,22 +343,22 @@ object ForUuid : KSerializer<UUID> {
 
 
 @Serializer(forClass = Vec3d::class)
-object ForVec3d : KSerializer<Vec3d> {
-    //TODO: simplify these descriptors to a "compositedescriptor" class
-    override val descriptor: SerialDescriptor = object : SerialClassDescImpl("Vec3d") {
-        init {
-            addElement("x")
-            addElement("y")
-            addElement("z")
-        }
-    }
+object ForVec3d : KSerializer<Vec3d>/*, PatchFix<Vec3d>*/ {
+//    private val helperSerializer = TripleSerializer(DoubleSerializer, DoubleSerializer, DoubleSerializer)
+
+
+        override val descriptor: SerialDescriptor = CompositeDescriptor("Vec3d", "x", "y", "z")
+//    override val descriptor: SerialDescriptor  = helperSerializer.descriptor
+
+    //TODO: learn wtf patch is
+
 
     private const val XIndex = 0
     private const val YIndex = 1
     private const val ZIndex = 2
 
     override fun serialize(encoder: Encoder, obj: Vec3d) {
-        val compositeOutput = encoder.beginStructure(descriptor)
+        val compositeOutput = encoder.beginStructure(descriptor,DoubleSerializer,DoubleSerializer,DoubleSerializer)
         compositeOutput.encodeDoubleElement(descriptor, XIndex, obj.x)
         compositeOutput.encodeDoubleElement(descriptor, YIndex, obj.y)
         compositeOutput.encodeDoubleElement(descriptor, ZIndex, obj.z)
@@ -352,7 +366,7 @@ object ForVec3d : KSerializer<Vec3d> {
     }
 
     override fun deserialize(decoder: Decoder): Vec3d {
-        val dec: CompositeDecoder = decoder.beginStructure(descriptor)
+        val dec: CompositeDecoder = decoder.beginStructure(descriptor,DoubleSerializer,DoubleSerializer,DoubleSerializer)
 
         var x = 0.0
         var y = 0.0
@@ -389,6 +403,7 @@ object ForVec3d : KSerializer<Vec3d> {
             }
         }
 
+        dec.endStructure(descriptor)
         if (!xExists) throw MissingFieldException("x")
         if (!yExists) throw MissingFieldException("y")
         if (!zExists) throw MissingFieldException("z")

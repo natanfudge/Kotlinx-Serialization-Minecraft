@@ -149,6 +149,8 @@ interface SerialContainer<T> {
     fun serialize(obj: T)
     fun deserialize(): T
     val serializer: KSerializer<T>
+
+//    fun deserializeAndCompare() = deserialize()
 }
 
 class TagSerialContainer<T>(override val serializer: KSerializer<T>,val tag: CompoundTag = CompoundTag()) : SerialContainer<T> {

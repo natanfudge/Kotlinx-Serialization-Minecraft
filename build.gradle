@@ -2,7 +2,7 @@ plugins {
     id 'fabric-loom'
     id 'maven-publish'
     id "org.jetbrains.kotlin.jvm"
-    id "kotlinx-serialization"
+    id "org.jetbrains.kotlin.plugin.serialization"
     id "com.jfrog.bintray"
     id 'com.matthewprenger.cursegradle'
 }

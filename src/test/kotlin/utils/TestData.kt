@@ -133,15 +133,7 @@ data class City(val name: String) {
     override fun toString() = name
 }
 
-@Serializable
-data class OtherFormats(
-    val uuid: UUID,
-    val uuidList: List<UUID>,
-    val blockPos: BlockPos,
-    val blockPosList: List<BlockPos>,
-    val id: Identifier,
-    val vec3d : Vec3d
-)
+
 
 
 interface PolymorphicMessage
@@ -302,6 +294,17 @@ val zoo = Zoo(
         arrayOf(IntData(1), IntData(2))
     )
 )
+
+@Serializable
+data class OtherFormats(
+    val uuid: UUID,
+    val uuidList: List<UUID>,
+    val blockPos: BlockPos,
+    val blockPosList: List<BlockPos>,
+    val id: Identifier,
+    val vec3d : Vec3d
+)
+
 
 val otherFormats = OtherFormats(
     UUID(1, 222222222),

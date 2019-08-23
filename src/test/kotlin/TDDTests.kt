@@ -1,15 +1,15 @@
-@file:UseSerializers(ForUuid::class)
+@file:UseSerializers(ForUuid::class, ForBlockPos::class, ForIdentifier::class,ForVec3d::class)
 
-import drawer.ForUuid
-import drawer.getFrom
-import drawer.nullable
-import drawer.put
+import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
 import net.minecraft.nbt.Tag
+import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
 import utils.CityData
 import java.util.*
@@ -58,6 +58,12 @@ data class SimpleTree(val down: SimpleTree?)
 @Serializable
 data class TreeHolder(
     val tree: SimpleTree
+)
+
+@Serializable
+data class Vec3dContainer(
+//    val vec3d: Vec3d
+val triple: Triple<Double,Double,Double>
 )
 
 class TDDTests {
@@ -189,5 +195,14 @@ class TDDTests {
         CityData.serializer().put(obj, existing)
         val back = CityData.serializer().nullable.getFrom(existing)
         assertEquals(obj, back)
+    }
+
+    @Test
+    fun `Vec3d Serializer works`() {
+        val json = Json(JsonConfiguration.Stable)
+        val obj = Vec3dContainer(Triple(0.2, -123.0, 2323.3))
+        val str = json.stringify(Vec3dContainer.serializer(),obj)
+        val back = json.parse(Vec3dContainer.serializer(),str)
+        assertEquals(obj,back)
     }
 }
