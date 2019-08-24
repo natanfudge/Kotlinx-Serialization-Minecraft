@@ -13,7 +13,7 @@ import kotlinx.serialization.internal.EnumDescriptor
 
 
 
-abstract class UnsealedTaggedEncoder<Tag : Any?> : Encoder, CompositeEncoder {
+internal abstract class UnsealedTaggedEncoder<Tag : Any?> : Encoder, CompositeEncoder {
 
     /**
      * Provides a tag object for given serial descriptor and index.
@@ -145,7 +145,7 @@ abstract class UnsealedTaggedEncoder<Tag : Any?> : Encoder, CompositeEncoder {
 
 
 
-abstract class UnsealedNamedValueEncoder(val rootName: String = "") : UnsealedTaggedEncoder<String>() {
+internal abstract class UnsealedNamedValueEncoder(val rootName: String = "") : UnsealedTaggedEncoder<String>() {
     final override fun SerialDescriptor.getTag(index: Int): String = nested(elementName(this, index))
 
     protected fun nested(nestedName: String) = composeName(currentTagOrNull ?: rootName, nestedName)
@@ -155,7 +155,7 @@ abstract class UnsealedNamedValueEncoder(val rootName: String = "") : UnsealedTa
 
 
 
-abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDecoder {
+internal abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDecoder {
     override val context: SerialModule
         get() = EmptyModule
 
@@ -273,7 +273,7 @@ abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDecoder {
 
 
 
-abstract class UnsealedNamedValueDecoder(val rootName: String = "") : UnsealedTaggedDecoder<String>() {
+internal abstract class UnsealedNamedValueDecoder(val rootName: String = "") : UnsealedTaggedDecoder<String>() {
     final override fun SerialDescriptor.getTag(index: Int): String = nested(elementName(this, index))
 
     protected fun nested(nestedName: String) = composeName(currentTagOrNull ?: rootName, nestedName)

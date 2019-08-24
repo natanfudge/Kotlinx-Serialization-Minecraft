@@ -10,23 +10,6 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
 
-//TODO: go through everything and make sure it's needed
-//TODO: document .nullable
-//TODO: think if we want direct tags or nested ones (probably direct to avoid boilerplate)
-//TODO: instruct to not use pos, and throw an error if they try to put when one already exists (somehow)
-//TODO: tell not to use primitive serializers and point to issue
-//TODO: update kotlinx.serialization to 0.12.0
-//TODO: fix badges, they don't link to anything
-
-//TODO: handle invalid state (have a look at @Optional)
-//TODO: test invalid state
-
-//TODO: explain in readme how the packet handler already catches errors for you
-//TODO: explain that you still need to check the validity of the packet
-//TODO: explain in readme why we must have nulls everywhere and be careful
-//TODO: test readme (example mod)
-//TODO: revisit this claim "Or make myInfo nullable without lateinit if initializing it at first placement is not guaranteed"
-
 
 //TODO: Later version:
 //TODO: Text serializer

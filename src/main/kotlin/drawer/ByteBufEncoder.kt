@@ -1,5 +1,6 @@
 package drawer
 
+import io.netty.buffer.Unpooled
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.EnumDescriptor
 import kotlinx.serialization.modules.EmptyModule
@@ -8,7 +9,7 @@ import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Ingredient
 import net.minecraft.util.PacketByteBuf
-
+internal fun bufferedPacket() =PacketByteBuf(Unpooled.buffer())
 internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
     inner class ByteBufEncoder(private val buf: PacketByteBuf) : ElementValueEncoder(), ICanEncodeCompoundTag,
         ICanEncodeIngredient {

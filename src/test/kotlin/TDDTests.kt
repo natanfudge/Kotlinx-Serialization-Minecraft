@@ -62,8 +62,8 @@ data class TreeHolder(
 
 @Serializable
 data class Vec3dContainer(
-//    val vec3d: Vec3d
-val triple: Triple<Double,Double,Double>
+    val vec3d: Vec3d
+//val triple: Triple<Double,Double,Double>
 )
 
 class TDDTests {
@@ -200,7 +200,7 @@ class TDDTests {
     @Test
     fun `Vec3d Serializer works`() {
         val json = Json(JsonConfiguration.Stable)
-        val obj = Vec3dContainer(Triple(0.2, -123.0, 2323.3))
+        val obj = Vec3dContainer(Vec3d(0.2, -123.0, 2323.3))
         val str = json.stringify(Vec3dContainer.serializer(),obj)
         val back = json.parse(Vec3dContainer.serializer(),str)
         assertEquals(obj,back)

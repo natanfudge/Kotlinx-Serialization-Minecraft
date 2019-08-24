@@ -26,7 +26,7 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id ("org.jetbrains.kotlin.plugin.serialization") version "1.3.50" // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version $KOTLIN_VERSION // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -83,6 +83,8 @@ ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packet_id")){ co
     val data = BlockInfo.serializer().readFrom(buf)
 }
 ```
+
+Remember that you still need to validate your client to server packets!
 
 An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-example).
 
@@ -167,6 +169,8 @@ If I've missed anything you need please [open an issue](https://github.com/natan
 
 You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
 
+Note: Primitive serializers don't work right now for `CompoundTag`, so just use the existing `putInt` etc methods. 
+
 ### Why does every property need to have a default value when storing data for a block entity?
 There are 2 main reasons:
 1. Nbt data is volatile. It can change at any time, via modifying the save file, or by using the `/data` command.
@@ -183,6 +187,16 @@ Make sure that the default values are **usable**, meaning trying to use them in 
 - Read [this](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md) first. 
 - In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
 If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
+
+### Depending on the mod
+```json
+{
+  "depends": {
+    "fabricdrawer": ">=$VERSION"
+  }
+}
+```
+
 
 ### Tips
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:

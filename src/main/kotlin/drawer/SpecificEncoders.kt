@@ -6,36 +6,36 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.recipe.Ingredient
 
-interface ICanEncodeTag : ICanEncodeCompoundTag {
+internal interface ICanEncodeTag : ICanEncodeCompoundTag {
     fun encodeTag(tag: Tag)
     override fun encodeCompoundTag(tag: CompoundTag) = encodeTag(tag)
 }
 
-interface ICanDecodeTag : ICanDecodeCompoundTag {
+internal interface ICanDecodeTag : ICanDecodeCompoundTag {
     fun decodeTag(): Tag
     override fun decodeCompoundTag(): CompoundTag = decodeTag() as CompoundTag
 }
 
-interface ICanEncodeCompoundTag {
+internal interface ICanEncodeCompoundTag {
     fun encodeCompoundTag(tag: CompoundTag)
 }
 
-interface ICanDecodeCompoundTag {
+internal interface ICanDecodeCompoundTag {
     fun decodeCompoundTag(): CompoundTag
 }
 
-abstract class NamedValueTagEncoder : UnsealedNamedValueEncoder(), ICanEncodeTag {
+internal abstract class NamedValueTagEncoder : UnsealedNamedValueEncoder(), ICanEncodeTag {
     final override fun encodeTag(tag: Tag) = encodeTaggedTag(popTag(), tag)
     abstract fun encodeTaggedTag(key: String, tag: Tag)
 }
 
-abstract class NamedValueTagDecoder : UnsealedNamedValueDecoder(), ICanDecodeTag {
+internal abstract class NamedValueTagDecoder : UnsealedNamedValueDecoder(), ICanDecodeTag {
     final override fun decodeTag(): Tag = decodeTaggedTag(popTag())
     abstract fun decodeTaggedTag(key: String): Tag
 }
 
 
-interface ICanEncodeIngredient{
+internal interface ICanEncodeIngredient{
     fun encodeIngredient(ingredient: Ingredient)
 }
 
