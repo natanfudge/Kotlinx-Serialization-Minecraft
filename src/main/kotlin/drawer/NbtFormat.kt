@@ -15,6 +15,8 @@ import net.minecraft.nbt.*
 //TODO: think if we want direct tags or nested ones (probably direct to avoid boilerplate)
 //TODO: instruct to not use pos, and throw an error if they try to put when one already exists (somehow)
 //TODO: tell not to use primitive serializers and point to issue
+//TODO: update kotlinx.serialization to 0.12.0
+//TODO: fix badges, they don't link to anything
 
 //TODO: handle invalid state (have a look at @Optional)
 //TODO: test invalid state

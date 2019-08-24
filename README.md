@@ -1,6 +1,6 @@
 # Fabric Drawer
-![CurseForge](https://curse.nikky.moe/api/img/334410)](https://curse.nikky.moe/api/url/334410)
-![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)
+![CurseForge](https://curse.nikky.moe/api/img/334410)
+![https://discord.gg/CFaCu97](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)
 ![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg) 
 ![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)
 
