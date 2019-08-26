@@ -10,6 +10,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.*
 
+//TODO: put up issues for these
 
 //TODO: Later version:
 //TODO: Text serializer
