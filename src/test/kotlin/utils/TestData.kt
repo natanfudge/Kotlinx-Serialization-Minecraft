@@ -17,7 +17,8 @@
     ForCompoundTag::class,
     ForItemStack::class,
     ForIngredient::class,
-    ForVec3d::class
+    ForVec3d::class,
+    ForSoundEvent::class
 )
 
 package utils
@@ -30,6 +31,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
+import net.minecraft.sound.SoundEvent
+import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -314,6 +317,14 @@ val otherFormats = OtherFormats(
     Identifier("spatialcrafting", "x2crafter_piece"),
     Vec3d(0.2,-123.0,2323.3)
 )
+
+@Serializable
+data class OtherLazyFormats(val soundEvent: SoundEvent)
+
+val otherLazyFormats = {
+    OtherLazyFormats(SoundEvents.AMBIENT_UNDERWATER_LOOP)
+}
+
 
 val zeroNumbers = VariousNumbers(0, 0, 0, 0f, 0, 0.0)
 val nullableZeroNumbers = VariousNullableNumbers(null, 0, 0, 0f, 0, 0.0)

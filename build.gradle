@@ -42,6 +42,7 @@ repositories {
     maven { url = "http://maven.fabricmc.net/" }
     maven { url = "https://kotlin.bintray.com/kotlinx" }
     jcenter()
+    mavenLocal()
 }
 
 dependencies {

@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "fabricdrawer",
   "version": "${version}",
-
   "name": "Fabric Drawer",
   "description": "Fabric library mod for kotlin mods that allows you to easily save data to NBT and PacketByteBuf using kotlinx.serialization.\n",
   "authors": [
@@ -12,9 +11,7 @@
     "homepage": "https://github.com/natanfudge/Fabric-Drawer",
     "sources": "https://github.com/natanfudge/Fabric-Drawer"
   },
-
   "license": "The MIT License",
-
   "environment": "*",
   "depends": {
     "fabricloader": ">=0.4.0",

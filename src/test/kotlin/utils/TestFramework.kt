@@ -68,6 +68,7 @@ val testCases = testCases {
     zoo with Zoo.serializer()
     shop with Shop.serializer()
     otherFormats with OtherFormats.serializer()
+    otherLazyFormats with OtherLazyFormats.serializer()
     zeroNumbers with VariousNumbers.serializer()
     nullableZeroNumbers with VariousNullableNumbers.serializer()
     tags with Tags.serializer()

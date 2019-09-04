@@ -6,13 +6,15 @@ import kotlinx.serialization.internal.*
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
+import net.minecraft.sound.SoundEvent
+import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.util.registry.Registry
 import java.util.*
 
-//TODO: cache helper serializers for everything (see the last few serializers)
 
 /**
  * Sometimes stuff crash with a NotSupportedException so this fixes it, probably a bad idea but I don't know what to do about it.
@@ -34,6 +36,16 @@ object ForIdentifier : KSerializer<Identifier> {
     override val descriptor: SerialDescriptor = StringDescriptor.withName("Identifier")
     override fun serialize(encoder: Encoder, obj: Identifier) = encoder.encodeString(obj.toString())
     override fun deserialize(decoder: Decoder): Identifier = Identifier(decoder.decodeString())
+}
+
+@Serializer(forClass = SoundEvent::class)
+object ForSoundEvent : KSerializer<SoundEvent> {
+    override val descriptor: SerialDescriptor = StringDescriptor.withName("SoundEvent")
+    override fun serialize(encoder: Encoder, obj: SoundEvent) {
+        encoder.encodeInt(Registry.SOUND_EVENT.getRawId(obj))
+    }
+    override fun deserialize(decoder: Decoder): SoundEvent = Registry.SOUND_EVENT.get(decoder.decodeInt())
+        ?: SoundEvents.ENTITY_ITEM_PICKUP
 }
 
 
@@ -260,7 +272,7 @@ object ForIngredient : KSerializer<Ingredient> {
  * Nontheless, the default value doesn't matter after the point the list has been initialized.
  */
 @Serializer(forClass = DefaultedList::class)
-class ForDefaultedList<T>(private val elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>>,
+class ForDefaultedList<T>(elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>>,
     PatchFix<DefaultedList<T>> {
     override val descriptor: SerialDescriptor =
         UnsealedListLikeDescriptorImpl(elementSerializer.descriptor, "DefaultedList")
@@ -406,6 +418,5 @@ object ForVec3d : KSerializer<Vec3d> {
         return Vec3d(x, y, z)
     }
 }
-
 
 

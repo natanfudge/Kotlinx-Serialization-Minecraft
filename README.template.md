@@ -159,9 +159,10 @@ Serializers for the following classes are available:
 - BlockPos
 - Vec3d
 - Identifier
+- SoundEvent (note: requires being in a Minecraft context as it accesses the registry)
 - All NBT classes
-- ItemStack (note: requires being in a Minecraft context as it accesses the registry)
-- Ingredient (note: requires being in a Minecraft context as it accesses the registry)
+- ItemStack (requires being in a Minecraft context)
+- Ingredient (requires being in a Minecraft context)
 - DefaultedList<> (note: bug requires special syntax, see above)
 
 
@@ -215,7 +216,3 @@ fun toTag(tag :CompoundTag){
 Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/issues/329) so we can have this syntax built-in to the library for all serializable classes! Having a common interface for serializable classes would also enable avoiding boilerplate in other places.
 
 - Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
-
-### Closing notes
-You are looking at the first revision of this library and its readme. 
-As things usually go, problems will likely arise, in which case I urge you to open an issue or contact me via [discord](https://discord.gg/CFaCu97).
