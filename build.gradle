@@ -84,8 +84,6 @@ processResources {
 }
 
 
-
-
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 // if it is present.
 // If you remove this task, sources will not be generated.
@@ -120,14 +118,12 @@ curseforge {
 }
 
 
-
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
-
 
 
 jar {
@@ -156,7 +152,6 @@ bintray {
     }
 
 }
-
 
 
 publishing {
@@ -194,17 +189,26 @@ compileKotlin {
     }
 }
 
-task updateTemplate {
+
+Properties properties = new Properties()
+File propertiesFile = new File('gradle.properties')
+propertiesFile.withInputStream {
+    properties.load(it)
+}
+
+
+task updateTemplate(type: Copy) {
     group = "template"
-    description = "Parses the README.template.md file and inserts the current version into a new README.md file."
-    doLast {
-        if (!project.hasProperty("version")) throw new IllegalArgumentException("Please define a 'version' property in gradle.properties.")
-        def readMeTemplateFile = new File("README.template.md")
-        if (!readMeTemplateFile.exists()) throw new FileNotFoundException("could not find $readMeTemplateFile.")
-        def readMeTemplateText = readMeTemplateFile.text
-        def readMeFile = new File("README.md")
-        readMeFile.write(readMeTemplateText.replace('$VERSION', project.version).replace('$KOTLIN_VERSION',project.kotlin_version))
+    description = "Switches out gradle.properties variables like \$mod_version in .template.md files, and copies the results into .md files."
+    from(rootDir)
+    include("**/*.template.md")
+    filesMatching("**/*.template.md") {
+        def extensionLength = ".template.md".length()
+
+        name = sourceName.substring(0, sourceName.length() - extensionLength) + ".md"
+        expand(properties)
     }
+    destinationDir = rootDir
 }
 
 bintrayUpload.dependsOn updateTemplate

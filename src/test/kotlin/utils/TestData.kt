@@ -27,10 +27,12 @@ import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
+import net.minecraft.client.sound.SoundInstance
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
+import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
@@ -305,7 +307,10 @@ data class OtherFormats(
     val blockPos: BlockPos,
     val blockPosList: List<BlockPos>,
     val id: Identifier,
-    val vec3d : Vec3d
+    val vec3d : Vec3d,
+    val soundCategory: SoundCategory,
+    val attenuationType: SoundInstance.AttenuationType
+
 )
 
 

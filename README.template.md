@@ -19,14 +19,14 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:$VERSION")
+    modImplementation("com.lettuce.fudge:fabric-drawer:$mod_version")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id ("org.jetbrains.kotlin.plugin.serialization") version $KOTLIN_VERSION // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version $kotlin_version // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -193,7 +193,7 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 ```json
 {
   "depends": {
-    "fabricdrawer": ">=$VERSION"
+    "fabricdrawer": ">=$mod_version"
   }
 }
 ```

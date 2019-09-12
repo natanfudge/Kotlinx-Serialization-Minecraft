@@ -3,9 +3,11 @@ package drawer
 import drawer.util.CompositeDescriptor
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.*
+import net.minecraft.client.sound.SoundInstance
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
+import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
@@ -44,6 +46,7 @@ object ForSoundEvent : KSerializer<SoundEvent> {
     override fun serialize(encoder: Encoder, obj: SoundEvent) {
         encoder.encodeInt(Registry.SOUND_EVENT.getRawId(obj))
     }
+
     override fun deserialize(decoder: Decoder): SoundEvent = Registry.SOUND_EVENT.get(decoder.decodeInt())
         ?: SoundEvents.ENTITY_ITEM_PICKUP
 }
@@ -354,7 +357,7 @@ object ForVec3d : KSerializer<Vec3d> {
 //    private val helperSerializer = TripleSerializer(DoubleSerializer, DoubleSerializer, DoubleSerializer)
 
 
-        override val descriptor: SerialDescriptor = CompositeDescriptor("Vec3d", "x", "y", "z")
+    override val descriptor: SerialDescriptor = CompositeDescriptor("Vec3d", "x", "y", "z")
 //    override val descriptor: SerialDescriptor  = helperSerializer.descriptor
 
     //TODO: learn wtf patch is
@@ -365,7 +368,7 @@ object ForVec3d : KSerializer<Vec3d> {
     private const val ZIndex = 2
 
     override fun serialize(encoder: Encoder, obj: Vec3d) {
-        val compositeOutput = encoder.beginStructure(descriptor,DoubleSerializer,DoubleSerializer,DoubleSerializer)
+        val compositeOutput = encoder.beginStructure(descriptor, DoubleSerializer, DoubleSerializer, DoubleSerializer)
         compositeOutput.encodeDoubleElement(descriptor, XIndex, obj.x)
         compositeOutput.encodeDoubleElement(descriptor, YIndex, obj.y)
         compositeOutput.encodeDoubleElement(descriptor, ZIndex, obj.z)
@@ -373,7 +376,8 @@ object ForVec3d : KSerializer<Vec3d> {
     }
 
     override fun deserialize(decoder: Decoder): Vec3d {
-        val dec: CompositeDecoder = decoder.beginStructure(descriptor,DoubleSerializer,DoubleSerializer,DoubleSerializer)
+        val dec: CompositeDecoder =
+            decoder.beginStructure(descriptor, DoubleSerializer, DoubleSerializer, DoubleSerializer)
 
         var x = 0.0
         var y = 0.0
