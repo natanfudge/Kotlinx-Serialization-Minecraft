@@ -50,6 +50,10 @@ data class LazyCase<T : Any>(
 ) : Case<T> {
     override val obj: T get() = lazyObj()
     override val name: String get() = obj.javaClass.simpleName
+
+    override fun toString(): String {
+        return lazyObj().toString()
+    }
 }
 
 data class EagerCase<T : Any>(

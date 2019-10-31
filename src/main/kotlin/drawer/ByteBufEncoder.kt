@@ -105,7 +105,7 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun decodeString(): String = buf.readString(StringLengthCap)
         override fun decodeEnum(enumDescription: EnumDescriptor): Int = buf.readInt()
         override fun decodeNull(): Nothing? = null
-        override fun decodeCompoundTag(): CompoundTag = buf.readCompoundTag()!!
+        override fun decodeCompoundTag(): CompoundTag = buf.readCompoundTag()!! /*?: CompoundTag()*/
         override fun decodeIngredient(): Ingredient = Ingredient.fromPacket(buf)
 
     }

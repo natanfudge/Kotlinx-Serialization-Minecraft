@@ -3,11 +3,9 @@ package drawer
 import drawer.util.CompositeDescriptor
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.*
-import net.minecraft.client.sound.SoundInstance
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
-import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.DefaultedList
@@ -219,13 +217,60 @@ object ForItemStack : KSerializer<ItemStack> {
             addElement("tag")
         }
     }
+    private const val IdIndex = 0
+    private const val CountIndex = 1
+    private const val TagIndex = 2
+
 
     override fun serialize(encoder: Encoder, obj: ItemStack) {
-        ForCompoundTag.serialize(encoder, obj.toTag(CompoundTag()))
+        val compositeOutput = encoder.beginStructure(descriptor)
+        compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(obj.item).toString())
+        compositeOutput.encodeIntElement(descriptor, CountIndex, obj.count)
+        compositeOutput.encodeSerializableElement(descriptor, TagIndex, ForCompoundTag.nullable, obj.tag)
+        compositeOutput.endStructure(descriptor)
     }
 
+
     override fun deserialize(decoder: Decoder): ItemStack {
-        return ItemStack.fromTag(ForCompoundTag.deserialize(decoder))
+        val dec= decoder.beginStructure(descriptor, DoubleSerializer, DoubleSerializer, DoubleSerializer)
+
+        var id: String? = null
+        var count = 0
+        var tag: CompoundTag? = null
+        var countExists = false
+        loop@ while (true) {
+            when (val i = dec.decodeElementIndex(descriptor)) {
+                CompositeDecoder.READ_DONE -> break@loop
+                CompositeDecoder.READ_ALL -> {
+                    id = dec.decodeStringElement(descriptor, IdIndex)
+                    count = dec.decodeIntElement(descriptor, CountIndex)
+                    tag = dec.decodeSerializableElement(descriptor, TagIndex, ForCompoundTag.nullable)
+                    countExists = true
+                    break@loop
+                }
+
+                IdIndex -> {
+                    id = dec.decodeStringElement(descriptor, i)
+                }
+                CountIndex -> {
+                    count = dec.decodeIntElement(descriptor, i)
+                    countExists = true
+                }
+                TagIndex -> {
+                    tag = dec.decodeNullableSerializableElement(descriptor, TagIndex, ForCompoundTag.nullable)
+                }
+                else -> throw SerializationException("Unknown index $i")
+            }
+        }
+
+        dec.endStructure(descriptor)
+        if (id == null) throw MissingFieldException("id")
+        if (!countExists) throw MissingFieldException("count")
+
+        return ItemStack(
+            Registry.ITEM.get(Identifier(id)).also { if (tag != null) it.postProcessTag(tag) },
+            count
+        ).apply { this.tag = tag }
     }
 
 

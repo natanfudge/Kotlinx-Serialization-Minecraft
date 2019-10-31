@@ -320,7 +320,8 @@ val otherFormats = OtherFormats(
     BlockPos(78, 12, 2),
     listOf(BlockPos(4, 5, 6), BlockPos(7, 8, 9), BlockPos(10, 11, 12)),
     Identifier("spatialcrafting", "x2crafter_piece"),
-    Vec3d(0.2,-123.0,2323.3)
+    Vec3d(0.2,-123.0,2323.3),
+    SoundCategory.AMBIENT,SoundInstance.AttenuationType.LINEAR
 )
 
 @Serializable
