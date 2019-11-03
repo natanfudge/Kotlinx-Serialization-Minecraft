@@ -13,15 +13,16 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import org.apache.logging.log4j.LogManager
 import java.util.*
 
+private val Logger = LogManager.getLogger("Fabric-Drawer")
 
-/**
- * Sometimes stuff crash with a NotSupportedException so this fixes it, probably a bad idea but I don't know what to do about it.
- */
-private interface PatchFix<T> : KSerializer<T> {
-    override fun patch(decoder: Decoder, old: T): T = old
+private inline fun <T> missingField(missingField: String, deserializing: String, defaultValue: () -> T): T {
+    Logger.warn("Missing $missingField while deserializing $deserializing")
+    return defaultValue()
 }
+
 
 @Serializer(forClass = net.minecraft.util.math.BlockPos::class)
 object ForBlockPos : KSerializer<BlockPos> {
@@ -232,7 +233,7 @@ object ForItemStack : KSerializer<ItemStack> {
 
 
     override fun deserialize(decoder: Decoder): ItemStack {
-        val dec= decoder.beginStructure(descriptor, DoubleSerializer, DoubleSerializer, DoubleSerializer)
+        val dec = decoder.beginStructure(descriptor, DoubleSerializer, DoubleSerializer, DoubleSerializer)
 
         var id: String? = null
         var count = 0
@@ -264,8 +265,12 @@ object ForItemStack : KSerializer<ItemStack> {
         }
 
         dec.endStructure(descriptor)
-        if (id == null) throw MissingFieldException("id")
-        if (!countExists) throw MissingFieldException("count")
+        if (id == null) {
+            id = missingField("ID", "ItemStack") { "minecraft:air" }
+        }
+        if (!countExists) {
+            count = missingField("count", "ItemStack") { 0 }
+        }
 
         return ItemStack(
             Registry.ITEM.get(Identifier(id)).also { if (tag != null) it.postProcessTag(tag) },
@@ -275,6 +280,7 @@ object ForItemStack : KSerializer<ItemStack> {
 
 
 }
+
 
 //TODO: optimizable by making the inner Array<ItemStack> public with a getter mixin
 @Serializer(forClass = Ingredient::class)
@@ -320,8 +326,7 @@ object ForIngredient : KSerializer<Ingredient> {
  * Nontheless, the default value doesn't matter after the point the list has been initialized.
  */
 @Serializer(forClass = DefaultedList::class)
-class ForDefaultedList<T>(elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>>,
-    PatchFix<DefaultedList<T>> {
+class ForDefaultedList<T>(elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>> {
     override val descriptor: SerialDescriptor =
         UnsealedListLikeDescriptorImpl(elementSerializer.descriptor, "DefaultedList")
 
@@ -390,8 +395,8 @@ object ForUuid : KSerializer<UUID> {
         }
         dec.endStructure(descriptor)
         return UUID(
-            most ?: throw MissingFieldException("most"),
-            least ?: throw MissingFieldException("least")
+            most ?: missingField("most", "UUID") { 0L },
+            least ?: missingField("least", "UUID") { 0L }
         )
     }
 }
@@ -460,9 +465,9 @@ object ForVec3d : KSerializer<Vec3d> {
         }
 
         dec.endStructure(descriptor)
-        if (!xExists) throw MissingFieldException("x")
-        if (!yExists) throw MissingFieldException("y")
-        if (!zExists) throw MissingFieldException("z")
+        if (!xExists) x = missingField("x", "Vec3d") { 0.0 }
+        if (!yExists) y = missingField("y", "Vec3d") { 0.0 }
+        if (!zExists) z = missingField("z", "Vec3d") { 0.0 }
 
         return Vec3d(x, y, z)
     }
