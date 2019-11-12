@@ -1,5 +1,6 @@
 package drawer
 
+import drawer.nbt.TagModule
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.EnumDescriptor

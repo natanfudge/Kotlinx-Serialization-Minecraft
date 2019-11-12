@@ -1,5 +1,6 @@
 package drawer
 
+import drawer.nbt.NbtFormat
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.makeNullable
 import kotlinx.serialization.modules.EmptyModule
@@ -72,9 +73,11 @@ fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: S
  */
 fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerialModule = EmptyModule): T {
     val decoder = ByteBufFormat(context).ByteBufDecoder(buf)
-    return if (decoder.decodeNotNullMark()) {
-        decoder.decode(this)
-    } else if(descriptor.isNullable) null as T else throw SerializationException("You need to use a nullable serializer to be able to read a nullable value. Use the .nullable extension property.")
+    return when {
+        decoder.decodeNotNullMark() -> decoder.decode(this)
+        descriptor.isNullable -> null as T
+        else -> throw SerializationException("You need to use a nullable serializer to be able to read a nullable value. Use the .nullable extension property.")
+    }
 }
 
 
