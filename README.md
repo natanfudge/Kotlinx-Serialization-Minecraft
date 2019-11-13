@@ -145,15 +145,6 @@ To fix this, put at the very top of the file:
 @file:UseSerializers(ForUuid::class, ForBlockPos::class)
 ```
 
-Or, [because of a bug you should thumbs up the issue on](https://github.com/Kotlin/kotlinx.serialization/issues/533), specifically when using a `DefaultedList<>` you need to annotate every property that uses `DefaultedList<>` like this:
-```kotlin
-@Serializable
-data class MyPlayerInventory(
-    @Serializable(with = ForDefaultedList::class) val list1 : DefaultedList<ItemStack>,
-    @Serializable(with = ForDefaultedList::class) val list2 : DefaultedList<Ingredient>
-)
-```
-
 Serializers for the following classes are available:
 - UUID
 - BlockPos
