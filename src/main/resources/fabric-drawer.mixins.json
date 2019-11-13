@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "drawer.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AccessibleListTag"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

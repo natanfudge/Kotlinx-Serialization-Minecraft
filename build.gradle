@@ -101,6 +101,7 @@ curseforge {
         id = '334410'
         releaseType = 'release'
         addGameVersion "Fabric"
+        addGameVersion "1.14.4"
         changelogType = "markdown"
         changelog = file("changelog.md")
 

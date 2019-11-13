@@ -48,7 +48,6 @@ class InvalidDataTests {
             innerTag.remove(innerTag.keys.first())
             innerTag.remove(innerTag.keys.first())
             innerTag.remove(innerTag.keys.first())
-            innerTag.remove(innerTag.keys.first())
             val result = deserialize()
 
             assertEquals(null, result.uuid)

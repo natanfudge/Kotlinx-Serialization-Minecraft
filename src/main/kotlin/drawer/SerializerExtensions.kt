@@ -81,4 +81,3 @@ fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerialM
 }
 
 
-val <T : Any> KSerializer<T>.nullable get() = makeNullable(this)

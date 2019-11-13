@@ -19,7 +19,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:2.0.1")
+    modImplementation("com.lettuce.fudge:fabric-drawer:3.0.0")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
@@ -193,7 +193,7 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 ```json
 {
   "depends": {
-    "fabricdrawer": ">=2.0.1"
+    "fabricdrawer": ">=3.0.0"
   }
 }
 ```

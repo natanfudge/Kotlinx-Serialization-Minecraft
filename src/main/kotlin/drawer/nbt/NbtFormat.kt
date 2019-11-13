@@ -13,7 +13,6 @@ import net.minecraft.nbt.*
 
 //TODO: Later version:
 //TODO: Text serializer
-//TODO: getNullableFrom / readNullableFrom extension methods for all types  + optional key for all types
 //TODO: "Identifiable" serializer
 //TODO: SimpleFixedItemInv serializer
 
@@ -35,8 +34,6 @@ internal val TagModule = SerializersModule {
     }
 }
 
-internal fun String.nullMarked() = "$this\$N"
-
 
 /**
  * Keeping this class public for now in case you want to serializer an object directly to tag and vise versa.
@@ -52,28 +49,24 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
      */
     fun <T> serialize(serializer: SerializationStrategy<T>, obj: T): Tag {
         return writeNbt(obj, serializer)
-//        return TagEncoder().also { it.encode(serializer, obj) }.compoundTag
     }
 
     fun <T> deserialize(deserializer: DeserializationStrategy<T>, tag: Tag): T {
         return readNbt(tag, deserializer)
-//        return TagDecoder(tag, context).decode(deserializer)
     }
 
     internal companion object {
         const val Null = 1.toByte()
-        const val NotNull = 0.toByte()
     }
 
 }
 
 internal const val ClassDiscriminator = "type"
 
-internal fun CompoundTagInvalidKeyKind(keyDescriptor: SerialDescriptor) = JsonException(
+internal fun compoundTagInvalidKeyKind(keyDescriptor: SerialDescriptor) = JsonException(
     "Value of type ${keyDescriptor.name} can't be used in a compound tag as map key. " +
             "It should have either primitive or enum kind, but its kind is ${keyDescriptor.kind}."
 )
-
 
 // This is an extension in case we want to have an option to not allow lists
 internal inline fun <T, R1 : T, R2 : T> NbtFormat.selectMapMode(
@@ -91,11 +84,3 @@ internal inline fun <T, R1 : T, R2 : T> NbtFormat.selectMapMode(
 }
 
 
-//
-
-internal class NullTag : ByteTag(0){
-    override fun copy(): Tag {
-        TODO("not implemented")
-    }
-
-}
