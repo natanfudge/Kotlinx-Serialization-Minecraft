@@ -101,7 +101,7 @@ override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : CompoundTag) {
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -111,7 +111,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
+fun toTag(tag : CompoundTag) {
     MyData.serializer().put(MyData(1,2))
 }
 ```
@@ -119,7 +119,7 @@ fun toTag(tag : CompoundTag){
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
+fun toTag(tag : CompoundTag) {
     MyData.serializer().put(MyData(1,2), key = "first")
     MyData.serializer().put(MyData(3,4), key = "second")
 }
