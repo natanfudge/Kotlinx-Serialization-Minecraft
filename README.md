@@ -26,8 +26,7 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id ("org.jetbrains.kotlin.plugin.serialization") version 1.3.50
-    // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version 1.3.50 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -112,7 +111,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
 fun toTag(tag : CompoundTag) {
-    MyData.serializer().put(MyData(1,2))
+    MyData.serializer().put(MyData(1, 2))
 }
 ```
 
@@ -120,8 +119,8 @@ fun toTag(tag : CompoundTag) {
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
 fun toTag(tag : CompoundTag) {
-    MyData.serializer().put(MyData(1,2), key = "first")
-    MyData.serializer().put(MyData(3,4), key = "second")
+    MyData.serializer().put(MyData(1, 2), key = "first")
+    MyData.serializer().put(MyData(3, 4), key = "second")
 }
 ```
 
@@ -153,9 +152,9 @@ Serializers for the following classes are available:
 - Identifier
 - SoundEvent (note: requires being in a Minecraft context as it accesses the registry)
 - All NBT classes
-- ItemStack (requires Minecraft context)
-- Ingredient (requires Minecraft context)
-- DefaultedList<> 
+- ItemStack (requires being in a Minecraft context)
+- Ingredient (requires being in a Minecraft context)
+- DefaultedList<> (note: bug requires special syntax, see above)
 
 
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).

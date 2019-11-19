@@ -100,7 +100,7 @@ override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : CompoundTag) {
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -110,21 +110,21 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
-    MyData.serializer().put(MyData(1,2))
+fun toTag(tag : CompoundTag) {
+    MyData.serializer().put(MyData(1, 2))
 }
 ```
 
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
-    MyData.serializer().put(MyData(1,2), key = "first")
-    MyData.serializer().put(MyData(3,4), key = "second")
+fun toTag(tag : CompoundTag) {
+    MyData.serializer().put(MyData(1, 2), key = "first")
+    MyData.serializer().put(MyData(3, 4), key = "second")
 }
 ```
 
-### Serializing Java and Mojang objects
+### Serializing Java and Minecraft objects
 You can serialize any primitive, and any list of primitives, and any class of your own that is annotated with `@Serializable`, without any extra modification:
 ```kotlin
 // OK
@@ -143,15 +143,6 @@ data class MyPlayer(val id : UUID)
 To fix this, put at the very top of the file:
 ```kotlin
 @file:UseSerializers(ForUuid::class, ForBlockPos::class)
-```
-
-Or, [because of a bug you should thumbs up the issue on](https://github.com/Kotlin/kotlinx.serialization/issues/533), specifically when using a `DefaultedList<>` you need to annotate every property that uses `DefaultedList<>` like this:
-```kotlin
-@Serializable
-data class MyPlayerInventory(
-    @Serializable(with = ForDefaultedList::class) val list1 : DefaultedList<ItemStack>,
-    @Serializable(with = ForDefaultedList::class) val list2 : DefaultedList<Ingredient>
-)
 ```
 
 Serializers for the following classes are available:
