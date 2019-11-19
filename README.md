@@ -26,7 +26,8 @@ Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id ("org.jetbrains.kotlin.plugin.serialization") version 1.3.50 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version 1.3.50
+    // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -100,7 +101,7 @@ override fun toTag(tag: CompoundTag) : CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : CompoundTag) {
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -110,7 +111,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
+fun toTag(tag : CompoundTag) {
     MyData.serializer().put(MyData(1,2))
 }
 ```
@@ -118,13 +119,13 @@ fun toTag(tag : CompoundTag){
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
+fun toTag(tag : CompoundTag) {
     MyData.serializer().put(MyData(1,2), key = "first")
     MyData.serializer().put(MyData(3,4), key = "second")
 }
 ```
 
-### Serializing Java and Mojang objects
+### Serializing Java and Minecraft objects
 You can serialize any primitive, and any list of primitives, and any class of your own that is annotated with `@Serializable`, without any extra modification:
 ```kotlin
 // OK
@@ -145,15 +146,6 @@ To fix this, put at the very top of the file:
 @file:UseSerializers(ForUuid::class, ForBlockPos::class)
 ```
 
-Or, [because of a bug you should thumbs up the issue on](https://github.com/Kotlin/kotlinx.serialization/issues/533), specifically when using a `DefaultedList<>` you need to annotate every property that uses `DefaultedList<>` like this:
-```kotlin
-@Serializable
-data class MyPlayerInventory(
-    @Serializable(with = ForDefaultedList::class) val list1 : DefaultedList<ItemStack>,
-    @Serializable(with = ForDefaultedList::class) val list2 : DefaultedList<Ingredient>
-)
-```
-
 Serializers for the following classes are available:
 - UUID
 - BlockPos
@@ -161,9 +153,9 @@ Serializers for the following classes are available:
 - Identifier
 - SoundEvent (note: requires being in a Minecraft context as it accesses the registry)
 - All NBT classes
-- ItemStack (requires being in a Minecraft context)
-- Ingredient (requires being in a Minecraft context)
-- DefaultedList<> (note: bug requires special syntax, see above)
+- ItemStack (requires Minecraft context)
+- Ingredient (requires Minecraft context)
+- DefaultedList<> 
 
 
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
