@@ -45,3 +45,6 @@ This improves speed, and reduces memory usage and space taken. And most importan
 Unsurprisingly, <span style="font-size:larger;"> __**THIS UPDATE IS VERY SUPER BREAKING**__</span>. Any NBT data stored with Drawer 2.0.1 and earlier will not be usable.
 
 - Also, removed the .nullable extension property, since it's now provided by kotlinx.serialization itself! You just need to change the import.
+
+## 3.1.0
+Updated kotlinx.serialization to 0.14.0. This release allows you to serialize `object`s and sealed classes without `SerialModule`!

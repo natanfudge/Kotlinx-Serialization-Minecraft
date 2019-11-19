@@ -73,7 +73,7 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
             buf.writeString(value)
         }
 
-        override fun encodeEnum(enumDescription: EnumDescriptor, ordinal: Int) {
+        override fun encodeEnum(enumDescription: SerialDescriptor, ordinal: Int) {
             buf.writeInt(ordinal)
         }
 
@@ -104,7 +104,7 @@ internal class ByteBufFormat(context: SerialModule = EmptyModule) : AbstractSeri
         override fun decodeDouble(): Double = buf.readDouble()
         override fun decodeChar(): Char = buf.readChar()
         override fun decodeString(): String = buf.readString(StringLengthCap)
-        override fun decodeEnum(enumDescription: EnumDescriptor): Int = buf.readInt()
+        override fun decodeEnum(enumDescription: SerialDescriptor): Int = buf.readInt()
         override fun decodeNull(): Nothing? = null
         override fun decodeCompoundTag(): CompoundTag = buf.readCompoundTag()!! /*?: CompoundTag()*/
         override fun decodeIngredient(): Ingredient = Ingredient.fromPacket(buf)

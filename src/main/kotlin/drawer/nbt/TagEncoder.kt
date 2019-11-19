@@ -48,9 +48,10 @@ private sealed class AbstractTagEncoder(
 
     override fun encodeTaggedChar(tag: String, value: Char) = putElement(tag, StringTag(value.toString()))
     override fun encodeTaggedString(tag: String, value: String) = putElement(tag, StringTag(value))
+
     override fun encodeTaggedEnum(
         tag: String,
-        enumDescription: EnumDescriptor,
+        enumDescription: SerialDescriptor,
         ordinal: Int
     ) = putElement(tag, StringTag(enumDescription.getElementName(ordinal)))
 
@@ -66,7 +67,7 @@ private sealed class AbstractTagEncoder(
         else { node -> putElement(currentTag, node) }
 
         val encoder = when (desc.kind) {
-            StructureKind.LIST, UnionKind.POLYMORPHIC -> TagListEncoder(format, consumer)
+            StructureKind.LIST, is PolymorphicKind -> TagListEncoder(format, consumer)
             StructureKind.MAP -> format.selectMapMode(desc,
                 ifMap = { TagMapEncoder(format, consumer) },
                 ifList = { TagListEncoder(format, consumer) })
@@ -88,24 +89,6 @@ private sealed class AbstractTagEncoder(
 
 
 internal const val PRIMITIVE_TAG = "primitive" // also used in drawer.nbt.JsonPrimitiveInput
-
-private class TagPrimitiveEncoder(json: NbtFormat, nodeConsumer: (Tag) -> Unit) :
-    AbstractTagEncoder(json, nodeConsumer) {
-    private var content: Tag? = null
-
-    init {
-        pushTag(PRIMITIVE_TAG)
-    }
-
-    override fun putElement(key: String, element: Tag) {
-        require(key === PRIMITIVE_TAG) { "This output can only consume primitives with '$PRIMITIVE_TAG' tag" }
-        require(content == null) { "Primitive element was already recorded. Does call to .encodeXxx happen more than once?" }
-        content = element
-    }
-
-    override fun getCurrent(): Tag =
-        requireNotNull(content) { "Primitive element has not been recorded. Is call to .encodeXxx is missing in serializer?" }
-}
 
 private open class TagEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) :
     AbstractTagEncoder(format, nodeConsumer) {

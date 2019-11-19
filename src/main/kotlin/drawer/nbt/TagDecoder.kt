@@ -42,7 +42,7 @@ private sealed class AbstractTagDecoder(val format: NbtFormat, open val map: Tag
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         val currentObject = currentObject()
         return when (desc.kind) {
-            StructureKind.LIST, UnionKind.POLYMORPHIC -> TagListDecoder(format, cast(currentObject))
+            StructureKind.LIST, is PolymorphicKind -> TagListDecoder(format, cast(currentObject))
             StructureKind.MAP -> format.selectMapMode(
                 desc,
                 { TagMapDecoder(format, cast(currentObject)) },
@@ -62,7 +62,9 @@ private sealed class AbstractTagDecoder(val format: NbtFormat, open val map: Tag
         return if (str.length == 1) str[0] else throw SerializationException("$o can't be represented as Char")
     }
 
-    override fun decodeTaggedEnum(tag: String, enumDescription: EnumDescriptor): Int =
+//    override fun decodeTaggedEnum(tag: String, enumDescription: EnumDescriptor): Int =
+//        enumDescription.getElementIndexOrThrow(getValue(tag).asString())
+    override fun decodeTaggedEnum(tag: String, enumDescription: SerialDescriptor): Int =
         enumDescription.getElementIndexOrThrow(getValue(tag).asString())
 
     override fun decodeTaggedNull(tag: String): Nothing? = null

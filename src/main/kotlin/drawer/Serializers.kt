@@ -154,7 +154,7 @@ object ForTag : KSerializer<Tag> {
 
     override fun deserialize(decoder: Decoder): Tag {
         if (decoder is ICanDecodeTag) return decoder.decodeTag()
-        else return PolymorphicSerializer(Tag::class).deserialize(decoder) as Tag
+        else return PolymorphicSerializer(Tag::class).deserialize(decoder)
     }
 }
 

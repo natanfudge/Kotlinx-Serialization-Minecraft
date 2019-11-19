@@ -9,150 +9,6 @@ import kotlinx.serialization.*
 import kotlinx.serialization.CompositeDecoder.Companion.READ_ALL
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
-import kotlinx.serialization.internal.EnumDescriptor
-
-
-
-internal abstract class UnsealedTaggedEncoder<Tag : Any?> : Encoder, CompositeEncoder {
-
-    /**
-     * Provides a tag object for given serial descriptor and index.
-     * Tag object allows to associate given user information with particular element of composite serializable entity..
-     */
-    protected abstract fun SerialDescriptor.getTag(index: Int): Tag
-
-    override val context: SerialModule
-        get() = EmptyModule
-
-    // ---- API ----
-    open fun encodeTaggedValue(tag: Tag, value: Any): Unit
-            = throw SerializationException("Non-serializable ${value::class} is not supported by ${this::class} encoder")
-
-    open fun encodeTaggedNotNullMark(tag: Tag) {}
-    open fun encodeTaggedNull(tag: Tag): Unit = throw SerializationException("null is not supported")
-
-    private fun encodeTaggedNullable(tag: Tag, value: Any?) {
-        if (value == null) {
-            encodeTaggedNull(tag)
-        } else {
-            encodeTaggedNotNullMark(tag)
-            encodeTaggedValue(tag, value)
-        }
-    }
-
-    open fun encodeTaggedUnit(tag: Tag) = encodeTaggedValue(tag, Unit)
-    open fun encodeTaggedInt(tag: Tag, value: Int) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedByte(tag: Tag, value: Byte) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedShort(tag: Tag, value: Short) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedLong(tag: Tag, value: Long) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedFloat(tag: Tag, value: Float) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedDouble(tag: Tag, value: Double) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedBoolean(tag: Tag, value: Boolean) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedChar(tag: Tag, value: Char) = encodeTaggedValue(tag, value)
-    open fun encodeTaggedString(tag: Tag, value: String) = encodeTaggedValue(tag, value)
-
-    open fun encodeTaggedEnum(
-        tag: Tag,
-        enumDescription: EnumDescriptor,
-        ordinal: Int
-    ) = encodeTaggedValue(tag, ordinal)
-
-    // ---- Implementation of low-level API ----
-
-    fun encodeElement(desc: SerialDescriptor, index: Int): Boolean {
-        val tag = desc.getTag(index)
-        val shouldWriteElement = shouldWriteElement(desc, tag, index)
-        if (shouldWriteElement) {
-            pushTag(tag)
-        }
-        return shouldWriteElement
-    }
-
-    // For format-specific behaviour, invoked only on
-    open fun shouldWriteElement(desc: SerialDescriptor, tag: Tag, index: Int) = true
-
-    final override fun encodeNotNullMark() = encodeTaggedNotNullMark(currentTag)
-    final override fun encodeNull() = encodeTaggedNull(popTag())
-
-    final override fun encodeUnit() = encodeTaggedUnit(popTag())
-    final override fun encodeBoolean(value: Boolean) = encodeTaggedBoolean(popTag(), value)
-    final override fun encodeByte(value: Byte) = encodeTaggedByte(popTag(), value)
-    final override fun encodeShort(value: Short) = encodeTaggedShort(popTag(), value)
-    final override fun encodeInt(value: Int) = encodeTaggedInt(popTag(), value)
-    final override fun encodeLong(value: Long) = encodeTaggedLong(popTag(), value)
-    final override fun encodeFloat(value: Float) = encodeTaggedFloat(popTag(), value)
-    final override fun encodeDouble(value: Double) = encodeTaggedDouble(popTag(), value)
-    final override fun encodeChar(value: Char) = encodeTaggedChar(popTag(), value)
-    final override fun encodeString(value: String) = encodeTaggedString(popTag(), value)
-
-    final override fun encodeEnum(
-        enumDescription: EnumDescriptor,
-        ordinal: Int
-    ) = encodeTaggedEnum(popTag(), enumDescription, ordinal)
-
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
-        return this
-    }
-
-    final override fun endStructure(desc: SerialDescriptor) {
-        if (tagStack.isNotEmpty()) popTag(); endEncode(desc)
-    }
-
-    /**
-     * Format-specific replacement for [endStructure], because latter is overridden to manipulate tag stack.
-     */
-    open fun endEncode(desc: SerialDescriptor) {}
-
-    final override fun encodeNonSerializableElement(desc: SerialDescriptor, index: Int, value: Any) = encodeTaggedValue(desc.getTag(index), value)
-
-    final override fun encodeUnitElement(desc: SerialDescriptor, index: Int) = encodeTaggedUnit(desc.getTag(index))
-    final override fun encodeBooleanElement(desc: SerialDescriptor, index: Int, value: Boolean) = encodeTaggedBoolean(desc.getTag(index), value)
-    final override fun encodeByteElement(desc: SerialDescriptor, index: Int, value: Byte) = encodeTaggedByte(desc.getTag(index), value)
-    final override fun encodeShortElement(desc: SerialDescriptor, index: Int, value: Short) = encodeTaggedShort(desc.getTag(index), value)
-    final override fun encodeIntElement(desc: SerialDescriptor, index: Int, value: Int) = encodeTaggedInt(desc.getTag(index), value)
-    final override fun encodeLongElement(desc: SerialDescriptor, index: Int, value: Long) = encodeTaggedLong(desc.getTag(index), value)
-    final override fun encodeFloatElement(desc: SerialDescriptor, index: Int, value: Float) = encodeTaggedFloat(desc.getTag(index), value)
-    final override fun encodeDoubleElement(desc: SerialDescriptor, index: Int, value: Double) = encodeTaggedDouble(desc.getTag(index), value)
-    final override fun encodeCharElement(desc: SerialDescriptor, index: Int, value: Char) = encodeTaggedChar(desc.getTag(index), value)
-    final override fun encodeStringElement(desc: SerialDescriptor, index: Int, value: String) = encodeTaggedString(desc.getTag(index), value)
-
-    final override fun <T : Any?> encodeSerializableElement(desc: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T) {
-        if (encodeElement(desc, index))
-            encodeSerializableValue(serializer, value)
-    }
-
-    final override fun <T : Any> encodeNullableSerializableElement(desc: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T?) {
-        if (encodeElement(desc, index))
-            encodeNullableSerializableValue(serializer, value)
-    }
-
-    private val tagStack = arrayListOf<Tag>()
-    protected val currentTag: Tag
-        get() = tagStack.last()
-    protected val currentTagOrNull
-        get() = tagStack.lastOrNull()
-
-    protected fun pushTag(name: Tag) {
-        tagStack.add(name)
-    }
-
-    protected fun popTag() =
-        if (tagStack.isNotEmpty())
-            tagStack.removeAt(tagStack.lastIndex)
-        else
-            throw SerializationException("No tag in stack for requested element")
-}
-
-
-
-internal abstract class UnsealedNamedValueEncoder(val rootName: String = "") : UnsealedTaggedEncoder<String>() {
-    final override fun SerialDescriptor.getTag(index: Int): String = nested(elementName(this, index))
-
-    protected fun nested(nestedName: String) = composeName(currentTagOrNull ?: rootName, nestedName)
-    open fun elementName(desc: SerialDescriptor, index: Int) = desc.getElementName(index)
-    open fun composeName(parentName: String, childName: String) = if (parentName.isEmpty()) childName else parentName + "." + childName
-}
-
 
 
 internal abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDecoder {
@@ -171,14 +27,6 @@ internal abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDe
     open fun decodeTaggedNotNullMark(tag: Tag): Boolean = true
     open fun decodeTaggedNull(tag: Tag): Nothing? = null
 
-    private fun decodeTaggedNullable(tag: Tag): Any? {
-        return if (decodeTaggedNotNullMark(tag)) {
-            decodeTaggedValue(tag)
-        } else {
-            decodeTaggedNull(tag)
-        }
-    }
-
     open fun decodeTaggedUnit(tag: Tag): Unit = decodeTaggedValue(tag) as Unit
     open fun decodeTaggedBoolean(tag: Tag): Boolean = decodeTaggedValue(tag) as Boolean
     open fun decodeTaggedByte(tag: Tag): Byte = decodeTaggedValue(tag) as Byte
@@ -189,12 +37,16 @@ internal abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDe
     open fun decodeTaggedDouble(tag: Tag): Double = decodeTaggedValue(tag) as Double
     open fun decodeTaggedChar(tag: Tag): Char = decodeTaggedValue(tag) as Char
     open fun decodeTaggedString(tag: Tag): String = decodeTaggedValue(tag) as String
-    open fun decodeTaggedEnum(tag: Tag, enumDescription: EnumDescriptor): Int = decodeTaggedValue(tag) as Int
+    open fun decodeTaggedEnum(tag: Tag, enumDescription: SerialDescriptor): Int = decodeTaggedValue(tag) as Int
 
 
     // ---- Implementation of low-level API ----
 
-    final override fun decodeNotNullMark(): Boolean =if(tagStack.isEmpty()) true else decodeTaggedNotNullMark(currentTag)
+    /****************************************************************************************************************/
+    /*** Fix to tagStack throwing an "empty" exception when trying to decode a top-level null. Everything else is the same. **/
+    final override fun decodeNotNullMark(): Boolean = if(tagStack.isEmpty()) true else decodeTaggedNotNullMark(currentTag)
+    /****************************************************************************************************************/
+
     final override fun decodeNull(): Nothing? = null
 
     final override fun decodeUnit() = decodeTaggedUnit(popTag())
@@ -208,7 +60,7 @@ internal abstract class UnsealedTaggedDecoder<Tag : Any?> : Decoder, CompositeDe
     final override fun decodeChar(): Char = decodeTaggedChar(popTag())
     final override fun decodeString(): String = decodeTaggedString(popTag())
 
-    final override fun decodeEnum(enumDescription: EnumDescriptor): Int = decodeTaggedEnum(popTag(), enumDescription)
+    final override fun decodeEnum(enumDescription: SerialDescriptor): Int = decodeTaggedEnum(popTag(), enumDescription)
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         return this
