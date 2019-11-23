@@ -347,21 +347,21 @@ val messageModule = SerializersModule {
 }
 
 val tags = Tags(
-    ByteTag(0),
-    ShortTag(1),
-    IntTag(2),
-    LongTag(3),
-    FloatTag(3.5f),
-    DoubleTag(4.23),
-    StringTag("amar"),
-    EndTag(),
+    ByteTag.of(0),
+    ShortTag.of(1),
+    IntTag.of(2),
+    LongTag.of(3),
+    FloatTag.of(3.5f),
+    DoubleTag.of(4.23),
+    StringTag.of("amar"),
+    EndTag.INSTANCE,
     ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     IntArrayTag(listOf(8, 9, 10)),
     LongArrayTag(listOf(11L, 12L, 13L))
 )
 
 val intArrayTagWrapper = IntArrayTagWrapper(
-    EndTag(), ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    EndTag.INSTANCE, ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L))
 )
 
@@ -384,18 +384,18 @@ data class AbstractTags(
 
 
 val abstractTags = AbstractTags(
-    ByteTag(0),
-    ShortTag(1),
-    IntTag(2),
-    LongTag(3),
-    FloatTag(3.5f),
-    DoubleTag(4.23),
-    StringTag("amar"),
-    EndTag(),
+    ByteTag.of(0),
+    ShortTag.of(1),
+    IntTag.of(2),
+    LongTag.of(3),
+    FloatTag.of(3.5f),
+    DoubleTag.of(4.23),
+    StringTag.of("amar"),
+    EndTag.INSTANCE,
     ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     IntArrayTag(listOf(8, 9, 10)),
     LongArrayTag(listOf(11L, 12L, 13L)),
-    ListTag().apply { add(LongTag(2L)) },
+    ListTag().apply { add(LongTag.of(2L)) },
     CompoundTag().apply { putBoolean("as", false) }
 )
 
@@ -416,12 +416,12 @@ data class ListTags(
 
 //TODO: list tag of compound tag
 val listTags = ListTags(ListTag().apply {
-    add(IntTag(1))
-    add(IntTag(2))
-    add(IntTag(3))
+    add(IntTag.of(1))
+    add(IntTag.of(2))
+    add(IntTag.of(3))
 }, ListTag().apply {
-    add(StringTag("asdf"))
-    add(StringTag("asdf"))
+    add(StringTag.of("asdf"))
+    add(StringTag.of("asdf"))
 },
     ListTag().apply {
         add(ByteArrayTag(listOf(1.toByte(), 2.toByte(), 3.toByte())))
@@ -429,8 +429,8 @@ val listTags = ListTags(ListTag().apply {
         add(ByteArrayTag(listOf((-13).toByte(), 2.toByte(), 4.toByte())))
     },
     ListTag().apply {
-        add(ListTag().apply { add(ByteTag(1.toByte())) })
-        add(ListTag().apply { add(FloatTag(0.3f)) })
+        add(ListTag().apply { add(ByteTag.of(1.toByte())) })
+        add(ListTag().apply { add(FloatTag.of(0.3f)) })
     },
     ListTag().apply {
         CompoundTag().apply {
@@ -514,7 +514,7 @@ data class Ingredients(val ingredient1: Ingredient, val ingredient2: Ingredient,
 }
 
 infix fun Ingredient.actuallyEquals(other: Ingredient): Boolean {
-    return other.stackArray.zip(other.stackArray)
+    return other.matchingStacksClient.zip(other.matchingStacksClient)
         .all { (stack1, stack2) -> ItemStack.areEqualIgnoreDamage(stack1, stack2) }
 }
 

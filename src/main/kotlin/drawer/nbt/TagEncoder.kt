@@ -34,32 +34,32 @@ private sealed class AbstractTagEncoder(
     abstract fun putElement(key: String, element: Tag)
     abstract fun getCurrent(): Tag
 
-    override fun encodeTaggedNull(tag: String) = putElement(tag, ByteTag(NbtFormat.Null))
+    override fun encodeTaggedNull(tag: String) = putElement(tag, ByteTag.of(NbtFormat.Null))
 
-    override fun encodeTaggedInt(tag: String, value: Int) = putElement(tag, IntTag(value))
-    override fun encodeTaggedByte(tag: String, value: Byte) = putElement(tag, ByteTag(value))
-    override fun encodeTaggedShort(tag: String, value: Short) = putElement(tag, ShortTag(value))
-    override fun encodeTaggedLong(tag: String, value: Long) = putElement(tag, LongTag(value))
-    override fun encodeTaggedFloat(tag: String, value: Float) = putElement(tag, FloatTag(value))
-    override fun encodeTaggedDouble(tag: String, value: Double) = putElement(tag, DoubleTag(value))
+    override fun encodeTaggedInt(tag: String, value: Int) = putElement(tag, IntTag.of(value))
+    override fun encodeTaggedByte(tag: String, value: Byte) = putElement(tag, ByteTag.of(value))
+    override fun encodeTaggedShort(tag: String, value: Short) = putElement(tag, ShortTag.of(value))
+    override fun encodeTaggedLong(tag: String, value: Long) = putElement(tag, LongTag.of(value))
+    override fun encodeTaggedFloat(tag: String, value: Float) = putElement(tag, FloatTag.of(value))
+    override fun encodeTaggedDouble(tag: String, value: Double) = putElement(tag, DoubleTag.of(value))
 
     override fun encodeTaggedBoolean(tag: String, value: Boolean) =
-        putElement(tag, ByteTag(if (value) 1.toByte() else 0.toByte()))
+        putElement(tag, ByteTag.of(value))
 
-    override fun encodeTaggedChar(tag: String, value: Char) = putElement(tag, StringTag(value.toString()))
-    override fun encodeTaggedString(tag: String, value: String) = putElement(tag, StringTag(value))
+    override fun encodeTaggedChar(tag: String, value: Char) = putElement(tag, StringTag.of(value.toString()))
+    override fun encodeTaggedString(tag: String, value: String) = putElement(tag, StringTag.of(value))
 
     override fun encodeTaggedEnum(
         tag: String,
         enumDescription: SerialDescriptor,
         ordinal: Int
-    ) = putElement(tag, StringTag(enumDescription.getElementName(ordinal)))
+    ) = putElement(tag, StringTag.of(enumDescription.getElementName(ordinal)))
 
 
     override fun encodeTaggedTag(key: String, tag: Tag) = putElement(key, tag)
 
     override fun encodeTaggedValue(tag: String, value: Any) {
-        putElement(tag, StringTag(value.toString()))
+        putElement(tag, StringTag.of(value.toString()))
     }
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
@@ -76,7 +76,7 @@ private sealed class AbstractTagEncoder(
 
         if (writePolymorphic) {
             writePolymorphic = false
-            encoder.putElement(ClassDiscriminator, StringTag(desc.name))
+            encoder.putElement(ClassDiscriminator, StringTag.of(desc.name))
         }
 
         return encoder

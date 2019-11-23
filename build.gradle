@@ -10,8 +10,10 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+def total_version = "$mod_version-$minecraft_version"
+
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = total_version
 group = project.maven_group
 
 minecraft {
@@ -74,11 +76,11 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.mod_version
+    inputs.property "version", total_version
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        expand "version": project.mod_version
+        expand "version": total_version
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -106,7 +108,7 @@ curseforge {
         changelog = file("changelog.md")
 
         mainArtifact(remapJar) {
-            displayName = "Fabric Drawer $project.mod_version"
+            displayName = "Fabric Drawer $total_version"
         }
         addArtifact sourcesJar
 
@@ -150,7 +152,7 @@ bintray {
         licenses = [project.license]
         vcsUrl = project.github_url
         version {
-            name = project.mod_version
+            name = total_version
             released = new Date()
         }
     }
@@ -170,7 +172,7 @@ publishing {
             }
             groupId project.maven_group
             artifactId project.archives_base_name
-            version project.mod_version
+            version total_version
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'Fabric mod that adds NBT and PacketByteBuf to kotlinx.serialization')
@@ -199,11 +201,12 @@ File propertiesFile = new File('gradle.properties')
 propertiesFile.withInputStream {
     properties.load(it)
 }
+properties.put("total_version",total_version)
 
 
 task updateTemplate(type: Copy) {
     group = "template"
-    description = "Switches out gradle.properties variables like \$mod_version in .template.md files, and copies the results into .md files."
+    description = "Switches out variables like \$total_version in .template.md files, and copies the results into .md files."
     from(rootDir)
     include("**/*.template.md")
     filesMatching("**/*.template.md") {

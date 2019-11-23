@@ -158,15 +158,15 @@ interface SerialContainer<T> {
 //    fun deserializeAndCompare() = deserialize()
 }
 
-class TagSerialContainer<T>(override val serializer: KSerializer<T>,val tag: CompoundTag = CompoundTag()) : SerialContainer<T> {
+class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val tag: CompoundTag = CompoundTag()) : SerialContainer<T> {
     override fun serialize(obj: T) = serializer.put(obj, tag)
     override fun deserialize(): T = serializer.getFrom(tag)
-    val innerTag : CompoundTag get() = tag.getTag(serializer.descriptor.name) as CompoundTag
+    val innerTag : CompoundTag get() = tag.get(serializer.descriptor.name) as CompoundTag
 }
 
-class BufSerialContainer<T>(override val serializer: KSerializer<T>, val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) : SerialContainer<T> {
+class BufSerialContainer<T>(override val serializer: KSerializer<T>, private val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) : SerialContainer<T> {
     override fun serialize(obj: T) = serializer.write(obj, buf)
-    override fun deserialize(): T = serializer.readFrom(buf) as T
+    override fun deserialize(): T = serializer.readFrom(buf)
 }
 
 

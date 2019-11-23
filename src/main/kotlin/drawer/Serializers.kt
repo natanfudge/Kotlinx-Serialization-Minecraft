@@ -55,56 +55,56 @@ object ForSoundEvent : KSerializer<SoundEvent> {
 object ForByteTag : KSerializer<ByteTag> {
     override val descriptor: SerialDescriptor = ByteDescriptor.withName("ByteTag")
     override fun serialize(encoder: Encoder, obj: ByteTag) = encoder.encodeByte(obj.byte)
-    override fun deserialize(decoder: Decoder): ByteTag = ByteTag(decoder.decodeByte())
+    override fun deserialize(decoder: Decoder): ByteTag = ByteTag.of(decoder.decodeByte())
 }
 
 @Serializer(forClass = ShortTag::class)
 object ForShortTag : KSerializer<ShortTag> {
     override val descriptor: SerialDescriptor = ShortDescriptor.withName("ShortTag")
     override fun serialize(encoder: Encoder, obj: ShortTag) = encoder.encodeShort(obj.short)
-    override fun deserialize(decoder: Decoder): ShortTag = ShortTag(decoder.decodeShort())
+    override fun deserialize(decoder: Decoder): ShortTag = ShortTag.of(decoder.decodeShort())
 }
 
 @Serializer(forClass = IntTag::class)
 object ForIntTag : KSerializer<IntTag> {
     override val descriptor: SerialDescriptor = IntDescriptor.withName("IntTag")
     override fun serialize(encoder: Encoder, obj: IntTag) = encoder.encodeInt(obj.int)
-    override fun deserialize(decoder: Decoder): IntTag = IntTag(decoder.decodeInt())
+    override fun deserialize(decoder: Decoder): IntTag = IntTag.of(decoder.decodeInt())
 }
 
 @Serializer(forClass = LongTag::class)
 object ForLongTag : KSerializer<LongTag> {
     override val descriptor: SerialDescriptor = LongDescriptor.withName("LongTag")
     override fun serialize(encoder: Encoder, obj: LongTag) = encoder.encodeLong(obj.long)
-    override fun deserialize(decoder: Decoder): LongTag = LongTag(decoder.decodeLong())
+    override fun deserialize(decoder: Decoder): LongTag = LongTag.of(decoder.decodeLong())
 }
 
 @Serializer(forClass = FloatTag::class)
 object ForFloatTag : KSerializer<FloatTag> {
     override val descriptor: SerialDescriptor = FloatDescriptor.withName("FloatTag")
     override fun serialize(encoder: Encoder, obj: FloatTag) = encoder.encodeFloat(obj.float)
-    override fun deserialize(decoder: Decoder): FloatTag = FloatTag(decoder.decodeFloat())
+    override fun deserialize(decoder: Decoder): FloatTag = FloatTag.of(decoder.decodeFloat())
 }
 
 @Serializer(forClass = DoubleTag::class)
 object ForDoubleTag : KSerializer<DoubleTag> {
     override val descriptor: SerialDescriptor = DoubleDescriptor.withName("DoubleTag")
     override fun serialize(encoder: Encoder, obj: DoubleTag) = encoder.encodeDouble(obj.double)
-    override fun deserialize(decoder: Decoder): DoubleTag = DoubleTag(decoder.decodeDouble())
+    override fun deserialize(decoder: Decoder): DoubleTag = DoubleTag.of(decoder.decodeDouble())
 }
 
 @Serializer(forClass = StringTag::class)
 object ForStringTag : KSerializer<StringTag> {
     override val descriptor: SerialDescriptor = StringDescriptor.withName("StringTag")
     override fun serialize(encoder: Encoder, obj: StringTag) = encoder.encodeString(obj.asString())
-    override fun deserialize(decoder: Decoder): StringTag = StringTag(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): StringTag = StringTag.of(decoder.decodeString())
 }
 
 @Serializer(forClass = EndTag::class)
 object ForEndTag : KSerializer<EndTag> {
     override val descriptor: SerialDescriptor = ByteDescriptor.withName("EndTag")
     override fun serialize(encoder: Encoder, obj: EndTag) = encoder.encodeByte(0)
-    override fun deserialize(decoder: Decoder): EndTag = EndTag().also { decoder.decodeByte() }
+    override fun deserialize(decoder: Decoder): EndTag = EndTag.INSTANCE.also { decoder.decodeByte() }
 }
 
 @Serializer(forClass = ByteArrayTag::class)
@@ -188,7 +188,7 @@ object ForCompoundTag : KSerializer<CompoundTag> {
         } else {
             HashMapSerializer(StringSerializer, ForTag).serialize(
                 encoder,
-                obj.keys.map { it to obj.getTag(it)!! }.toMap()
+                obj.keys.map { it to obj.get(it)!! }.toMap()
             )
         }
 

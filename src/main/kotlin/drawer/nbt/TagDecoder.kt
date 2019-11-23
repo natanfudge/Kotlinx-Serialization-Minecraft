@@ -107,14 +107,14 @@ private open class TagDecoder(json: NbtFormat, override val map: CompoundTag) : 
     override fun decodeElementIndex(desc: SerialDescriptor): Int {
         while (position < desc.elementsCount) {
             val name = desc.getTag(position++)
-            if (map.containsKey(name)) {
+            if (map.contains(name)) {
                 return position - 1
             }
         }
         return CompositeDecoder.READ_DONE
     }
 
-    override fun currentElement(tag: String): Tag = map.getTag(tag)!!
+    override fun currentElement(tag: String): Tag = map.get(tag)!!
 
 }
 
@@ -137,7 +137,7 @@ private class TagMapDecoder(json: NbtFormat, override val map: CompoundTag) : Ta
     }
 
     override fun currentElement(tag: String): Tag {
-        return if (position % 2 == 0) StringTag(tag) else map.getTag(tag)!!
+        return if (position % 2 == 0) StringTag.of(tag) else map.get(tag)!!
     }
 
     override fun endStructure(desc: SerialDescriptor) {

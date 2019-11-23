@@ -19,9 +19,10 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:$mod_version")
+    modImplementation("com.lettuce.fudge:fabric-drawer:$total_version")
 }
 ```
+This is for Minecraft 1.15. For Minecraft 1.14.4 ,specify just `3.1.0` as the version instead. 
 Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
@@ -184,7 +185,7 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 ```json
 {
   "depends": {
-    "fabricdrawer": ">=$mod_version"
+    "fabricdrawer": ">=$total_version"
   }
 }
 ```

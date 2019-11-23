@@ -25,7 +25,7 @@ fun <T> SerializationStrategy<T>.put(
     context: SerialModule = EmptyModule
 ) {
     val usedKey = key ?: this.descriptor.name
-    require(!inTag.containsKey(usedKey)) {
+    require(!inTag.contains(usedKey)) {
         """A '${this.descriptor.name}' appears twice in the CompoundTag.
             |If you are serializing two objects of the same type, you MUST specify a key, see kdoc.
         |Also make sure you didn't use the same key twice.
@@ -48,7 +48,7 @@ fun <T> DeserializationStrategy<T>.getFrom(
     context: SerialModule = EmptyModule
 ): T {
     val deserializedTag =
-        tag.getTag(key ?: this.descriptor.name) ?: if (descriptor.isNullable) return null as T else CompoundTag()
+        tag.get(key ?: this.descriptor.name) ?: if (descriptor.isNullable) return null as T else CompoundTag()
     return NbtFormat(context).deserialize(this, deserializedTag as CompoundTag)
 }
 

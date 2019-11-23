@@ -134,7 +134,7 @@ class TDDTests {
 
     @Test
     fun `TagEncoder can serialize polymorphic tags`() {
-        val obj = PolymorphicTag(IntTag(1))
+        val obj = PolymorphicTag(IntTag.of(1))
         val existing = CompoundTag()
         PolymorphicTag.serializer().put(obj, existing)
         val back = PolymorphicTag.serializer().getFrom(existing)
