@@ -259,8 +259,8 @@ data class Zoo(
     val listIntData: List<IntData>,
     val listIntDataN: List<IntData?>,
     val tree: Tree,
-//        val mapStringInt: Map<String,Int>,
-//        val mapIntStringN: Map<Int,String?>,
+        val mapStringInt: Map<String,Int>,
+        val mapIntStringN: Map<Int,String?>,
     val arrays: ZooWithArrays
 )
 
@@ -290,8 +290,8 @@ val zoo = Zoo(
     listOf(IntData(1), IntData(2), IntData(3)),
     listOf(IntData(1), null, IntData(3)),
     Tree("root", Tree("left"), Tree("right", Tree("right.left"), Tree("right.right"))),
-//        mapOf("one" to 1, "two" to 2, "three" to 3),
-//        mapOf(0 to null, 1 to "first", 2 to "second"),
+        mapOf("one" to 1, "two" to 2, "three" to 3),
+        mapOf(0 to null, 1 to "first", 2 to "second"),
     ZooWithArrays(
         arrayOf(1, 2, 3),
         arrayOf(100, 200, 300),

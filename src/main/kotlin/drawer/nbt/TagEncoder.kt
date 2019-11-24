@@ -4,11 +4,11 @@ import drawer.ForCompoundTag
 import drawer.ForEndTag
 import drawer.ForListTag
 import drawer.NamedValueTagEncoder
+import drawer.mixin.AccessibleListTag
 import drawer.util.DrawerLogger
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.EnumDescriptor
+import kotlinx.serialization.internal.ListLikeDescriptor
 import kotlinx.serialization.modules.SerialModule
-import drawer.mixin.AccessibleListTag
 import net.minecraft.nbt.*
 import java.lang.reflect.Field
 
@@ -62,15 +62,24 @@ private sealed class AbstractTagEncoder(
         putElement(tag, StringTag.of(value.toString()))
     }
 
+    override fun elementName(desc: SerialDescriptor, index: Int): String {
+        return if (desc.kind is PolymorphicKind) index.toString() else super.elementName(desc, index)
+    }
+
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         val consumer = if (currentTagOrNull == null) nodeConsumer
         else { node -> putElement(currentTag, node) }
 
         val encoder = when (desc.kind) {
-            StructureKind.LIST, is PolymorphicKind -> TagListEncoder(format, consumer)
+            StructureKind.LIST -> {
+                if (desc is ListLikeDescriptor && desc.elementDesc.isNullable) NullableListEncoder(format, consumer)
+                else TagListEncoder(format, consumer)
+            }
+            is PolymorphicKind -> TagMapEncoder(format, consumer)
             StructureKind.MAP -> format.selectMapMode(desc,
                 ifMap = { TagMapEncoder(format, consumer) },
-                ifList = { TagListEncoder(format, consumer) })
+                ifList = { TagListEncoder(format, consumer) }
+            )
             else -> TagEncoder(format, consumer)
         }
 
@@ -106,9 +115,10 @@ private class TagMapEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) : Ta
     private lateinit var key: String
 
     override fun putElement(key: String, element: Tag) {
-        val idx = key.toIntOrNull()
-        if (idx != null && idx % 2 == 0) { // writing key
-            this.key = when (element) {
+        val idx = key.toInt()
+        // writing key
+        when {
+            idx % 2 == 0 -> this.key = when (element) {
                 is CompoundTag, is AbstractListTag<*>, is EndTag -> throw compoundTagInvalidKeyKind(
                     when (element) {
                         is CompoundTag -> ForCompoundTag.descriptor
@@ -119,8 +129,7 @@ private class TagMapEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) : Ta
                 )
                 else -> element.asString()
             }
-        } else {
-            content[this.key] = element
+            else -> content[this.key] = element
         }
     }
 
@@ -128,6 +137,17 @@ private class TagMapEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) : Ta
 
     override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
 }
+
+private class NullableListEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) : TagEncoder(format, nodeConsumer) {
+    override fun putElement(key: String, element: Tag) {
+        content[key] = element
+    }
+
+    override fun getCurrent(): Tag = content
+
+    override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
+}
+
 
 private operator fun CompoundTag.set(key: String, value: Tag) = put(key, value)
 

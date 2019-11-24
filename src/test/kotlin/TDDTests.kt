@@ -12,7 +12,7 @@ import net.minecraft.nbt.IntTag
 import net.minecraft.nbt.Tag
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
-import utils.CityData
+import utils.*
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -64,8 +64,12 @@ data class TreeHolder(
 @Serializable
 data class Vec3dContainer(
     val vec3d: Vec3d
-//val triple: Triple<Double,Double,Double>
 )
+
+@Serializable
+data class IntStringMap(val intString: Map<Int,String>)
+
+val intStringMap = IntStringMap(mapOf(0 to "foo"))
 
 class TDDTests {
     @Test
@@ -101,6 +105,30 @@ class TDDTests {
         val obj = SimpleNullable(
             listOf(4, 5, null),
             listOf(6, 7, 8, 9)
+        )
+        val existing = CompoundTag()
+        SimpleNullable.serializer().put(obj, existing)
+        val back = SimpleNullable.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `TagEncoder can serialize an oddly sized nullable list with null`() {
+        val obj = SimpleNullable(
+            listOf(4, 5,6, null),
+            listOf(6, 7, 8)
+        )
+        val existing = CompoundTag()
+        SimpleNullable.serializer().put(obj, existing)
+        val back = SimpleNullable.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `TagEncoder can serialize an oddly sized nullable list`() {
+        val obj = SimpleNullable(
+            listOf(4, 5,6),
+            listOf(6, 7, 8)
         )
         val existing = CompoundTag()
         SimpleNullable.serializer().put(obj, existing)
@@ -205,5 +233,14 @@ class TDDTests {
         val str = json.stringify(Vec3dContainer.serializer(),obj)
         val back = json.parse(Vec3dContainer.serializer(),str)
         assertEquals(obj,back)
+    }
+
+    @Test
+    fun `Can serialize a string to int map`() {
+        val obj =  intStringMap
+        val existing = CompoundTag()
+        IntStringMap.serializer().put(obj, existing)
+        val back = IntStringMap.serializer().getFrom(existing)
+        assertEquals(obj, back)
     }
 }

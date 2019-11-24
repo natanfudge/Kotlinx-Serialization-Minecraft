@@ -76,7 +76,7 @@ internal inline fun <T, R1 : T, R2 : T> NbtFormat.selectMapMode(
 ): T {
     val keyDescriptor = mapDescriptor.getElementDescriptor(0)
     val keyKind = keyDescriptor.kind
-    return if (keyKind is PrimitiveKind || keyKind == UnionKind.ENUM_KIND) {
+    return if (keyKind is PrimitiveKind  || keyKind == UnionKind.ENUM_KIND) {
         ifMap()
     } else {
         ifList()

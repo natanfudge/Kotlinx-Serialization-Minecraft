@@ -53,3 +53,5 @@ Updated kotlinx.serialization to 0.14.0. This release allows you to serialize `o
 Now works in 1.15 (not compatible with 1.14.4).
 ### 3.1.1
 Fixed an unnecessary cast causing an exception. 
+## 3.2.0 
+Fixed NBT serialization being completely broken with nullable lists and polymorphic classes.

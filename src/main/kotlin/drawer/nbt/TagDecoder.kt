@@ -9,7 +9,7 @@ package drawer.nbt
 
 import drawer.NamedValueTagDecoder
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.EnumDescriptor
+import kotlinx.serialization.internal.ListLikeDescriptor
 import kotlinx.serialization.modules.SerialModule
 import net.minecraft.nbt.*
 
@@ -27,6 +27,8 @@ internal inline fun <reified T : Tag> cast(obj: Tag): T {
     return obj
 }
 
+private inline fun <reified T> Any.cast() = this as T
+
 
 private sealed class AbstractTagDecoder(val format: NbtFormat, open val map: Tag) : NamedValueTagDecoder() {
 
@@ -42,7 +44,14 @@ private sealed class AbstractTagDecoder(val format: NbtFormat, open val map: Tag
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         val currentObject = currentObject()
         return when (desc.kind) {
-            StructureKind.LIST, is PolymorphicKind -> TagListDecoder(format, cast(currentObject))
+            StructureKind.LIST -> {
+                if (desc is ListLikeDescriptor && desc.elementDesc.isNullable) NullableListDecoder(
+                    format,
+                    cast(currentObject)
+                )
+                else TagListDecoder(format, cast(currentObject))
+            }
+            is PolymorphicKind -> TagMapDecoder(format, cast(currentObject))
             StructureKind.MAP -> format.selectMapMode(
                 desc,
                 { TagMapDecoder(format, cast(currentObject)) },
@@ -62,32 +71,41 @@ private sealed class AbstractTagDecoder(val format: NbtFormat, open val map: Tag
         return if (str.length == 1) str[0] else throw SerializationException("$o can't be represented as Char")
     }
 
-//    override fun decodeTaggedEnum(tag: String, enumDescription: EnumDescriptor): Int =
-//        enumDescription.getElementIndexOrThrow(getValue(tag).asString())
     override fun decodeTaggedEnum(tag: String, enumDescription: SerialDescriptor): Int =
         enumDescription.getElementIndexOrThrow(getValue(tag).asString())
 
     override fun decodeTaggedNull(tag: String): Nothing? = null
 
-    override fun decodeTaggedNotNullMark(tag: String): Boolean = (currentElement(tag) as? ByteTag)?.byte != NbtFormat.Null
+    override fun decodeTaggedNotNullMark(tag: String): Boolean =
+        (currentElement(tag) as? ByteTag)?.byte != NbtFormat.Null
 
     override fun decodeTaggedUnit(tag: String) {
         return
     }
 
-    override fun decodeTaggedBoolean(tag: String): Boolean = getValue(tag).cast<ByteTag>().byte == 1.toByte()
-    override fun decodeTaggedByte(tag: String): Byte = getValue(tag).cast<ByteTag>().byte
-    override fun decodeTaggedShort(tag: String) = getValue(tag).cast<ShortTag>().short
-    override fun decodeTaggedInt(tag: String) = getValue(tag).cast<IntTag>().int
-    override fun decodeTaggedLong(tag: String) = getValue(tag).cast<LongTag>().long
-    override fun decodeTaggedFloat(tag: String) = getValue(tag).cast<FloatTag>().float
-    override fun decodeTaggedDouble(tag: String) = getValue(tag).cast<DoubleTag>().double
+    override fun decodeTaggedBoolean(tag: String): Boolean = decodeTaggedByte(tag) == 1.toByte()
+    override fun decodeTaggedByte(tag: String): Byte = getNumberValue(tag, { byte }, { toByte() })
+    override fun decodeTaggedShort(tag: String) = getNumberValue(tag, { short }, { toShort() })
+    override fun decodeTaggedInt(tag: String): Int = getNumberValue(tag, { int }, { toInt() })
+
+    override fun decodeTaggedLong(tag: String) = getNumberValue(tag, { long }, { toLong() })
+    override fun decodeTaggedFloat(tag: String) = getNumberValue(tag, { float }, { toFloat() })
+    override fun decodeTaggedDouble(tag: String) = getNumberValue(tag, { double }, { toDouble() })
     override fun decodeTaggedString(tag: String): String = getValue(tag).cast<StringTag>().asString()
 
     override fun decodeTaggedTag(key: String): Tag = getValue(key)
 
-    private inline fun<reified T> Any.cast() = this as T
+    private inline fun <T> getNumberValue(
+        tag: String,
+        getter: AbstractNumberTag.() -> T,
+        stringGetter: String.() -> T
+    ): T {
+        val value = getValue(tag)
+        if (value is AbstractNumberTag) return value.getter()
+        else return value.cast<StringTag>().asString().stringGetter()
+    }
 }
+
 
 private class TagPrimitiveDecoder(json: NbtFormat, override val map: Tag) : AbstractTagDecoder(json, map) {
 
@@ -144,6 +162,31 @@ private class TagMapDecoder(json: NbtFormat, override val map: CompoundTag) : Ta
         // do nothing, maps do not have strict keys, so strict mode check is omitted
     }
 }
+
+private class NullableListDecoder(json: NbtFormat, override val map: CompoundTag) : TagDecoder(json, map) {
+    private val size: Int = map.size
+    private var position = -1
+
+    override fun elementName(desc: SerialDescriptor, index: Int): String = index.toString()
+
+
+    override fun decodeElementIndex(desc: SerialDescriptor): Int {
+        while (position < size - 1) {
+            position++
+            return position
+        }
+        return CompositeDecoder.READ_DONE
+    }
+
+    override fun currentElement(tag: String): Tag {
+        return map[tag]!!
+    }
+
+    override fun endStructure(desc: SerialDescriptor) {
+        // do nothing, maps do not have strict keys, so strict mode check is omitted
+    }
+}
+
 
 private class TagListDecoder(json: NbtFormat, override val map: AbstractListTag<*>) : AbstractTagDecoder(json, map) {
     private val size = map.size
