@@ -19,7 +19,7 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:3.1.0-1.15-pre1")
+    modImplementation("com.lettuce.fudge:fabric-drawer:3.1.1-1.15-pre1")
 }
 ```
 This is for Minecraft 1.15. For Minecraft 1.14.4 ,specify just `3.1.0` as the version instead. 
@@ -185,7 +185,7 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 ```json
 {
   "depends": {
-    "fabricdrawer": ">=3.1.0-1.15-pre1"
+    "fabricdrawer": ">=3.1.1-1.15-pre1"
   }
 }
 ```

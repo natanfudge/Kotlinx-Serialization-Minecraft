@@ -51,3 +51,5 @@ Updated kotlinx.serialization to 0.14.0. This release allows you to serialize `o
 
 # 3.1.0-1.15-pre1
 Now works in 1.15 (not compatible with 1.14.4).
+### 3.1.1
+Fixed an unnecessary cast causing an exception. 

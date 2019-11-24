@@ -49,7 +49,7 @@ fun <T> DeserializationStrategy<T>.getFrom(
 ): T {
     val deserializedTag =
         tag.get(key ?: this.descriptor.name) ?: if (descriptor.isNullable) return null as T else CompoundTag()
-    return NbtFormat(context).deserialize(this, deserializedTag as CompoundTag)
+    return NbtFormat(context).deserialize(this, deserializedTag)
 }
 
 
