@@ -20,24 +20,6 @@ minecraft {
 }
 
 
-def pomConfig = {
-    licenses {
-        license {
-            name project.license
-        }
-    }
-    developers {
-        developer {
-            id "fudge"
-            name "natan"
-            email "natandestroyer100@gmail.com"
-        }
-    }
-
-    scm {
-        url project.github_url
-    }
-}
 
 
 repositories {
@@ -93,9 +75,29 @@ processResources {
 // if it is present.
 // If you remove this task, sources will not be generated.
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
+    archiveClassifier = "sources"
     from sourceSets.main.allSource
 }
+
+def pomConfig = {
+    licenses {
+        license {
+            name project.license
+        }
+    }
+    developers {
+        developer {
+            id "fudge"
+            name "natan"
+            email "natandestroyer100@gmail.com"
+        }
+    }
+
+    scm {
+        url project.github_url
+    }
+}
+
 
 curseforge {
     apiKey = project.hasProperty("curseforge_api_key") ? project.curseforge_api_key : ""
@@ -103,7 +105,7 @@ curseforge {
         id = '334410'
         releaseType = 'release'
         addGameVersion "Fabric"
-        addGameVersion "1.14.4"
+        addGameVersion curseforge_mc_version
         changelogType = "markdown"
         changelog = file("changelog.md")
 

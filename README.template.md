@@ -79,7 +79,7 @@ for (player in PlayerStream.all(world.server)) {
 ```
 
 ```kotlin
-ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packet_id")){ context, buf ->
+ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packet_id")) { context, buf ->
     // Deserialize
     val data = BlockInfo.serializer().readFrom(buf)
 }
@@ -155,7 +155,7 @@ Serializers for the following classes are available:
 - All NBT classes
 - ItemStack (requires being in a Minecraft context)
 - Ingredient (requires being in a Minecraft context)
-- DefaultedList<> (note: bug requires special syntax, see above)
+- DefaultedList<>
 
 
 If I've missed anything you need please [open an issue](https://github.com/natanfudge/Fabric-Drawer/issues/new).
@@ -195,12 +195,12 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
 ```kotlin
 @Serializable
-data class MyData(val x :Int, val y : String){
+data class MyData(val x :Int, val y : String) {
     fun putIn(tag : CompoundTag) = MyData.serializer().put(this,tag)
 }
 //Usage:
-fun toTag(tag :CompoundTag){
-    val data = MyData(1,"hello")
+fun toTag(tag :CompoundTag) {
+    val data = MyData(1, "hello")
     tag.putIn(tag) // Instead of MyData.serializer().put(data,tag)
 }
 ```
