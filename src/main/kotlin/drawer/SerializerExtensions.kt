@@ -6,7 +6,7 @@ import kotlinx.serialization.internal.makeNullable
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.PacketByteBuf
+import net.minecraft.network.PacketByteBuf
 
 
 /**

@@ -26,7 +26,6 @@ repositories {
     maven { url = "http://maven.fabricmc.net/" }
     maven { url = "https://kotlin.bintray.com/kotlinx" }
     maven {url = "https://repo.spongepowered.org/maven"}
-    maven { url= 'http://repo1.maven.org/maven2' }
     jcenter()
 //    mavenCentral()
 }
