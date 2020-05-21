@@ -35,8 +35,8 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
-import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
+import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import java.util.*
@@ -139,9 +139,8 @@ data class City(val name: String) {
 }
 
 
-
-
 interface PolymorphicMessage
+
 @Serializable
 data class IntMessage(val int: Int) : PolymorphicMessage
 
@@ -259,8 +258,8 @@ data class Zoo(
     val listIntData: List<IntData>,
     val listIntDataN: List<IntData?>,
     val tree: Tree,
-        val mapStringInt: Map<String,Int>,
-        val mapIntStringN: Map<Int,String?>,
+    val mapStringInt: Map<String, Int>,
+    val mapIntStringN: Map<Int, String?>,
     val arrays: ZooWithArrays
 )
 
@@ -290,8 +289,8 @@ val zoo = Zoo(
     listOf(IntData(1), IntData(2), IntData(3)),
     listOf(IntData(1), null, IntData(3)),
     Tree("root", Tree("left"), Tree("right", Tree("right.left"), Tree("right.right"))),
-        mapOf("one" to 1, "two" to 2, "three" to 3),
-        mapOf(0 to null, 1 to "first", 2 to "second"),
+    mapOf("one" to 1, "two" to 2, "three" to 3),
+    mapOf(0 to null, 1 to "first", 2 to "second"),
     ZooWithArrays(
         arrayOf(1, 2, 3),
         arrayOf(100, 200, 300),
@@ -307,7 +306,7 @@ data class OtherFormats(
     val blockPos: BlockPos,
     val blockPosList: List<BlockPos>,
     val id: Identifier,
-    val vec3d : Vec3d,
+    val vec3d: Vec3d,
     val soundCategory: SoundCategory,
     val attenuationType: SoundInstance.AttenuationType
 
@@ -320,8 +319,8 @@ val otherFormats = OtherFormats(
     BlockPos(78, 12, 2),
     listOf(BlockPos(4, 5, 6), BlockPos(7, 8, 9), BlockPos(10, 11, 12)),
     Identifier("spatialcrafting", "x2crafter_piece"),
-    Vec3d(0.2,-123.0,2323.3),
-    SoundCategory.AMBIENT,SoundInstance.AttenuationType.LINEAR
+    Vec3d(0.2, -123.0, 2323.3),
+    SoundCategory.AMBIENT, SoundInstance.AttenuationType.LINEAR
 )
 
 @Serializable
@@ -450,7 +449,7 @@ val compoundTags = CompoundTags(
     CompoundTag().apply {
         put("", tags.intArray)
         put("asdfff", tags.double)
-        putUuid("amar", UUID(1, 2))
+        ForUuid.put(UUID(1, 2), this, key = "amar")
     },
     CompoundTag().apply {
         put("heavy shit", listTags.listTag5)
@@ -463,7 +462,7 @@ data class LessCompoundTags(val compoundTag1: CompoundTag/*, val compoundTag2 : 
 
 val lessCompoundTags = LessCompoundTags(
     CompoundTag().apply {
-        putUuid("amar", UUID(1, 2))
+        ForUuid.put(UUID(1, 2), this, key = "amar")
     }
 
 )
@@ -471,9 +470,9 @@ val lessCompoundTags = LessCompoundTags(
 @Serializable
 data class ItemStacks(val itemStack1: ItemStack, val itemStack2: ItemStack, val itemStack3: ItemStack) {
     override fun equals(other: Any?): Boolean = other is ItemStacks
-            && ItemStack.areEqualIgnoreDamage(this.itemStack1, other.itemStack1)
-            && ItemStack.areEqualIgnoreDamage(this.itemStack2, other.itemStack2)
-            && ItemStack.areEqualIgnoreDamage(this.itemStack3, other.itemStack3)
+            && ItemStack.areEqual(this.itemStack1, other.itemStack1)
+            && ItemStack.areEqual(this.itemStack2, other.itemStack2)
+            && ItemStack.areEqual(this.itemStack3, other.itemStack3)
 
     override fun hashCode(): Int {
         var result = itemStack1.hashCode()
@@ -515,7 +514,7 @@ data class Ingredients(val ingredient1: Ingredient, val ingredient2: Ingredient,
 
 infix fun Ingredient.actuallyEquals(other: Ingredient): Boolean {
     return other.matchingStacksClient.zip(other.matchingStacksClient)
-        .all { (stack1, stack2) -> ItemStack.areEqualIgnoreDamage(stack1, stack2) }
+        .all { (stack1, stack2) -> ItemStack.areEqual(stack1, stack2) }
 }
 
 val ingredients = {
@@ -532,11 +531,13 @@ data class DefaultedLists(
     @Serializable(with = ForDefaultedList::class) val itemStackList: DefaultedList<ItemStack>,
     @Serializable(with = ForDefaultedList::class) val ingredientList: DefaultedList<Ingredient>,
     @Serializable(with = ForDefaultedList::class) val intList: DefaultedList<Int>
-){
+) {
     override fun equals(other: Any?): Boolean {
         return other is DefaultedLists &&
-                this.itemStackList.zip(other.itemStackList).all { (thisStack,otherStack) -> ItemStack.areEqualIgnoreDamage(thisStack,otherStack) }
-                && this.ingredientList.zip(other.ingredientList).all { (thisIngredient,otherIngredient) -> thisIngredient actuallyEquals otherIngredient }
+                this.itemStackList.zip(other.itemStackList)
+                    .all { (thisStack, otherStack) -> ItemStack.areEqual(thisStack, otherStack) }
+                && this.ingredientList.zip(other.ingredientList)
+            .all { (thisIngredient, otherIngredient) -> thisIngredient actuallyEquals otherIngredient }
                 && this.intList == other.intList
     }
 
@@ -558,6 +559,6 @@ val defaultedLists = {
             ItemStack(Items.ITEM_FRAME)
         ),
         DefaultedList.ofSize(10, Ingredient.EMPTY),
-        DefaultedList.copyOf(0, 1,2,3,4,5,6,7,8)
+        DefaultedList.copyOf(0, 1, 2, 3, 4, 5, 6, 7, 8)
     )
 }
