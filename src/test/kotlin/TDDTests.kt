@@ -47,6 +47,7 @@ data class ImplData2(val str: String) : PolymorphicData
 data class PolymorphicDataHolder(val data: PolymorphicData)
 
 
+
 @Serializable
 data class PolymorphicTag(val tag: Tag)
 
