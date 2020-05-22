@@ -40,12 +40,12 @@ Annotate any class with `@Serializable` to make it serializable. **Make sure tha
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BlockInfo(var timesClicked : Int = 0, val placementTime : Long = 0, val firstToClick : String? = null)
+data class BlockInfo(var timesClicked: Int = 0, val placementTime: Long = 0, val firstToClick: String? = null)
 ```
 
 Then you can serialize it back and forth.
 
-<details><summary>In a block entity</summary>
+<details><summary>    In a block entity</summary>
 
 ```kotlin
 fun fillData() {
@@ -70,7 +70,7 @@ override fun fromTag(tag: CompoundTag) {
 
 </details>
 
-<details><summary>In a packet</summary>
+<details><summary>    In a packet</summary>
 
 ```kotlin
 val data = BlockInfo(timesClicked = 0, placementTime = 420, firstToClick = null)
@@ -144,15 +144,15 @@ You can serialize any primitive, and any list of primitives, and any class of yo
 ```kotlin
 // OK
 @Serializable
-data class MyData(val str : String, val list : List<Double>)
+data class MyData(val str: String, val list: List<Double>)
 @Serializable
-data class Nested(val myData : MyData, val c : Char)
+data class Nested(val myData: MyData, val c: Char)
 ```
 However, if you try to put in a `UUID` or a `BlockPos`, for example:
 ```kotlin
 // Error!
 @Serializable
-data class MyPlayer(val id : UUID)
+data class MyPlayer(val id: UUID)
 ```
 
 To fix this, put at the very top of the file:
@@ -218,11 +218,11 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
 ```kotlin
 @Serializable
-data class MyData(val x :Int, val y : String) {
-    fun putIn(tag : CompoundTag) = MyData.serializer().put(this,tag)
+data class MyData(val x: Int, val y: String) {
+    fun putIn(tag: CompoundTag) = MyData.serializer().put(this, tag)
 }
 //Usage:
-fun toTag(tag :CompoundTag) {
+fun toTag(tag: CompoundTag) {
     val data = MyData(1, "hello")
     tag.putIn(tag) // Instead of MyData.serializer().put(data,tag)
 }
