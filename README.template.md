@@ -45,7 +45,7 @@ data class BlockInfo(var timesClicked: Int = 0, val placementTime: Long = 0, val
 
 Then you can serialize it back and forth.
 
-<details><summary>    In a block entity</summary>
+   <details><summary>In a block entity</summary>
 
 ```kotlin
 fun fillData() {
@@ -70,7 +70,7 @@ override fun fromTag(tag: CompoundTag) {
 
 </details>
 
-<details><summary>    In a packet</summary>
+   <details><summary>In a packet</summary>
 
 ```kotlin
 val data = BlockInfo(timesClicked = 0, placementTime = 420, firstToClick = null)
