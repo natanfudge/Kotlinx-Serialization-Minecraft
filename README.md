@@ -6,7 +6,8 @@
 
 Drawer is a Fabric library mod for Kotlin mods that allows you to easily convert objects back and forth from NBT and PacketBytebuf using kotlinx.serialization.
 
-<details><summary>Gradle</summary>
+<details><summary><b>Gradle</b></summary>
+<p>
 
 Add `jcenter()` to repositories if you haven't yet:
 ```groovy
@@ -29,6 +30,8 @@ plugins {
     id ("org.jetbrains.kotlin.plugin.serialization") version 1.3.60 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
+
+</p>
 </details>
 
 For other versions of Minecraft, look at different branches. 
