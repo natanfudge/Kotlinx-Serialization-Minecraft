@@ -45,7 +45,7 @@ data class BlockInfo(var timesClicked: Int = 0, val placementTime: Long = 0, val
 
 Then you can serialize it back and forth.
 
-   <details><summary>In a block entity</summary>
+### In a block entity
 
 ```kotlin
 fun fillData() {
@@ -68,9 +68,8 @@ override fun fromTag(tag: CompoundTag) {
 }
 ```
 
-</details>
 
-   <details><summary>In a packet</summary>
+### In a packet
 
 ```kotlin
 val data = BlockInfo(timesClicked = 0, placementTime = 420, firstToClick = null)
@@ -93,7 +92,6 @@ ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packet_id")) { c
 
 Remember that you still need to validate your client to server packets!
 
-</details>
 
 An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-example).
 
