@@ -36,7 +36,8 @@ plugins {
 
 For other versions of Minecraft, look at different branches. 
 
-<details><summary>Basic Usage</summary>
+<details><summary><b>Basic Usage</b></summary>
+<p>
 
 Annotate any class with `@Serializable` to make it serializable. **Make sure that every property has a usable default value when storing data for a block entity.** More information on this farther down.
 ```kotlin
@@ -98,9 +99,11 @@ Remember that you still need to validate your client to server packets!
 
 An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-example).
 
+</p>
 </details>
 
-<details><summary>Putting two objects of the same type in one CompoundTag</summary>
+<details><summary><b>Putting two objects of the same type in one CompoundTag</b></summary>
+<p>
 
  If you are putting two objects of the same type in one CompoundTag you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
  For example:
@@ -137,9 +140,12 @@ fun toTag(tag: CompoundTag) {
 }
 ```
 
+</p>
 </details>
 
-<details><summary>Serializing Java and Minecraft objects</summary>
+<details><summary><b>Serializing Java and Minecraft objects</b></summary>
+
+<p>
 
 You can serialize any primitive, and any list of primitives, and any class of your own that is annotated with `@Serializable`, without any extra modification:
 ```kotlin
@@ -179,9 +185,11 @@ You can also add your own serializers and more using the kotlinx.serialization A
 
 Note: Primitive serializers don't work right now for `CompoundTag`, so just use the existing `putInt` etc methods. 
 
+</p>
 </details>
 
-<details><summary>Advanced</summary>
+<details><summary><b>Advanced</b></summary>
+<p>
 
 ### Why does every property need to have a default value when storing data for a block entity?
 There are 2 main reasons:
@@ -200,9 +208,11 @@ Make sure that the default values are **usable**, meaning trying to use them in 
 - In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
 If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
 
+</p>
 </details>
 
-<details><summary>Depending on the mod</summary>
+<details><summary><b>Depending on the mod</b></summary>
+<p>
 
 ```json
 {
@@ -212,9 +222,11 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 }
 ```
 
+</p>
 </details>
 
-<details><summary>Tips</summary>
+<details><summary><b>Tips</b></summary>
+<p>
 
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
 ```kotlin
@@ -233,4 +245,5 @@ Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/is
 
 - Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
 
+</p>
 </details>
