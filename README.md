@@ -4,9 +4,9 @@
 [![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg)](https://bintray.com/beta/#/natanfudge/libs/fabric-drawer?tab=overview)
 [![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)](https://github.com/natanfudge/Fabric-Drawer/commits/master)
 
-Drawer is a Fabric library mod for Kotlin mods that allows you to easily save data to and load from NBT and PacketByteBuf using kotlinx.serialization.
+Drawer is a Fabric library mod for Kotlin mods that allows you to easily convert objects back and forth from NBT and PacketBytebuf using kotlinx.serialization.
 
-## Gradle
+<details><summary>Gradle</summary>
 
 Add `jcenter()` to repositories if you haven't yet:
 ```groovy
@@ -19,10 +19,9 @@ And add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:3.2.1-20w19a")
+    modImplementation("com.lettuce.fudge:fabric-drawer:3.2.1-20w21a")
 }
 ```
-This is for Minecraft 1.15. For Minecraft 1.14.4 ,specify just `3.1.0` as the version instead. 
 Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
@@ -30,8 +29,11 @@ plugins {
     id ("org.jetbrains.kotlin.plugin.serialization") version 1.3.60 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
+</details>
 
-## Usage
+For other versions of Minecraft, look at different branches. 
+
+<details><summary>Basic Usage</summary>
 
 Annotate any class with `@Serializable` to make it serializable. **Make sure that every property has a usable default value when storing data for a block entity.** More information on this farther down.
 ```kotlin
@@ -42,13 +44,15 @@ data class BlockInfo(var timesClicked : Int = 0, val placementTime : Long = 0, v
 ```
 
 Then you can serialize it back and forth.
-#### In a block entity
+
+<details><summary>In a block entity</summary>
+
 ```kotlin
-fun fillData(){
+fun fillData() {
     myInfo = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 }
 // Or make myInfo lateinit if initializing it at first placement is guaranteed
-var myInfo : BlockInfo = BlockInfo()
+var myInfo: BlockInfo = BlockInfo()
     private set
 
 override fun toTag(tag: CompoundTag): CompoundTag {
@@ -64,7 +68,9 @@ override fun fromTag(tag: CompoundTag) {
 }
 ```
 
-#### In a packet
+</details>
+
+<details><summary>In a packet</summary>
 
 ```kotlin
 val data = BlockInfo(timesClicked = 0, placementTime = 420, firstToClick = null)
@@ -87,21 +93,26 @@ ClientSidePacketRegistry.INSTANCE.register(Identifier("modId", "packet_id")) { c
 
 Remember that you still need to validate your client to server packets!
 
+</details>
+
 An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-example).
 
-#### Putting two objects of the same type in one CompoundTag
+</details>
+
+<details><summary>Putting two objects of the same type in one CompoundTag</summary>
+
  If you are putting two objects of the same type in one CompoundTag you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
  For example:
 ```kotlin
 val myInfo1 = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, placementTime = 9999, firstToClick = "you")
 
-override fun toTag(tag: CompoundTag) : CompoundTag {
+override fun toTag(tag: CompoundTag): CompoundTag {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag : CompoundTag) {
+override fun fromTag(tag: CompoundTag) {
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -111,7 +122,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag) {
+fun toTag(tag: CompoundTag) {
     MyData.serializer().put(MyData(1, 2))
 }
 ```
@@ -119,13 +130,16 @@ fun toTag(tag : CompoundTag) {
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag) {
+fun toTag(tag: CompoundTag) {
     MyData.serializer().put(MyData(1, 2), key = "first")
     MyData.serializer().put(MyData(3, 4), key = "second")
 }
 ```
 
-### Serializing Java and Minecraft objects
+</details>
+
+<details><summary>Serializing Java and Minecraft objects</summary>
+
 You can serialize any primitive, and any list of primitives, and any class of your own that is annotated with `@Serializable`, without any extra modification:
 ```kotlin
 // OK
@@ -164,6 +178,10 @@ You can also add your own serializers and more using the kotlinx.serialization A
 
 Note: Primitive serializers don't work right now for `CompoundTag`, so just use the existing `putInt` etc methods. 
 
+</details>
+
+<details><summary>Advanced</summary>
+
 ### Why does every property need to have a default value when storing data for a block entity?
 There are 2 main reasons:
 1. Nbt data is volatile. It can change at any time, via modifying the save file, or by using the `/data` command.
@@ -181,17 +199,22 @@ Make sure that the default values are **usable**, meaning trying to use them in 
 - In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
 If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
 
-### Depending on the mod
+</details>
+
+<details><summary>Depending on the mod</summary>
+
 ```json
 {
   "depends": {
-    "fabricdrawer": ">=3.2.1-20w19a"
+    "fabricdrawer": ">=3.2.1-20w21a"
   }
 }
 ```
 
+</details>
 
-### Tips
+<details><summary>Tips</summary>
+
 - To avoid boilerplate it's recommended to add a `putIn()` / `writeTo()` function to your serializable classes, for example:
 ```kotlin
 @Serializable
@@ -208,3 +231,5 @@ fun toTag(tag :CompoundTag) {
 Please thumbs-up [this issue](https://github.com/Kotlin/kotlinx.serialization/issues/329) so we can have this syntax built-in to the library for all serializable classes! Having a common interface for serializable classes would also enable avoiding boilerplate in other places.
 
 - Serializable classes are also serializable to [Json](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md), and any other format that kotlinx.serialization and its addons support. 
+
+</details>
