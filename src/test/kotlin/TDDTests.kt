@@ -1,18 +1,18 @@
-@file:UseSerializers(ForUuid::class, ForBlockPos::class, ForIdentifier::class,ForVec3d::class)
+@file:UseSerializers(ForUuid::class, ForBlockPos::class, ForIdentifier::class, ForVec3d::class)
 
 import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import kotlinx.serialization.internal.nullable
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
 import net.minecraft.nbt.Tag
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
-import utils.*
+import utils.CityData
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -47,7 +47,6 @@ data class ImplData2(val str: String) : PolymorphicData
 data class PolymorphicDataHolder(val data: PolymorphicData)
 
 
-
 @Serializable
 data class PolymorphicTag(val tag: Tag)
 
@@ -68,7 +67,7 @@ data class Vec3dContainer(
 )
 
 @Serializable
-data class IntStringMap(val intString: Map<Int,String>)
+data class IntStringMap(val intString: Map<Int, String>)
 
 val intStringMap = IntStringMap(mapOf(0 to "foo"))
 
@@ -116,7 +115,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize an oddly sized nullable list with null`() {
         val obj = SimpleNullable(
-            listOf(4, 5,6, null),
+            listOf(4, 5, 6, null),
             listOf(6, 7, 8)
         )
         val existing = CompoundTag()
@@ -128,7 +127,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize an oddly sized nullable list`() {
         val obj = SimpleNullable(
-            listOf(4, 5,6),
+            listOf(4, 5, 6),
             listOf(6, 7, 8)
         )
         val existing = CompoundTag()
@@ -150,8 +149,8 @@ class TDDTests {
     fun `TagEncoder can serialize polymorphic Data`() {
         val context = SerializersModule {
             polymorphic(PolymorphicData::class) {
-                ImplData1::class with ImplData1.serializer()
-                ImplData2::class with ImplData2.serializer()
+                subclass(ImplData1::class, ImplData1.serializer())
+                subclass(ImplData2::class, ImplData2.serializer())
             }
         }
         val obj = PolymorphicDataHolder(ImplData1(1))
@@ -196,16 +195,16 @@ class TDDTests {
         val obj: CityData? = CityData(1, "asd")
         val existing = CompoundTag()
         CityData.serializer().put(obj, existing)
-        val back = CityData.serializer().nullable.getFrom(existing)
+        val back = CityData.serializer().getFrom(existing)
         assertEquals(obj, back)
     }
 
     @Test
     fun `ByteBufEncoder can serialize a nullable value`() {
         val obj: CityData? = CityData(1, "asd")
-        val existing = CompoundTag()
-        CityData.serializer().put(obj, existing)
-        val back = CityData.serializer().nullable.getFrom(existing)
+        val existing = bufferedPacket()
+        CityData.serializer().write(obj, existing)
+        val back = CityData.serializer().readFrom(existing)
         assertEquals(obj, back)
     }
 
@@ -229,19 +228,78 @@ class TDDTests {
 
     @Test
     fun `Vec3d Serializer works`() {
-        val json = Json(JsonConfiguration.Stable)
+        val json = Json
         val obj = Vec3dContainer(Vec3d(0.2, -123.0, 2323.3))
-        val str = json.stringify(Vec3dContainer.serializer(),obj)
-        val back = json.parse(Vec3dContainer.serializer(),str)
-        assertEquals(obj,back)
+        val str = json.encodeToString(Vec3dContainer.serializer(), obj)
+        val back = json.decodeFromString(Vec3dContainer.serializer(), str)
+        assertEquals(obj, back)
     }
 
     @Test
     fun `Can serialize a string to int map`() {
-        val obj =  intStringMap
+        val obj = intStringMap
         val existing = CompoundTag()
         IntStringMap.serializer().put(obj, existing)
         val back = IntStringMap.serializer().getFrom(existing)
         assertEquals(obj, back)
     }
+
+//    @Test
+//    fun `Tree gets serialized properly to ByteBuf`() {
+//        val buf = bufferedPacket()
+//        val zoo = lesserZoo
+//        LesserZoo.serializer().write(zoo, buf)
+//        val result = LesserZoo.serializer().readFrom(buf)
+//        assertEquals(zoo, result)
+//    }
 }
+
+
+val lesserZoo = LesserZoo(
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+)
+
+@Serializable
+data class LesserZoo(
+    val unit: Int,
+    val boolean: Int,
+    val byte: Int,
+    val short: Int,
+    val int: Int,
+    val long: Int,
+    val float: Int,
+    val double: Int,
+    val char: Int,
+    val string: Int,
+    val enum: Int,
+    val intData: Int,
+    val unitN: Int,
+    val booleanN: Int,
+    val byteN: Int,
+    val shortN: Int,
+    val intN: Int,
+    val longN: Int,
+    val floatN: Int,
+    val doubleN: Int,
+    val charN: Int,
+    val stringN: Int,
+    val enumN: Int,
+    val intDataN: Int,
+    val listInt: Int,
+    val listIntN: Int,
+    val listNInt: Int,
+    val listNIntN: Int,
+    val listListEnumN: Int,
+    val listIntData: Int,
+    val listIntDataN: Int,
+    val tree: Long
+)

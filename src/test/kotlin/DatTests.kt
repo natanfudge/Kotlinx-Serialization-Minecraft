@@ -4,7 +4,7 @@ import drawer.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
@@ -40,7 +40,7 @@ data class NullableList(val listIntN: List<Int?>)
 val nullableList = NullableList(listOf(4, 5, null))
 
 
-private fun testDat(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
+private fun testDat(serializer: KSerializer<Any>, obj: Any, context: SerializersModule): TestResult {
     val file = Files.createTempFile("tempDat", ".dat").toFile()
     val tag = CompoundTag()
     serializer.put(obj, tag, context = context)
@@ -51,7 +51,6 @@ private fun testDat(serializer: KSerializer<Any>, obj: Any, context: SerialModul
 }
 
 class DatTests {
-    //TODO: the problem is that a string tag is being put into a list of compound tags when there is polymorphic
     @Test
     fun `Polymorphic serializer writes a valid dat file`() {
         val obj = Repetition.RepeatAmount()

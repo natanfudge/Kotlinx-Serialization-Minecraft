@@ -3,8 +3,7 @@ import drawer.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import kotlinx.serialization.internal.nullable
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
 import net.minecraft.nbt.CompoundTag
@@ -16,14 +15,14 @@ import utils.*
 import java.util.*
 import kotlin.test.assertEquals
 
-fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
+fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerializersModule): TestResult {
     val tag = CompoundTag()
     serializer.put(obj, tag, context = context)
     val back = serializer.getFrom(tag, context = context)
     return TestResult(obj, back, "$tag")
 }
 
-fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerialModule): TestResult {
+fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerializersModule): TestResult {
     val buf = bufferedPacket()
     serializer.write(obj, toBuf = buf, context = context)
     val back = serializer.readFrom(buf, context = context)
@@ -35,8 +34,6 @@ var initialized = false
 
 class SerializationTests {
 
-
-    //TODO: ERROR: Update is not supported for Identifier
     @Test
     fun `TagEncoder serializes and deserializes correctly`() {
         if (!initialized) {
@@ -46,7 +43,6 @@ class SerializationTests {
         testMethod(::testTag,  verbose = false)
 
     }
-
 
     @Test
     fun `ByteBufEncoder serializes and deserializes correctly`() {
@@ -124,6 +120,15 @@ class SerializationTests {
         assertEquals(back, null)
     }
 
+
+    @Test
+    fun `Test Bytebuf works as expected`() {
+//        val buf = bufferedPacket()
+//        buf.writeByte(1)
+//
+//        val result = buf.readString()
+//        assertEquals("foo",result)
+    }
 
     @Test
     fun `Abstract array tags can be encoded in a ByteBuf`() {

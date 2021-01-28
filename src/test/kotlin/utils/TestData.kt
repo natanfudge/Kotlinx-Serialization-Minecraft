@@ -27,6 +27,7 @@ import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import net.minecraft.client.sound.SoundInstance
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
@@ -278,6 +279,7 @@ data class ZooWithArrays(
             arrIntData.contentEquals(other.arrIntData)
 }
 
+
 val zoo = Zoo(
     Unit, true, 10, 20, 30, 40, 50f, 60.0, 'A', "Str0", Attitude.POSITIVE, IntData(70),
     null, null, 11, 21, 31, 41, 51f, 61.0, 'B', "Str1", Attitude.NEUTRAL, null,
@@ -340,8 +342,8 @@ val message = MessageWrapper(
 )
 val messageModule = SerializersModule {
     polymorphic(PolymorphicMessage::class) {
-        IntMessage::class with IntMessage.serializer()
-        StringMessage::class with StringMessage.serializer()
+        subclass(IntMessage::class , IntMessage.serializer())
+                subclass(StringMessage::class , StringMessage.serializer())
     }
 }
 

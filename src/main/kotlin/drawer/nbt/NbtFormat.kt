@@ -1,36 +1,52 @@
 package drawer.nbt
 
 import drawer.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.JsonException
-import kotlinx.serialization.modules.EmptyModule
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialFormat
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.SerialKind
+import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
+import kotlinx.serialization.modules.polymorphic
 import net.minecraft.nbt.*
 
-//TODO: put up issues for these
 
-//TODO: Later version:
-//TODO: Text serializer
-//TODO: "Identifiable" serializer
-//TODO: SimpleFixedItemInv serializer
-
+//internal val TagModule = SerializersModule {
+//    polymorphic(Tag::class) {
+//        subclass(ByteTag::class, ForByteTag)
+//        subclass(ShortTag::class, ForShortTag)
+//        subclass(IntTag::class, ForIntTag)
+//        subclass(LongTag::class, ForLongTag)
+//        subclass(FloatTag::class, ForFloatTag)
+//        subclass(DoubleTag::class, ForDoubleTag)
+//        subclass(StringTag::class, ForStringTag)
+//        subclass(EndTag::class, ForEndTag)
+//        subclass(ByteArrayTag::class, ForByteArrayTag)
+//        subclass(IntArrayTag::class, ForIntArrayTag)
+//        subclass(LongArrayTag::class, ForLongArrayTag)
+//        subclass(ListTag::class, ForListTag)
+//        subclass(CompoundTag::class, ForCompoundTag)
+//    }
+//}
 internal val TagModule = SerializersModule {
     polymorphic(Tag::class) {
-        ByteTag::class with ForByteTag
-        ShortTag::class with ForShortTag
-        IntTag::class with ForIntTag
-        LongTag::class with ForLongTag
-        FloatTag::class with ForFloatTag
-        DoubleTag::class with ForDoubleTag
-        StringTag::class with ForStringTag
-        EndTag::class with ForEndTag
-        ByteArrayTag::class with ForByteArrayTag
-        IntArrayTag::class with ForIntArrayTag
-        LongArrayTag::class with ForLongArrayTag
-        ListTag::class with ForListTag
-        CompoundTag::class with ForCompoundTag
+        subclass(ByteTag::class, ForByteTag)
+        subclass(ShortTag::class, ForShortTag)
+        subclass(IntTag::class, ForIntTag)
+        subclass(LongTag::class, ForLongTag)
+        subclass(FloatTag::class, ForFloatTag)
+        subclass(DoubleTag::class, ForDoubleTag)
+        subclass(StringTag::class, ForStringTag)
+        subclass(EndTag::class, ForEndTag)
+        subclass(ByteArrayTag::class, ForByteArrayTag)
+        subclass(IntArrayTag::class, ForIntArrayTag)
+        subclass(LongArrayTag::class, ForLongArrayTag)
+        subclass(ListTag::class, ForListTag)
+        subclass(CompoundTag::class, ForCompoundTag)
     }
 }
 
@@ -38,7 +54,8 @@ internal val TagModule = SerializersModule {
 /**
  * Keeping this class public for now in case you want to serializer an object directly to tag and vise versa.
  */
-class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(context + TagModule) {
+@OptIn(ExperimentalSerializationApi::class)
+class NbtFormat(context: SerializersModule = EmptySerializersModule) : SerialFormat {
 
     /**
      * Converts [obj] into a [CompoundTag] that represents [obj].
@@ -59,16 +76,20 @@ class NbtFormat(context: SerialModule = EmptyModule) : AbstractSerialFormat(cont
         const val Null = 1.toByte()
     }
 
+    override val serializersModule = context + TagModule
+
 }
 
 internal const val ClassDiscriminator = "type"
 
-internal fun compoundTagInvalidKeyKind(keyDescriptor: SerialDescriptor) = JsonException(
-    "Value of type ${keyDescriptor.name} can't be used in a compound tag as map key. " +
+@OptIn(ExperimentalSerializationApi::class)
+internal fun compoundTagInvalidKeyKind(keyDescriptor: SerialDescriptor) = NbtEncodingException(
+    "Value of type ${keyDescriptor.serialName} can't be used in a compound tag as map key. " +
             "It should have either primitive or enum kind, but its kind is ${keyDescriptor.kind}."
 )
 
 // This is an extension in case we want to have an option to not allow lists
+@OptIn(ExperimentalSerializationApi::class)
 internal inline fun <T, R1 : T, R2 : T> NbtFormat.selectMapMode(
     mapDescriptor: SerialDescriptor,
     ifMap: () -> R1,
@@ -76,7 +97,7 @@ internal inline fun <T, R1 : T, R2 : T> NbtFormat.selectMapMode(
 ): T {
     val keyDescriptor = mapDescriptor.getElementDescriptor(0)
     val keyKind = keyDescriptor.kind
-    return if (keyKind is PrimitiveKind  || keyKind == UnionKind.ENUM_KIND) {
+    return if (keyKind is PrimitiveKind || keyKind == SerialKind.ENUM) {
         ifMap()
     } else {
         ifList()

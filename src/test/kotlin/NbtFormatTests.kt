@@ -12,7 +12,7 @@ data class SimpleObj(val x: Int = 3, val y: String = "asdf")
 @Serializable
 data class ComplexObj(val list: List<SimpleObj>, val map: Map<String, Int>, val simple: SimpleObj)
 
-@Serializable //TODO: test serializing this
+@Serializable
 data class CustomMap(val map: Map<SimpleObj, SimpleObj>)
 
 class NestedNbtFormatTests {

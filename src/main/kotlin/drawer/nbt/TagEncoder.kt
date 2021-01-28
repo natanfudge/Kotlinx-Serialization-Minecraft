@@ -7,25 +7,28 @@ import drawer.NamedValueTagEncoder
 import drawer.mixin.AccessibleListTag
 import drawer.util.DrawerLogger
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.ListLikeDescriptor
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.descriptors.PolymorphicKind
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.encoding.CompositeEncoder
+import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 import java.lang.reflect.Field
 
 internal fun <T> NbtFormat.writeNbt(value: T, serializer: SerializationStrategy<T>): Tag {
     lateinit var result: Tag
     val encoder = TagEncoder(this) { result = it }
-    encoder.encode(serializer, value)
+    encoder.encodeSerializableValue(serializer, value)
     return result
 }
-
+@OptIn(ExperimentalSerializationApi::class)
 private sealed class AbstractTagEncoder(
     val format: NbtFormat,
     val nodeConsumer: (Tag) -> Unit
 ) : NamedValueTagEncoder() {
 
-    final override val context: SerialModule
-        get() = format.context
+    final override val serializersModule: SerializersModule
+        get() = format.serializersModule
 
 
     private var writePolymorphic = false
@@ -51,9 +54,9 @@ private sealed class AbstractTagEncoder(
 
     override fun encodeTaggedEnum(
         tag: String,
-        enumDescription: SerialDescriptor,
+        enumDescriptor: SerialDescriptor,
         ordinal: Int
-    ) = putElement(tag, StringTag.of(enumDescription.getElementName(ordinal)))
+    ) = putElement(tag, StringTag.of(enumDescriptor.getElementName(ordinal)))
 
 
     override fun encodeTaggedTag(key: String, tag: Tag) = putElement(key, tag)
@@ -62,21 +65,21 @@ private sealed class AbstractTagEncoder(
         putElement(tag, StringTag.of(value.toString()))
     }
 
-    override fun elementName(desc: SerialDescriptor, index: Int): String {
-        return if (desc.kind is PolymorphicKind) index.toString() else super.elementName(desc, index)
+    override fun elementName(descriptor: SerialDescriptor, index: Int): String {
+        return if (descriptor.kind is PolymorphicKind) index.toString() else super.elementName(descriptor, index)
     }
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
         val consumer = if (currentTagOrNull == null) nodeConsumer
         else { node -> putElement(currentTag, node) }
 
-        val encoder = when (desc.kind) {
+        val encoder = when (descriptor.kind) {
             StructureKind.LIST -> {
-                if (desc is ListLikeDescriptor && desc.elementDesc.isNullable) NullableListEncoder(format, consumer)
+                if (descriptor.kind == StructureKind.LIST && descriptor.getElementDescriptor(0).isNullable) NullableListEncoder(format, consumer)
                 else TagListEncoder(format, consumer)
             }
             is PolymorphicKind -> TagMapEncoder(format, consumer)
-            StructureKind.MAP -> format.selectMapMode(desc,
+            StructureKind.MAP -> format.selectMapMode(descriptor,
                 ifMap = { TagMapEncoder(format, consumer) },
                 ifList = { TagListEncoder(format, consumer) }
             )
@@ -85,13 +88,13 @@ private sealed class AbstractTagEncoder(
 
         if (writePolymorphic) {
             writePolymorphic = false
-            encoder.putElement(ClassDiscriminator, StringTag.of(desc.name))
+            encoder.putElement(ClassDiscriminator, StringTag.of(descriptor.serialName))
         }
 
         return encoder
     }
 
-    override fun endEncode(desc: SerialDescriptor) {
+    override fun endEncode(descriptor: SerialDescriptor) {
         nodeConsumer(getCurrent())
     }
 }
@@ -135,7 +138,6 @@ private class TagMapEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) : Ta
 
     override fun getCurrent(): Tag = content
 
-    override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
 }
 
 private class NullableListEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit) : TagEncoder(format, nodeConsumer) {
@@ -145,7 +147,6 @@ private class NullableListEncoder(format: NbtFormat, nodeConsumer: (Tag) -> Unit
 
     override fun getCurrent(): Tag = content
 
-    override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
 }
 
 
@@ -168,9 +169,8 @@ private class TagListEncoder(json: NbtFormat, nodeConsumer: (Tag) -> Unit) :
     AbstractTagEncoder(json, nodeConsumer) {
     private val list: ListTag = ListTag()
 
-    override fun elementName(desc: SerialDescriptor, index: Int): String = index.toString()
+    override fun elementName(descriptor: SerialDescriptor, index: Int): String = index.toString()
 
-    override fun shouldWriteElement(desc: SerialDescriptor, tag: String, index: Int): Boolean = true
 
     override fun putElement(key: String, element: Tag) {
         val idx = key.toInt()

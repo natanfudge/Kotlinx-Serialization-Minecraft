@@ -47,7 +47,7 @@ Unsurprisingly, <span style="font-size:larger;"> __**THIS UPDATE IS VERY SUPER B
 - Also, removed the .nullable extension property, since it's now provided by kotlinx.serialization itself! You just need to change the import.
 
 ## 3.1.0
-Updated kotlinx.serialization to 0.14.0. This release allows you to serialize `object`s and sealed classes without `SerialModule`!
+Updated kotlinx.serialization to 0.14.0. This release allows you to serialize `object`s and sealed classes without `SerializersModule`!
 
 # 3.1.0-1.15-pre1
 Now works in 1.15 (not compatible with 1.14.4).
@@ -55,3 +55,6 @@ Now works in 1.15 (not compatible with 1.14.4).
 Fixed an unnecessary cast causing an exception. 
 ## 3.2.0 
 Fixed NBT serialization being completely broken with nullable lists and polymorphic classes.
+# 4.0.0
+- No longer includes and exposes kotlinx.serialization - this is now part of Fabric Language Kotlin.
+- Updated to kotlinx.serialization-json 1.0.1 

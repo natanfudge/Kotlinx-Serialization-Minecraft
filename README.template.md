@@ -4,7 +4,7 @@
 [![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg)](https://bintray.com/beta/#/natanfudge/libs/fabric-drawer?tab=overview)
 [![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)](https://github.com/natanfudge/Fabric-Drawer/commits/master)
 
-Drawer is a Fabric library mod for Kotlin mods that allows you to easily convert objects back and forth from NBT and PacketBytebuf using kotlinx.serialization.
+Drawer is a Fabric library mod for Kotlin mods that allows you to easily convert objects back and forth from NBT and PacketBytebuf using kotlinx.serialization, and provides KSerializers for common Minecraft types (for NBT, PacketBytebuf, or even JSON). 
 
 <details><summary><b>Gradle</b></summary>
 <p>
@@ -21,6 +21,7 @@ And add to dependencies:
 dependencies {
     // [...]
     modImplementation("com.lettuce.fudge:fabric-drawer:$total_version")
+    include("com.lettuce.fudge:fabric-drawer:$total_version")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
@@ -205,22 +206,8 @@ Make sure that the default values are **usable**, meaning trying to use them in 
 
 ### Polymorphic serialization
 - Read [this](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md) first. 
-- In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
+- In order to do this in drawer you need to add the `SerializersModule` instance whenever you serialize / deserialize using that module. 
 If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
-
-</p>
-</details>
-
-<details><summary><b>Depending on the mod</b></summary>
-<p>
-
-```json
-{
-  "depends": {
-    "fabricdrawer": ">=$total_version"
-  }
-}
-```
 
 </p>
 </details>

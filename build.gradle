@@ -46,9 +46,7 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version"
 
-    //TODO: update kotlinx.serialization
-    modApi "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
-    include "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinx_serialization_runtime_version"
+    modImplementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_runtime_version"
 
     testImplementation('com.google.guava:guava:28.0-jre') {
         force = true
@@ -202,6 +200,15 @@ test {
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+    }
+}
+
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 }
 

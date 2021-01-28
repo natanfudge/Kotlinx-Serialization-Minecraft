@@ -2,9 +2,8 @@ package drawer
 
 import drawer.nbt.NbtFormat
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.makeNullable
-import kotlinx.serialization.modules.EmptyModule
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
 
@@ -18,15 +17,16 @@ import net.minecraft.network.PacketByteBuf
  * The same key must be used in [getFrom].
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
+@OptIn(ExperimentalSerializationApi::class)
 fun <T> SerializationStrategy<T>.put(
     obj: T?,
     inTag: CompoundTag,
     key: String? = null,
-    context: SerialModule = EmptyModule
+    context: SerializersModule = EmptySerializersModule
 ) {
-    val usedKey = key ?: this.descriptor.name
+    val usedKey = key ?: this.descriptor.serialName
     require(!inTag.contains(usedKey)) {
-        """A '${this.descriptor.name}' appears twice in the CompoundTag.
+        """A '${this.descriptor.serialName}' appears twice in the CompoundTag.
             |If you are serializing two objects of the same type, you MUST specify a key, see kdoc.
         |Also make sure you didn't use the same key twice.
     """.trimMargin()
@@ -42,13 +42,14 @@ fun <T> SerializationStrategy<T>.put(
  * The same key must be used in [put].
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
+@OptIn(ExperimentalSerializationApi::class)
 fun <T> DeserializationStrategy<T>.getFrom(
     tag: CompoundTag,
     key: String? = null,
-    context: SerialModule = EmptyModule
+    context: SerializersModule = EmptySerializersModule
 ): T {
     val deserializedTag =
-        tag.get(key ?: this.descriptor.name) ?: if (descriptor.isNullable) return null as T else CompoundTag()
+        tag.get(key ?: this.descriptor.serialName) ?: if (descriptor.isNullable) return null as T else CompoundTag()
     return NbtFormat(context).deserialize(this, deserializedTag)
 }
 
@@ -57,11 +58,12 @@ fun <T> DeserializationStrategy<T>.getFrom(
  * Writes [obj] into [toBuf], to later be retrieved with [readFrom].
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
-fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: SerialModule = EmptyModule) {
+@OptIn(ExperimentalSerializationApi::class)
+fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: SerializersModule = EmptySerializersModule) {
     ByteBufFormat(context).ByteBufEncoder(toBuf).apply {
         if (obj != null) {
             encodeNotNullMark()
-            encode(this@write, obj)
+            encodeSerializableValue(this@write, obj)
         } else encodeNull()
     }
 }
@@ -71,10 +73,11 @@ fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: S
  * Retrieves the object that was stored in the [buf] previously with [write]. For nullable values use .nullable extension on the serializer.
  *  @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
-fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerialModule = EmptyModule): T {
+@OptIn(ExperimentalSerializationApi::class)
+fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerializersModule = EmptySerializersModule): T {
     val decoder = ByteBufFormat(context).ByteBufDecoder(buf)
     return when {
-        decoder.decodeNotNullMark() -> decoder.decode(this)
+        decoder.decodeNotNullMark() -> decoder.decodeSerializableValue(this)
         descriptor.isNullable -> null as T
         else -> throw SerializationException("You need to use a nullable serializer to be able to read a nullable value. Use the .nullable extension property.")
     }

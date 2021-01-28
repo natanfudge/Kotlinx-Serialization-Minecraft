@@ -186,7 +186,7 @@ Make sure that the default values are **usable**, meaning trying to use them in 
 
 ### Polymorphic serialization
 - Read [this](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md) first. 
-- In order to do this in drawer you need to add the `SerialModule` instance whenever you serialize / deserialize using that module. 
+- In order to do this in drawer you need to add the `SerializersModule` instance whenever you serialize / deserialize using that module.
 If this is cumbersome a simple extension method on `KSerialize<T>` can be used that automatically inserts your module.
 
 ### Depending on the mod

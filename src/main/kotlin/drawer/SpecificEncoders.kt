@@ -1,18 +1,20 @@
 package drawer
 
-import drawer.util.UnsealedNamedValueDecoder
-import kotlinx.serialization.NamedValueDecoder
-import kotlinx.serialization.NamedValueEncoder
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.internal.NamedValueDecoder
+import kotlinx.serialization.internal.NamedValueEncoder
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.recipe.Ingredient
 
+@OptIn(InternalSerializationApi::class)
 internal abstract class NamedValueTagEncoder : NamedValueEncoder(), ICanEncodeTag {
     final override fun encodeTag(tag: Tag) = encodeTaggedTag(popTag(), tag)
     abstract fun encodeTaggedTag(key: String, tag: Tag)
 }
 
-internal abstract class NamedValueTagDecoder : UnsealedNamedValueDecoder(), ICanDecodeTag {
+@OptIn(InternalSerializationApi::class)
+internal abstract class NamedValueTagDecoder : NamedValueDecoder(), ICanDecodeTag {
     final override fun decodeTag(): Tag = decodeTaggedTag(popTag())
     abstract fun decodeTaggedTag(key: String): Tag
 }
