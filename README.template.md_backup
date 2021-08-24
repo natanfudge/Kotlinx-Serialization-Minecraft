@@ -50,13 +50,13 @@ fun fillData(){
 var myInfo : BlockInfo = BlockInfo()
     private set
 
-override fun toTag(tag: CompoundTag): CompoundTag {
+override fun toTag(tag: NbtCompound): NbtCompound {
     // Serialize
     BlockInfo.serializer().put(myInfo, inTag = tag)
     return super.toTag(tag)
 }
 
-override fun fromTag(tag: CompoundTag) {
+override fun fromTag(tag: NbtCompound) {
     super.fromTag(tag)
     // Deserialize
     myInfo = BlockInfo.serializer().getFrom(tag)
@@ -88,19 +88,19 @@ Remember that you still need to validate your client to server packets!
 
 An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-example).
 
-#### Putting two objects of the same type in one CompoundTag
- If you are putting two objects of the same type in one CompoundTag you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
+#### Putting two objects of the same type in one NbtCompound
+ If you are putting two objects of the same type in one NbtCompound you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
  For example:
 ```kotlin
 val myInfo1 = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, placementTime = 9999, firstToClick = "you")
 
-override fun toTag(tag: CompoundTag) : CompoundTag {
+override fun toTag(tag: NbtCompound) : NbtCompound {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag : CompoundTag){
+override fun fromTag(tag : NbtCompound){
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -110,7 +110,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
+fun toTag(tag : NbtCompound){
     MyData.serializer().put(MyData(1,2))
 }
 ```
@@ -118,7 +118,7 @@ fun toTag(tag : CompoundTag){
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag : CompoundTag){
+fun toTag(tag : NbtCompound){
     MyData.serializer().put(MyData(1,2), key = "first")
     MyData.serializer().put(MyData(3,4), key = "second")
 }
@@ -170,7 +170,7 @@ If I've missed anything you need please [open an issue](https://github.com/natan
 
 You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
 
-Note: Primitive serializers don't work right now for `CompoundTag`, so just use the existing `putInt` etc methods. 
+Note: Primitive serializers don't work right now for `NbtCompound`, so just use the existing `putInt` etc methods.
 
 ### Why does every property need to have a default value when storing data for a block entity?
 There are 2 main reasons:
@@ -204,10 +204,10 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 ```kotlin
 @Serializable
 data class MyData(val x :Int, val y : String){
-    fun putIn(tag : CompoundTag) = MyData.serializer().put(this,tag)
+    fun putIn(tag : NbtCompound) = MyData.serializer().put(this,tag)
 }
 //Usage:
-fun toTag(tag :CompoundTag){
+fun toTag(tag :NbtCompound){
     val data = MyData(1,"hello")
     tag.putIn(tag) // Instead of MyData.serializer().put(data,tag)
 }

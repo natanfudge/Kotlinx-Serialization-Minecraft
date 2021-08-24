@@ -3,7 +3,7 @@
   "package": "drawer.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AccessibleListTag"
+    "AccessibleNbtList"
   ],
   "injectors": {
     "defaultRequire": 1

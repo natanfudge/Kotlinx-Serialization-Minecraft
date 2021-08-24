@@ -2,19 +2,19 @@
     ForUuid::class,
     ForBlockPos::class,
     ForIdentifier::class,
-    ForByteTag::class,
-    ForShortTag::class,
-    ForIntTag::class,
-    ForLongTag::class,
-    ForFloatTag::class,
-    ForDoubleTag::class,
-    ForEndTag::class,
-    ForByteArrayTag::class,
-    ForIntArrayTag::class,
-    ForLongArrayTag::class,
-    ForStringTag::class,
-    ForListTag::class,
-    ForCompoundTag::class,
+    ForNbtByte::class,
+    ForNbtShort::class,
+    ForNbtInt::class,
+    ForNbtLong::class,
+    ForNbtFloat::class,
+    ForNbtDouble::class,
+    ForNbtNull::class,
+    ForNbtByteArray::class,
+    ForNbtIntArray::class,
+    ForNbtLongArray::class,
+    ForNbtString::class,
+    ForNbtList::class,
+    ForNbtCompound::class,
     ForItemStack::class,
     ForIngredient::class,
     ForVec3d::class,
@@ -92,25 +92,25 @@ data class CountyData(
 
 @Serializable
 data class Tags(
-    val byte: ByteTag,
-    val short: ShortTag,
-    val int: IntTag,
-    val long: LongTag,
-    val float: FloatTag,
-    val double: DoubleTag,
-    val string: StringTag,
-    val end: EndTag,
-    val byteArray: ByteArrayTag,
-    val intArray: IntArrayTag,
-    val longArray: LongArrayTag
+    val byte: NbtByte,
+    val short: NbtShort,
+    val int: NbtInt,
+    val long: NbtLong,
+    val float: NbtFloat,
+    val double: NbtDouble,
+    val string: NbtString,
+    val end: NbtNull,
+    val byteArray: NbtByteArray,
+    val intArray: NbtIntArray,
+    val longArray: NbtLongArray
 )
 
 @Serializable
-data class IntArrayTagWrapper(
-    val end: EndTag,
-    val byteArray: ByteArrayTag,
-    val intArray: IntArrayTag,
-    val longArray: LongArrayTag
+data class NbtIntArrayWrapper(
+    val end: NbtNull,
+    val byteArray: NbtByteArray,
+    val intArray: NbtIntArray,
+    val longArray: NbtLongArray
 )
 
 
@@ -348,96 +348,96 @@ val messageModule = SerializersModule {
 }
 
 val tags = Tags(
-    ByteTag.of(0),
-    ShortTag.of(1),
-    IntTag.of(2),
-    LongTag.of(3),
-    FloatTag.of(3.5f),
-    DoubleTag.of(4.23),
-    StringTag.of("amar"),
-    EndTag.INSTANCE,
-    ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
-    IntArrayTag(listOf(8, 9, 10)),
-    LongArrayTag(listOf(11L, 12L, 13L))
+    NbtByte.of(0),
+    NbtShort.of(1),
+    NbtInt.of(2),
+    NbtLong.of(3),
+    NbtFloat.of(3.5f),
+    NbtDouble.of(4.23),
+    NbtString.of("amar"),
+    NbtNull.INSTANCE,
+    NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    NbtIntArray(listOf(8, 9, 10)),
+    NbtLongArray(listOf(11L, 12L, 13L))
 )
 
-val intArrayTagWrapper = IntArrayTagWrapper(
-    EndTag.INSTANCE, ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
-    IntArrayTag(listOf(8, 9, 10)), LongArrayTag(listOf(11L, 12L, 13L))
+val intArrayTagWrapper = NbtIntArrayWrapper(
+    NbtNull.INSTANCE, NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    NbtIntArray(listOf(8, 9, 10)), NbtLongArray(listOf(11L, 12L, 13L))
 )
 
 @Serializable
 data class AbstractTags(
-    val tag1: Tag,
-    val tag2: Tag,
-    val tag3: Tag,
-    val tag4: Tag,
-    val tag5: Tag,
-    val tag6: Tag,
-    val tag7: Tag,
-    val tag8: Tag,
-    val tag9: Tag,
-    val tag10: Tag,
-    val tag11: Tag,
-    val tag12: Tag,
-    val tag13: Tag
+    val tag1: NbtElement,
+    val tag2: NbtElement,
+    val tag3: NbtElement,
+    val tag4: NbtElement,
+    val tag5: NbtElement,
+    val tag6: NbtElement,
+    val tag7: NbtElement,
+    val tag8: NbtElement,
+    val tag9: NbtElement,
+    val tag10: NbtElement,
+    val tag11: NbtElement,
+    val tag12: NbtElement,
+    val tag13: NbtElement
 )
 
 
 val abstractTags = AbstractTags(
-    ByteTag.of(0),
-    ShortTag.of(1),
-    IntTag.of(2),
-    LongTag.of(3),
-    FloatTag.of(3.5f),
-    DoubleTag.of(4.23),
-    StringTag.of("amar"),
-    EndTag.INSTANCE,
-    ByteArrayTag(listOf(5.toByte(), 6.toByte(), 7.toByte())),
-    IntArrayTag(listOf(8, 9, 10)),
-    LongArrayTag(listOf(11L, 12L, 13L)),
-    ListTag().apply { add(LongTag.of(2L)) },
-    CompoundTag().apply { putBoolean("as", false) }
+    NbtByte.of(0),
+    NbtShort.of(1),
+    NbtInt.of(2),
+    NbtLong.of(3),
+    NbtFloat.of(3.5f),
+    NbtDouble.of(4.23),
+    NbtString.of("amar"),
+    NbtNull.INSTANCE,
+    NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    NbtIntArray(listOf(8, 9, 10)),
+    NbtLongArray(listOf(11L, 12L, 13L)),
+    NbtList().apply { add(NbtLong.of(2L)) },
+    NbtCompound().apply { putBoolean("as", false) }
 )
 
 @Serializable
-data class LessAbstractTags(val tag: Tag)
+data class LessAbstractTags(val tag: NbtElement)
 
-val lessAbstractTags = LessAbstractTags(IntArrayTag(listOf(8, 9, 10)))
+val lessAbstractTags = LessAbstractTags(NbtIntArray(listOf(8, 9, 10)))
 
 
 @Serializable
-data class ListTags(
-    val listTag1: ListTag,
-    val listTag2: ListTag,
-    val listTag3: ListTag,
-    val listTag4: ListTag,
-    val listTag5: ListTag
+data class NbtLists(
+    val listTag1: NbtList,
+    val listTag2: NbtList,
+    val listTag3: NbtList,
+    val listTag4: NbtList,
+    val listTag5: NbtList
 )
 
 //TODO: list tag of compound tag
-val listTags = ListTags(ListTag().apply {
-    add(IntTag.of(1))
-    add(IntTag.of(2))
-    add(IntTag.of(3))
-}, ListTag().apply {
-    add(StringTag.of("asdf"))
-    add(StringTag.of("asdf"))
+val listTags = NbtLists(NbtList().apply {
+    add(NbtInt.of(1))
+    add(NbtInt.of(2))
+    add(NbtInt.of(3))
+}, NbtList().apply {
+    add(NbtString.of("asdf"))
+    add(NbtString.of("asdf"))
 },
-    ListTag().apply {
-        add(ByteArrayTag(listOf(1.toByte(), 2.toByte(), 3.toByte())))
-        add(ByteArrayTag(listOf(2.toByte(), 4.toByte(), 3.toByte())))
-        add(ByteArrayTag(listOf((-13).toByte(), 2.toByte(), 4.toByte())))
+    NbtList().apply {
+        add(NbtByteArray(listOf(1.toByte(), 2.toByte(), 3.toByte())))
+        add(NbtByteArray(listOf(2.toByte(), 4.toByte(), 3.toByte())))
+        add(NbtByteArray(listOf((-13).toByte(), 2.toByte(), 4.toByte())))
     },
-    ListTag().apply {
-        add(ListTag().apply { add(ByteTag.of(1.toByte())) })
-        add(ListTag().apply { add(FloatTag.of(0.3f)) })
+    NbtList().apply {
+        add(NbtList().apply { add(NbtByte.of(1.toByte())) })
+        add(NbtList().apply { add(NbtFloat.of(0.3f)) })
     },
-    ListTag().apply {
-        CompoundTag().apply {
+    NbtList().apply {
+        NbtCompound().apply {
             putInt("asdf", 1)
         }
-        CompoundTag().apply {
+        NbtCompound().apply {
             putString("asdf", "ASdf")
         }
     }
@@ -445,25 +445,25 @@ val listTags = ListTags(ListTag().apply {
 )
 
 @Serializable
-data class CompoundTags(val compoundTag1: CompoundTag, val compoundTag2: CompoundTag)
+data class NbtCompounds(val compoundTag1: NbtCompound, val compoundTag2: NbtCompound)
 
-val compoundTags = CompoundTags(
-    CompoundTag().apply {
+val compoundTags = NbtCompounds(
+    NbtCompound().apply {
         put("", tags.intArray)
         put("asdfff", tags.double)
         ForUuid.put(UUID(1, 2), this, key = "amar")
     },
-    CompoundTag().apply {
+    NbtCompound().apply {
         put("heavy shit", listTags.listTag5)
         putDouble("dd", 12.3)
     }
 )
 
 @Serializable
-data class LessCompoundTags(val compoundTag1: CompoundTag/*, val compoundTag2 : CompoundTag*/)
+data class LessNbtCompounds(val compoundTag1: NbtCompound/*, val compoundTag2 : NbtCompound*/)
 
-val lessCompoundTags = LessCompoundTags(
-    CompoundTag().apply {
+val lessNbtCompounds = LessNbtCompounds(
+    NbtCompound().apply {
         ForUuid.put(UUID(1, 2), this, key = "amar")
     }
 
@@ -485,11 +485,11 @@ data class ItemStacks(val itemStack1: ItemStack, val itemStack2: ItemStack, val 
 }
 
 val itemStacks = {
-    ItemStacks(ItemStack(Items.ACACIA_WOOD, 2), ItemStack.EMPTY, ItemStack.fromTag(
-        CompoundTag().apply {
+    ItemStacks(ItemStack(Items.ACACIA_WOOD, 2), ItemStack.EMPTY, ItemStack.fromNbt(
+        NbtCompound().apply {
             putString("id", "birch_planks")
             putByte("Count", 64)
-            put("tag", CompoundTag().apply {
+            put("tag", NbtCompound().apply {
                 putString("aaa", "hello")
                 putInt("waefwe", 222)
             })
@@ -515,7 +515,7 @@ data class Ingredients(val ingredient1: Ingredient, val ingredient2: Ingredient,
 }
 
 infix fun Ingredient.actuallyEquals(other: Ingredient): Boolean {
-    return other.matchingStacksClient.zip(other.matchingStacksClient)
+    return other.matchingStacks.zip(other.matchingStacks)
         .all { (stack1, stack2) -> ItemStack.areEqual(stack1, stack2) }
 }
 

@@ -4,13 +4,13 @@ import drawer.nbt.NbtFormat
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 
 
 /**
- * Puts [obj] into the [CompoundTag] instance of [inTag].
- * Later [getFrom] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
+ * Puts [obj] into the [NbtCompound] instance of [inTag].
+ * Later [getFrom] can be called to retrieve an identical instance of [obj] from the [NbtCompound].
  * For nullable values you SHOULD NOT use the .nullable serializer. It is not needed and does not work.
  *
  * @param key If you are serializing two objects of the same type, you MUST  specify a key.
@@ -20,13 +20,13 @@ import net.minecraft.network.PacketByteBuf
 @OptIn(ExperimentalSerializationApi::class)
 fun <T> SerializationStrategy<T>.put(
     obj: T?,
-    inTag: CompoundTag,
+    inTag: NbtCompound,
     key: String? = null,
     context: SerializersModule = EmptySerializersModule
 ) {
     val usedKey = key ?: this.descriptor.serialName
     require(!inTag.contains(usedKey)) {
-        """A '${this.descriptor.serialName}' appears twice in the CompoundTag.
+        """A '${this.descriptor.serialName}' appears twice in the NbtCompound.
             |If you are serializing two objects of the same type, you MUST specify a key, see kdoc.
         |Also make sure you didn't use the same key twice.
     """.trimMargin()
@@ -44,12 +44,12 @@ fun <T> SerializationStrategy<T>.put(
  */
 @OptIn(ExperimentalSerializationApi::class)
 fun <T> DeserializationStrategy<T>.getFrom(
-    tag: CompoundTag,
+    tag: NbtCompound,
     key: String? = null,
     context: SerializersModule = EmptySerializersModule
 ): T {
     val deserializedTag =
-        tag.get(key ?: this.descriptor.serialName) ?: if (descriptor.isNullable) return null as T else CompoundTag()
+        tag.get(key ?: this.descriptor.serialName) ?: if (descriptor.isNullable) return null as T else NbtCompound()
     return NbtFormat(context).deserialize(this, deserializedTag)
 }
 

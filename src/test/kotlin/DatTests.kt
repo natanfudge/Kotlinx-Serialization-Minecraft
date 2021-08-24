@@ -1,12 +1,15 @@
-@file:UseSerializers(ForBlockPos::class, ForIdentifier::class, ForCompoundTag::class)
+@file:UseSerializers(ForBlockPos::class, ForIdentifier::class, ForNbtCompound::class)
 
+import com.mojang.bridge.game.GameVersion
 import drawer.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.MinecraftVersion
+import net.minecraft.SharedConstants
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtIo
 import org.junit.jupiter.api.Test
 import utils.*
@@ -42,7 +45,7 @@ val nullableList = NullableList(listOf(4, 5, null))
 
 private fun testDat(serializer: KSerializer<Any>, obj: Any, context: SerializersModule): TestResult {
     val file = Files.createTempFile("tempDat", ".dat").toFile()
-    val tag = CompoundTag()
+    val tag = NbtCompound()
     serializer.put(obj, tag, context = context)
     tag.writeTo(file)
     val tagBack = file.readNbt()
@@ -54,7 +57,7 @@ class DatTests {
     @Test
     fun `Polymorphic serializer writes a valid dat file`() {
         val obj = Repetition.RepeatAmount()
-        val tag = CompoundTag().also { Repetition.serializer().put(obj, it) }
+        val tag = NbtCompound().also { Repetition.serializer().put(obj, it) }
         val file = Files.createTempFile("testschedule",".dat").toFile()
         tag.writeTo(file)
         val back = file.readNbt()
@@ -64,7 +67,7 @@ class DatTests {
     @Test
     fun `Nullable list becomes a valid dat file`() {
         val obj = nullableList
-        val tag = CompoundTag().also { NullableList.serializer().put(obj, it) }
+        val tag = NbtCompound().also { NullableList.serializer().put(obj, it) }
         val file = Files.createTempFile("testschedule",".dat").toFile()
         tag.writeTo(file)
         val back = file.readNbt()
@@ -75,21 +78,18 @@ class DatTests {
 
     @Test
     fun `All tested objects can be written from and read to dat files`() {
-        if (!initialized) {
-            Bootstrap.initialize()
-            initialized = true
-        }
+        bootstrapMinecraft()
         testMethod(::testDat, verbose = false)
     }
 }
 
-private fun CompoundTag.writeTo(file: File) {
+private fun NbtCompound.writeTo(file: File) {
     FileOutputStream(file).use {
         NbtIo.writeCompressed(this, it)
     }
 }
 
-private fun File.readNbt(): CompoundTag = PushbackInputStream(FileInputStream(this), 2).use {
+private fun File.readNbt(): NbtCompound = PushbackInputStream(FileInputStream(this), 2).use {
     NbtIo.readCompressed(it)
 }
 

@@ -1,22 +1,17 @@
 
 import drawer.*
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.IntTag
-import net.minecraft.nbt.Tag
+import net.minecraft.nbt.NbtCompound
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import utils.*
-import java.util.*
 import kotlin.test.assertEquals
 
 fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerializersModule): TestResult {
-    val tag = CompoundTag()
+    val tag = NbtCompound()
     serializer.put(obj, tag, context = context)
     val back = serializer.getFrom(tag, context = context)
     return TestResult(obj, back, "$tag")
@@ -30,26 +25,19 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerializersModu
 }
 
 
-var initialized = false
 
 class SerializationTests {
 
     @Test
     fun `TagEncoder serializes and deserializes correctly`() {
-        if (!initialized) {
-            Bootstrap.initialize()
-            initialized = true
-        }
+        bootstrapMinecraft()
         testMethod(::testTag,  verbose = false)
 
     }
 
     @Test
     fun `ByteBufEncoder serializes and deserializes correctly`() {
-        if (!initialized) {
-            Bootstrap.initialize()
-            initialized = true
-        }
+        bootstrapMinecraft()
         testMethod(::testByteBuf,  verbose = false)
     }
 
@@ -59,7 +47,7 @@ class SerializationTests {
     @Test
     fun `TagEncoder can serialize a zoo`() {
         val obj = zoo
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         Zoo.serializer().put(obj, existing)
         val back = Zoo.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -67,7 +55,7 @@ class SerializationTests {
 
     @Test
     fun `TagEncoder can also serialize into an existing tag using put and getFromTag`() {
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         Shop.serializer().put(shop, inTag = existing)
         Zoo.serializer().put(zoo, inTag = existing)
         OtherFormats.serializer().put(otherFormats, existing)
@@ -82,7 +70,7 @@ class SerializationTests {
 
     @Test
     fun `TagEncoder cannot encode multiple instances of the same class without using a key`() {
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         val cityData1 = CityData(1, "amar")
         val cityData2 = CityData(2, "oomer")
         CityData.serializer().put(cityData1, inTag = existing)
@@ -96,7 +84,7 @@ class SerializationTests {
 
     @Test
     fun `TagEncoder can encode multiple instances of the same class using a key`() {
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         val cityData1 = CityData(1, "amar")
         val cityData2 = CityData(2, "oomer")
         CityData.serializer().put(cityData1, inTag = existing, key = "key1")
@@ -142,7 +130,7 @@ class SerializationTests {
 
     @Test
     fun `Abstract array tags can be encoded in a Tag`() {
-        val buf = CompoundTag()
+        val buf = NbtCompound()
         val data = lessAbstractTags
         LessAbstractTags.serializer().put(data, buf)
         val back = LessAbstractTags.serializer().getFrom(buf)
@@ -151,11 +139,11 @@ class SerializationTests {
     }
 
     @Test
-    fun `CompoundTags with a UUID can be encoded in a CompoundTag`() {
-        val tag = CompoundTag()
-        val data = lessCompoundTags
-        LessCompoundTags.serializer().put(data, tag)
-        val back = LessCompoundTags.serializer().getFrom(tag)
+    fun `NbtCompounds with a UUID can be encoded in a NbtCompound`() {
+        val tag = NbtCompound()
+        val data = lessNbtCompounds
+        LessNbtCompounds.serializer().put(data, tag)
+        val back = LessNbtCompounds.serializer().getFrom(tag)
         assertEquals(data, back)
 
     }

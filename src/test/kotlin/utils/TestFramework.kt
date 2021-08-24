@@ -8,7 +8,10 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.Bootstrap
+import net.minecraft.MinecraftVersion
+import net.minecraft.SharedConstants
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import kotlin.reflect.KFunction
 
@@ -23,6 +26,16 @@ interface Case<T : Any> {
     val name: String
     val context: SerializersModule
     val serializer: KSerializer<T>
+}
+
+private var initialized = false
+
+fun bootstrapMinecraft() {
+    if (!initialized) {
+        SharedConstants.setGameVersion(MinecraftVersion.create())
+        Bootstrap.initialize()
+        initialized = true
+    }
 }
 
 class TestCaseInit {
@@ -78,11 +91,11 @@ val testCases = testCases {
     zeroNumbers with VariousNumbers.serializer()
     nullableZeroNumbers with VariousNullableNumbers.serializer()
     tags with Tags.serializer()
-    intArrayTagWrapper with IntArrayTagWrapper.serializer()
+    intArrayTagWrapper with NbtIntArrayWrapper.serializer()
     abstractTags with AbstractTags.serializer()
     message.with(MessageWrapper.serializer(), messageModule)
-    listTags with ListTags.serializer()
-    compoundTags with CompoundTags.serializer()
+    listTags with NbtLists.serializer()
+    compoundTags with NbtCompounds.serializer()
     itemStacks with ItemStacks.serializer()
     ingredients with Ingredients.serializer()
     defaultedLists with DefaultedLists.serializer()
@@ -160,11 +173,11 @@ interface SerialContainer<T> {
 //    fun deserializeAndCompare() = deserialize()
 }
 
-class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val tag: CompoundTag = CompoundTag()) : SerialContainer<T> {
+class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val tag: NbtCompound = NbtCompound()) : SerialContainer<T> {
     override fun serialize(obj: T) = serializer.put(obj, tag)
     override fun deserialize(): T = serializer.getFrom(tag)
     @OptIn(ExperimentalSerializationApi::class)
-    val innerTag : CompoundTag get() = tag.get(serializer.descriptor.serialName) as CompoundTag
+    val innerTag : NbtCompound get() = tag.get(serializer.descriptor.serialName) as NbtCompound
 }
 
 class BufSerialContainer<T>(override val serializer: KSerializer<T>, private val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) : SerialContainer<T> {

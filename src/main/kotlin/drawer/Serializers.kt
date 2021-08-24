@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package drawer
 
 import kotlinx.serialization.*
@@ -61,133 +63,133 @@ object ForSoundEvent : KSerializer<SoundEvent> {
 }
 
 
-@Serializer(forClass = ByteTag::class)
-object ForByteTag : KSerializer<ByteTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ByteTag", PrimitiveKind.BYTE)
-    override fun serialize(encoder: Encoder, value: ByteTag) = encoder.encodeByte(value.byte)
-    override fun deserialize(decoder: Decoder): ByteTag = ByteTag.of(decoder.decodeByte())
+@Serializer(forClass = NbtByte::class)
+object ForNbtByte : KSerializer<NbtByte> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtByte", PrimitiveKind.BYTE)
+    override fun serialize(encoder: Encoder, value: NbtByte) = encoder.encodeByte(value.byteValue())
+    override fun deserialize(decoder: Decoder): NbtByte = NbtByte.of(decoder.decodeByte())
 }
 
-@Serializer(forClass = ShortTag::class)
-object ForShortTag : KSerializer<ShortTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ShortTag", PrimitiveKind.SHORT)
-    override fun serialize(encoder: Encoder, value: ShortTag) = encoder.encodeShort(value.short)
-    override fun deserialize(decoder: Decoder): ShortTag = ShortTag.of(decoder.decodeShort())
+@Serializer(forClass = NbtShort::class)
+object ForNbtShort : KSerializer<NbtShort> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtShort", PrimitiveKind.SHORT)
+    override fun serialize(encoder: Encoder, value: NbtShort) = encoder.encodeShort(value.shortValue())
+    override fun deserialize(decoder: Decoder): NbtShort = NbtShort.of(decoder.decodeShort())
 }
 
-@Serializer(forClass = IntTag::class)
-object ForIntTag : KSerializer<IntTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("IntTag",PrimitiveKind.INT)
-    override fun serialize(encoder: Encoder, value: IntTag) = encoder.encodeInt(value.int)
-    override fun deserialize(decoder: Decoder): IntTag = IntTag.of(decoder.decodeInt())
+@Serializer(forClass = NbtInt::class)
+object ForNbtInt : KSerializer<NbtInt> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtInt",PrimitiveKind.INT)
+    override fun serialize(encoder: Encoder, value: NbtInt) = encoder.encodeInt(value.intValue())
+    override fun deserialize(decoder: Decoder): NbtInt = NbtInt.of(decoder.decodeInt())
 }
 
-@Serializer(forClass = LongTag::class)
-object ForLongTag : KSerializer<LongTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LongTag",PrimitiveKind.LONG)
-    override fun serialize(encoder: Encoder, value: LongTag) = encoder.encodeLong(value.long)
-    override fun deserialize(decoder: Decoder): LongTag = LongTag.of(decoder.decodeLong())
+@Serializer(forClass = NbtLong::class)
+object ForNbtLong : KSerializer<NbtLong> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtLong",PrimitiveKind.LONG)
+    override fun serialize(encoder: Encoder, value: NbtLong) = encoder.encodeLong(value.longValue())
+    override fun deserialize(decoder: Decoder): NbtLong = NbtLong.of(decoder.decodeLong())
 }
 
-@Serializer(forClass = FloatTag::class)
-object ForFloatTag : KSerializer<FloatTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("FloatTag",PrimitiveKind.FLOAT)
-    override fun serialize(encoder: Encoder, value: FloatTag) = encoder.encodeFloat(value.float)
-    override fun deserialize(decoder: Decoder): FloatTag = FloatTag.of(decoder.decodeFloat())
+@Serializer(forClass = NbtFloat::class)
+object ForNbtFloat : KSerializer<NbtFloat> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtFloat",PrimitiveKind.FLOAT)
+    override fun serialize(encoder: Encoder, value: NbtFloat) = encoder.encodeFloat(value.floatValue())
+    override fun deserialize(decoder: Decoder): NbtFloat = NbtFloat.of(decoder.decodeFloat())
 }
 
-@Serializer(forClass = DoubleTag::class)
-object ForDoubleTag : KSerializer<DoubleTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DoubleTag",PrimitiveKind.DOUBLE)
-    override fun serialize(encoder: Encoder, value: DoubleTag) = encoder.encodeDouble(value.double)
-    override fun deserialize(decoder: Decoder): DoubleTag = DoubleTag.of(decoder.decodeDouble())
+@Serializer(forClass = NbtDouble::class)
+object ForNbtDouble : KSerializer<NbtDouble> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtDouble",PrimitiveKind.DOUBLE)
+    override fun serialize(encoder: Encoder, value: NbtDouble) = encoder.encodeDouble(value.doubleValue())
+    override fun deserialize(decoder: Decoder): NbtDouble = NbtDouble.of(decoder.decodeDouble())
 }
 
-@Serializer(forClass = StringTag::class)
-object ForStringTag : KSerializer<StringTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("StringTag",PrimitiveKind.STRING)
-    override fun serialize(encoder: Encoder, value: StringTag) = encoder.encodeString(value.asString())
-    override fun deserialize(decoder: Decoder): StringTag = StringTag.of(decoder.decodeString())
+@Serializer(forClass = NbtString::class)
+object ForNbtString : KSerializer<NbtString> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtString",PrimitiveKind.STRING)
+    override fun serialize(encoder: Encoder, value: NbtString) = encoder.encodeString(value.asString())
+    override fun deserialize(decoder: Decoder): NbtString = NbtString.of(decoder.decodeString())
 }
 
-@Serializer(forClass = EndTag::class)
-object ForEndTag : KSerializer<EndTag> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("EndTag",PrimitiveKind.BYTE)
-    override fun serialize(encoder: Encoder, value: EndTag) = encoder.encodeByte(0)
-    override fun deserialize(decoder: Decoder): EndTag = EndTag.INSTANCE.also { decoder.decodeByte() }
+@Serializer(forClass = NbtNull::class)
+object ForNbtNull : KSerializer<NbtNull> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtNull",PrimitiveKind.BYTE)
+    override fun serialize(encoder: Encoder, value: NbtNull) = encoder.encodeByte(0)
+    override fun deserialize(decoder: Decoder): NbtNull = NbtNull.INSTANCE.also { decoder.decodeByte() }
 }
 
-@Serializer(forClass = ByteArrayTag::class)
+@Serializer(forClass = NbtByteArray::class)
 //TODO: optimizable by making the inner byte array public with a getter mixin
-object ForByteArrayTag : KSerializer<ByteArrayTag> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForByteTag.descriptor, "ByteArrayTag")
+object ForNbtByteArray : KSerializer<NbtByteArray> {
+    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForNbtByte.descriptor, "NbtByteArray")
 
-    override fun serialize(encoder: Encoder, value: ByteArrayTag) =
-        ListSerializer(ForByteTag).serialize(encoder, value)
+    override fun serialize(encoder: Encoder, value: NbtByteArray) =
+        ListSerializer(ForNbtByte).serialize(encoder, value)
 
-    override fun deserialize(decoder: Decoder): ByteArrayTag =
-        ByteArrayTag(ListSerializer(ForByteTag).deserialize(decoder).map { it.byte })
+    override fun deserialize(decoder: Decoder): NbtByteArray =
+        NbtByteArray(ListSerializer(ForNbtByte).deserialize(decoder).map { it.byteValue() })
 }
 
 //TODO: optimizable by making the inner int array public with a getter mixin
-@Serializer(forClass = IntArrayTag::class)
-object ForIntArrayTag : KSerializer<IntArrayTag> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForIntTag.descriptor, "IntArrayTag")
+@Serializer(forClass = NbtIntArray::class)
+object ForNbtIntArray : KSerializer<NbtIntArray> {
+    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForNbtInt.descriptor, "NbtIntArray")
 
-    override fun serialize(encoder: Encoder, value: IntArrayTag) =
-        ListSerializer(ForIntTag).serialize(encoder, value)
+    override fun serialize(encoder: Encoder, value: NbtIntArray) =
+        ListSerializer(ForNbtInt).serialize(encoder, value)
 
-    override fun deserialize(decoder: Decoder): IntArrayTag =
-        IntArrayTag(ListSerializer(ForIntTag).deserialize(decoder).map { it.int })
+    override fun deserialize(decoder: Decoder): NbtIntArray =
+        NbtIntArray(ListSerializer(ForNbtInt).deserialize(decoder).map { it.intValue() })
 }
 
 //TODO: optimizable by making the inner long array public with a getter mixin
-@Serializer(forClass = LongArrayTag::class)
-object ForLongArrayTag : KSerializer<LongArrayTag> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForLongTag.descriptor, "LongArrayTag")
+@Serializer(forClass = NbtLongArray::class)
+object ForNbtLongArray : KSerializer<NbtLongArray> {
+    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForNbtLong.descriptor, "NbtLongArray")
 
-    override fun serialize(encoder: Encoder, value: LongArrayTag) =
-        ListSerializer(ForLongTag).serialize(encoder, value)
+    override fun serialize(encoder: Encoder, value: NbtLongArray) =
+        ListSerializer(ForNbtLong).serialize(encoder, value)
 
-    override fun deserialize(decoder: Decoder): LongArrayTag =
-        LongArrayTag(ListSerializer(ForLongTag).deserialize(decoder).map { it.long })
+    override fun deserialize(decoder: Decoder): NbtLongArray =
+        NbtLongArray(ListSerializer(ForNbtLong).deserialize(decoder).map { it.longValue() })
 }
 
 //TODO: optimizable by using the exisiting encoding system
 @OptIn(InternalSerializationApi::class)
-@Serializer(forClass = Tag::class)
-object ForTag : KSerializer<Tag> {
+@Serializer(forClass = NbtElement::class)
+object ForTag : KSerializer<NbtElement> {
     override val descriptor: SerialDescriptor =         buildSerialDescriptor("kotlinx.serialization.Polymorphic", PolymorphicKind.OPEN) {
         element("type", String.serializer().descriptor)
         element(
             "value",
-            buildSerialDescriptor("kotlinx.serialization.Polymorphic<${Tag::class.simpleName}>", SerialKind.CONTEXTUAL)
+            buildSerialDescriptor("kotlinx.serialization.Polymorphic<${NbtElement::class.simpleName}>", SerialKind.CONTEXTUAL)
         )
     }
-    override fun serialize(encoder: Encoder, value: Tag) {
+    override fun serialize(encoder: Encoder, value: NbtElement) {
         if (encoder is ICanEncodeTag) encoder.encodeTag(value)
-        else PolymorphicSerializer(Tag::class).serialize(encoder, value)
+        else PolymorphicSerializer(NbtElement::class).serialize(encoder, value)
     }
 
-    override fun deserialize(decoder: Decoder): Tag {
+    override fun deserialize(decoder: Decoder): NbtElement {
         if (decoder is ICanDecodeTag) return decoder.decodeTag()
-        else return PolymorphicSerializer(Tag::class).deserialize(decoder)
+        else return PolymorphicSerializer(NbtElement::class).deserialize(decoder)
     }
 }
 
 /**
- * ListTag can only hold one type of tag
+ * NbtList can only hold one type of tag
  */
 //TODO: optimizable by making the inner List<Tag> public with a getter mixin
-@Serializer(forClass = ListTag::class)
-object ForListTag : KSerializer<ListTag> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForTag.descriptor, "ListTag")
+@Serializer(forClass = NbtList::class)
+object ForNbtList : KSerializer<NbtList> {
+    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForTag.descriptor, "NbtList")
 
-    override fun serialize(encoder: Encoder, value: ListTag) {
+    override fun serialize(encoder: Encoder, value: NbtList) {
         ListSerializer(ForTag).serialize(encoder, value)
     }
 
-    override fun deserialize(decoder: Decoder): ListTag = ListTag().apply {
+    override fun deserialize(decoder: Decoder): NbtList = NbtList().apply {
         for (tag in ListSerializer(ForTag).deserialize(decoder)) {
             add(tag)
         }
@@ -195,15 +197,15 @@ object ForListTag : KSerializer<ListTag> {
 }
 
 //TODO: optimizable by making the inner Map<String,Tag> public with a getter mixin
-@Serializer(forClass = CompoundTag::class)
-object ForCompoundTag : KSerializer<CompoundTag> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("CompoundTag"){
+@Serializer(forClass = NbtCompound::class)
+object ForNbtCompound : KSerializer<NbtCompound> {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("NbtCompound"){
         mapSerialDescriptor(PrimitiveSerialDescriptor("Key", PrimitiveKind.STRING), ForTag.descriptor)
     }
 
-    override fun serialize(encoder: Encoder, value: CompoundTag) {
-        if (encoder is ICanEncodeCompoundTag) {
-            encoder.encodeCompoundTag(value)
+    override fun serialize(encoder: Encoder, value: NbtCompound) {
+        if (encoder is ICanEncodeNbtCompound) {
+            encoder.encodeNbtCompound(value)
         } else {
             MapSerializer(String.serializer(), ForTag).serialize(
                 encoder,
@@ -213,11 +215,11 @@ object ForCompoundTag : KSerializer<CompoundTag> {
 
     }
 
-    override fun deserialize(decoder: Decoder): CompoundTag {
-        if (decoder is ICanDecodeCompoundTag) {
-            return decoder.decodeCompoundTag()
+    override fun deserialize(decoder: Decoder): NbtCompound {
+        if (decoder is ICanDecodeNbtCompound) {
+            return decoder.decodeNbtCompound()
         }
-        return CompoundTag().apply {
+        return NbtCompound().apply {
             for ((key, value) in MapSerializer(String.serializer(), ForTag).deserialize(decoder)) {
                 put(key, value)
             }
@@ -233,7 +235,7 @@ object ForItemStack : KSerializer<ItemStack> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ItemStack") {
             element("id",String.serializer().descriptor)
         element("count",Int.serializer().descriptor)
-            element("tag",ForCompoundTag.descriptor)
+            element("tag",ForNbtCompound.descriptor)
 
     }
     private const val IdIndex = 0
@@ -245,7 +247,7 @@ object ForItemStack : KSerializer<ItemStack> {
         val compositeOutput = encoder.beginStructure(descriptor)
         compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(value.item).toString())
         compositeOutput.encodeIntElement(descriptor, CountIndex, value.count)
-        compositeOutput.encodeSerializableElement(descriptor, TagIndex, ForCompoundTag.nullable, value.tag)
+        compositeOutput.encodeSerializableElement(descriptor, TagIndex, ForNbtCompound.nullable, value.nbt)
         compositeOutput.endStructure(descriptor)
     }
 
@@ -255,12 +257,12 @@ object ForItemStack : KSerializer<ItemStack> {
 
         var id: String? = null
         var count = 0
-        var tag: CompoundTag? = null
+        var tag: NbtCompound? = null
         var countExists = false
         if(dec.decodeSequentially()){
             id = dec.decodeStringElement(descriptor, IdIndex)
             count = dec.decodeIntElement(descriptor, CountIndex)
-            tag = dec.decodeSerializableElement(descriptor, TagIndex, ForCompoundTag.nullable)
+            tag = dec.decodeSerializableElement(descriptor, TagIndex, ForNbtCompound.nullable)
             countExists = true
         } else{
             loop@ while (true) {
@@ -274,7 +276,7 @@ object ForItemStack : KSerializer<ItemStack> {
                         countExists = true
                     }
                     TagIndex -> {
-                        tag = dec.decodeNullableSerializableElement(descriptor, TagIndex, ForCompoundTag.nullable)
+                        tag = dec.decodeNullableSerializableElement(descriptor, TagIndex, ForNbtCompound.nullable)
                     }
                     else -> throw SerializationException("Unknown index $i")
                 }
@@ -291,9 +293,9 @@ object ForItemStack : KSerializer<ItemStack> {
         }
 
         return ItemStack(
-            Registry.ITEM.get(Identifier(id)).also { if (tag != null) it.postProcessTag(tag) },
+            Registry.ITEM.get(Identifier(id)).also { if (tag != null) it.postProcessNbt(tag) },
             count
-        ).apply { this.tag = tag }
+        ).apply { this.nbt = tag }
     }
 
 

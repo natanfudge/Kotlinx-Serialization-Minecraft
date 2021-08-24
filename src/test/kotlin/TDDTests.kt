@@ -7,9 +7,9 @@ import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.IntTag
-import net.minecraft.nbt.Tag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtElement
+import net.minecraft.nbt.NbtInt
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
 import utils.CityData
@@ -48,7 +48,7 @@ data class PolymorphicDataHolder(val data: PolymorphicData)
 
 
 @Serializable
-data class PolymorphicTag(val tag: Tag)
+data class PolymorphicTag(val tag: NbtElement)
 
 @Serializable
 data class NullableString(val stringN: String?)
@@ -68,6 +68,8 @@ data class Vec3dContainer(
 
 @Serializable
 data class IntStringMap(val intString: Map<Int, String>)
+@Serializable
+data class NullableProperty(val nullable: Int?)
 
 val intStringMap = IntStringMap(mapOf(0 to "foo"))
 
@@ -75,7 +77,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize simple data`() {
         val obj = SimpleData("amar", 2)
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         SimpleData.serializer().put(obj, existing)
         val back = SimpleData.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -85,7 +87,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize lists`() {
         val obj = SimpleList(listOf("asd", "Wef", "1232"))
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         SimpleList.serializer().put(obj, existing)
         val back = SimpleList.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -94,7 +96,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize nested data`() {
         val obj = NestedData(SimpleData("amar", 2), 123123L)
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         NestedData.serializer().put(obj, existing)
         val back = NestedData.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -106,7 +108,7 @@ class TDDTests {
             listOf(4, 5, null),
             listOf(6, 7, 8, 9)
         )
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         SimpleNullable.serializer().put(obj, existing)
         val back = SimpleNullable.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -118,7 +120,7 @@ class TDDTests {
             listOf(4, 5, 6, null),
             listOf(6, 7, 8)
         )
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         SimpleNullable.serializer().put(obj, existing)
         val back = SimpleNullable.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -130,7 +132,7 @@ class TDDTests {
             listOf(4, 5, 6),
             listOf(6, 7, 8)
         )
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         SimpleNullable.serializer().put(obj, existing)
         val back = SimpleNullable.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -139,7 +141,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize a UUID`() {
         val obj = Uuid(UUID(123, 345))
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         Uuid.serializer().put(obj, existing)
         val back = Uuid.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -154,7 +156,7 @@ class TDDTests {
             }
         }
         val obj = PolymorphicDataHolder(ImplData1(1))
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         PolymorphicDataHolder.serializer().put(obj, existing, context = context)
         val back = PolymorphicDataHolder.serializer().getFrom(existing, context = context)
         assertEquals(obj, back)
@@ -162,8 +164,8 @@ class TDDTests {
 
     @Test
     fun `TagEncoder can serialize polymorphic tags`() {
-        val obj = PolymorphicTag(IntTag.of(1))
-        val existing = CompoundTag()
+        val obj = PolymorphicTag(NbtInt.of(1))
+        val existing = NbtCompound()
         PolymorphicTag.serializer().put(obj, existing)
         val back = PolymorphicTag.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -172,7 +174,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize a nullable string`() {
         val obj = NullableString("Str1")
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         NullableString.serializer().put(obj, existing)
         val back = NullableString.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -183,9 +185,18 @@ class TDDTests {
         val obj = TreeHolder(
             SimpleTree(SimpleTree(null))
         )
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         TreeHolder.serializer().put(obj, existing)
         val back = TreeHolder.serializer().getFrom(existing)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `TagEncoder can serialize a nullable property`() {
+        val obj = NullableProperty(null)
+        val existing = NbtCompound()
+        NullableProperty.serializer().put(obj, existing)
+        val back = NullableProperty.serializer().getFrom(existing)
         assertEquals(obj, back)
     }
 
@@ -193,7 +204,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize a nullable value`() {
         val obj: CityData? = CityData(1, "asd")
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         CityData.serializer().put(obj, existing)
         val back = CityData.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -211,7 +222,7 @@ class TDDTests {
     @Test
     fun `TagEncoder can serialize null`() {
         val obj: CityData? = null
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         CityData.serializer().put(obj, existing)
         val back = CityData.serializer().nullable.getFrom(existing)
         assertEquals(obj, back)
@@ -220,7 +231,7 @@ class TDDTests {
     @Test
     fun `ByteBufEncoder can serialize null`() {
         val obj: CityData? = null
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         CityData.serializer().put(obj, existing)
         val back = CityData.serializer().nullable.getFrom(existing)
         assertEquals(obj, back)
@@ -238,7 +249,7 @@ class TDDTests {
     @Test
     fun `Can serialize a string to int map`() {
         val obj = intStringMap
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         IntStringMap.serializer().put(obj, existing)
         val back = IntStringMap.serializer().getFrom(existing)
         assertEquals(obj, back)

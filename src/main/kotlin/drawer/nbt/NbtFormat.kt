@@ -17,36 +17,36 @@ import net.minecraft.nbt.*
 
 //internal val TagModule = SerializersModule {
 //    polymorphic(Tag::class) {
-//        subclass(ByteTag::class, ForByteTag)
-//        subclass(ShortTag::class, ForShortTag)
-//        subclass(IntTag::class, ForIntTag)
-//        subclass(LongTag::class, ForLongTag)
-//        subclass(FloatTag::class, ForFloatTag)
-//        subclass(DoubleTag::class, ForDoubleTag)
-//        subclass(StringTag::class, ForStringTag)
-//        subclass(EndTag::class, ForEndTag)
-//        subclass(ByteArrayTag::class, ForByteArrayTag)
-//        subclass(IntArrayTag::class, ForIntArrayTag)
-//        subclass(LongArrayTag::class, ForLongArrayTag)
-//        subclass(ListTag::class, ForListTag)
-//        subclass(CompoundTag::class, ForCompoundTag)
+//        subclass(NbtByte::class, ForNbtByte)
+//        subclass(NbtShort::class, ForNbtShort)
+//        subclass(NbtInt::class, ForNbtInt)
+//        subclass(NbtLong::class, ForNbtLong)
+//        subclass(NbtFloat::class, ForNbtFloat)
+//        subclass(NbtDouble::class, ForNbtDouble)
+//        subclass(NbtString::class, ForNbtString)
+//        subclass(NbtNull::class, ForNbtNull)
+//        subclass(NbtByteArray::class, ForNbtByteArray)
+//        subclass(NbtIntArray::class, ForNbtIntArray)
+//        subclass(NbtLongArray::class, ForNbtLongArray)
+//        subclass(NbtList::class, ForNbtList)
+//        subclass(NbtCompound::class, ForNbtCompound)
 //    }
 //}
 internal val TagModule = SerializersModule {
-    polymorphic(Tag::class) {
-        subclass(ByteTag::class, ForByteTag)
-        subclass(ShortTag::class, ForShortTag)
-        subclass(IntTag::class, ForIntTag)
-        subclass(LongTag::class, ForLongTag)
-        subclass(FloatTag::class, ForFloatTag)
-        subclass(DoubleTag::class, ForDoubleTag)
-        subclass(StringTag::class, ForStringTag)
-        subclass(EndTag::class, ForEndTag)
-        subclass(ByteArrayTag::class, ForByteArrayTag)
-        subclass(IntArrayTag::class, ForIntArrayTag)
-        subclass(LongArrayTag::class, ForLongArrayTag)
-        subclass(ListTag::class, ForListTag)
-        subclass(CompoundTag::class, ForCompoundTag)
+    polymorphic(NbtElement::class) {
+        subclass(NbtByte::class, ForNbtByte)
+        subclass(NbtShort::class, ForNbtShort)
+        subclass(NbtInt::class, ForNbtInt)
+        subclass(NbtLong::class, ForNbtLong)
+        subclass(NbtFloat::class, ForNbtFloat)
+        subclass(NbtDouble::class, ForNbtDouble)
+        subclass(NbtString::class, ForNbtString)
+        subclass(NbtNull::class, ForNbtNull)
+        subclass(NbtByteArray::class, ForNbtByteArray)
+        subclass(NbtIntArray::class, ForNbtIntArray)
+        subclass(NbtLongArray::class, ForNbtLongArray)
+        subclass(NbtList::class, ForNbtList)
+        subclass(NbtCompound::class, ForNbtCompound)
     }
 }
 
@@ -58,27 +58,26 @@ internal val TagModule = SerializersModule {
 class NbtFormat(context: SerializersModule = EmptySerializersModule) : SerialFormat {
 
     /**
-     * Converts [obj] into a [CompoundTag] that represents [obj].
-     * Later [deserialize] can be called to retrieve an identical instance of [obj] from the [CompoundTag].
+     * Converts [obj] into a [NbtCompound] that represents [obj].
+     * Later [deserialize] can be called to retrieve an identical instance of [obj] from the [NbtCompound].
      *
      * These functions are not documented because I think they would be confusing.
      * Do you want these to be an official part of the API? Please make an issue.
      */
-    fun <T> serialize(serializer: SerializationStrategy<T>, obj: T): Tag {
+    fun <T> serialize(serializer: SerializationStrategy<T>, obj: T): NbtElement {
         return writeNbt(obj, serializer)
     }
 
-    fun <T> deserialize(deserializer: DeserializationStrategy<T>, tag: Tag): T {
+    fun <T> deserialize(deserializer: DeserializationStrategy<T>, tag: NbtElement): T {
         return readNbt(tag, deserializer)
-    }
-
-    internal companion object {
-        const val Null = 1.toByte()
     }
 
     override val serializersModule = context + TagModule
 
 }
+internal const val NbtFormatNull = 1.toByte()
+
+
 
 internal const val ClassDiscriminator = "type"
 

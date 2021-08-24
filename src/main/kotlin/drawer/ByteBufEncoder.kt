@@ -10,7 +10,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 
@@ -19,7 +19,7 @@ internal fun bufferedPacket() = PacketByteBuf(Unpooled.buffer())
 @OptIn(ExperimentalSerializationApi::class)
 internal class ByteBufFormat(context: SerializersModule = EmptySerializersModule) : SerialFormat {
 
-    inner class ByteBufEncoder(private val buf: PacketByteBuf) : AbstractEncoder(), ICanEncodeCompoundTag,
+    inner class ByteBufEncoder(private val buf: PacketByteBuf) : AbstractEncoder(), ICanEncodeNbtCompound,
         ICanEncodeIngredient {
 
 
@@ -107,14 +107,14 @@ internal class ByteBufFormat(context: SerializersModule = EmptySerializersModule
             ingredient.write(buf)
         }
 
-        override fun encodeCompoundTag(tag: CompoundTag) {
+        override fun encodeNbtCompound(tag: NbtCompound) {
             debug { "COMPOUNDTAG" }
-            buf.writeCompoundTag(tag)
+            buf.writeNbt(tag)
         }
 
     }
 
-    inner class ByteBufDecoder(private val buf: PacketByteBuf) : AbstractDecoder(), ICanDecodeCompoundTag,
+    inner class ByteBufDecoder(private val buf: PacketByteBuf) : AbstractDecoder(), ICanDecodeNbtCompound,
         ICanDecodeIngredient {
 
         override fun decodeSequentially(): Boolean {
@@ -190,10 +190,10 @@ internal class ByteBufFormat(context: SerializersModule = EmptySerializersModule
             debug { "NULL" }
             return null
         }
-        override fun decodeCompoundTag(): CompoundTag {
+        override fun decodeNbtCompound(): NbtCompound {
             debug { "COMPOUNDTAG" }
-            return buf.readCompoundTag()!!
-        } /*?: CompoundTag()*/
+            return buf.readNbt()!!
+        } /*?: NbtCompound()*/
         override fun decodeIngredient(): Ingredient {
             debug { "INGREDIENT" }
             return Ingredient.fromPacket(buf)

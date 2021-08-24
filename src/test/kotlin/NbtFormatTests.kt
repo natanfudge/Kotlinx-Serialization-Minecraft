@@ -1,8 +1,8 @@
 import drawer.nbt.NbtFormat
 import drawer.nbt.writeNbt
 import kotlinx.serialization.Serializable
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -16,14 +16,14 @@ data class ComplexObj(val list: List<SimpleObj>, val map: Map<String, Int>, val 
 data class CustomMap(val map: Map<SimpleObj, SimpleObj>)
 
 class NestedNbtFormatTests {
-    private fun CompoundTag.tag(key: String, init: CompoundTag.() -> Unit) = put(key, CompoundTag().apply(init))
-    private fun CompoundTag.list(key: String, init: ListTag.() -> Unit) = put(key, ListTag().apply(init))
-    private fun ListTag.tag(init: CompoundTag.() -> Unit) = add(CompoundTag().apply(init))
+    private fun NbtCompound.tag(key: String, init: NbtCompound.() -> Unit) = put(key, NbtCompound().apply(init))
+    private fun NbtCompound.list(key: String, init: NbtList.() -> Unit) = put(key, NbtList().apply(init))
+    private fun NbtList.tag(init: NbtCompound.() -> Unit) = add(NbtCompound().apply(init))
     @Test
-    fun `Objects gets serialized to CompoundTag`() {
+    fun `Objects gets serialized to NbtCompound`() {
         val simple = SimpleObj()
         val actual = NbtFormat().writeNbt(simple, SimpleObj.serializer())
-        val expected = CompoundTag().apply {
+        val expected = NbtCompound().apply {
             putInt("x", 3)
             putString("y", "asdf")
         }
@@ -31,14 +31,14 @@ class NestedNbtFormatTests {
     }
 
     @Test
-    fun `Lists get serialized to ListTags, maps and objects to CompoundTags`() {
+    fun `Lists get serialized to NbtLists, maps and objects to NbtCompounds`() {
         val obj = ComplexObj(
             list = listOf(SimpleObj(), SimpleObj(x = 2)),
             map = mapOf("3" to 3, "hello" to 2),
             simple = SimpleObj(y = "foo")
         )
         val actual = NbtFormat().writeNbt(obj, ComplexObj.serializer())
-        val expected = CompoundTag().apply {
+        val expected = NbtCompound().apply {
             list("list") {
                 tag {
                     putInt("x", 3)
@@ -74,7 +74,7 @@ class NestedNbtFormatTests {
         )
 
         val actual = NbtFormat().writeNbt(obj, CustomMap.serializer())
-        val expected = CompoundTag().apply {
+        val expected = NbtCompound().apply {
             list("map") {
                 tag {
                     putInt("x", 3)

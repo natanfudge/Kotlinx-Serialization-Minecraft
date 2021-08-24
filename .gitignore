@@ -18,3 +18,6 @@ run/
 minecraft/
 cursegradle.properties
 logs/
+
+secret_key.txt
+local.properties

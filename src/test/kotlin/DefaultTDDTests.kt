@@ -6,9 +6,8 @@ import drawer.put
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.IntTag
-import net.minecraft.nbt.Tag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtInt
 import org.junit.jupiter.api.Test
 import utils.Tree
 import java.util.*
@@ -29,7 +28,7 @@ class DefaultTDDTests {
 
     @Test
     fun `TagEncoder can give the default value in case it doesn't exist`(){
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         val back = NullableClass.serializer().getFrom(existing)
 
         assertEquals(back,NullableClass())
@@ -38,7 +37,7 @@ class DefaultTDDTests {
     @Test
     fun `TagEncoder can serialize a defaulted class when the value is not specified`() {
         val obj = DefaultedInt()
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         DefaultedInt.serializer().put(obj, existing)
         val back = DefaultedInt.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -46,7 +45,7 @@ class DefaultTDDTests {
     @Test
     fun `TagEncoder can serialize a defaulted class when the value is specified`() {
         val obj = DefaultedInt(3)
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         DefaultedInt.serializer().put(obj, existing)
         val back = DefaultedInt.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -55,7 +54,7 @@ class DefaultTDDTests {
     @Test
     fun `TagEncoder can serialize a defaulted nested class when the inner value is not specified and the outer is not`() {
         val obj = DefaultedNestedNoValue()
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         DefaultedNestedNoValue.serializer().put(obj, existing)
         val back = DefaultedNestedNoValue.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -63,7 +62,7 @@ class DefaultTDDTests {
     @Test
     fun `TagEncoder can serialize a defaulted nested class when the inner value is specified but the outer is not`() {
         val obj = DefaultedNestedValue()
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         DefaultedNestedValue.serializer().put(obj, existing)
         val back = DefaultedNestedValue.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -72,7 +71,7 @@ class DefaultTDDTests {
     @Test
     fun `TagEncoder can serialize a defaulted nested class when the inner value is not specified but the outer is `() {
         val obj = DefaultedNestedNoValue(DefaultedInt())
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         DefaultedNestedNoValue.serializer().put(obj, existing)
         val back = DefaultedNestedNoValue.serializer().getFrom(existing)
         assertEquals(obj, back)
@@ -80,7 +79,7 @@ class DefaultTDDTests {
     @Test
     fun `TagEncoder can serialize a defaulted nested class when the inner value is specified and the outer is specified as well`() {
         val obj = DefaultedNestedValue(DefaultedInt(2))
-        val existing = CompoundTag()
+        val existing = NbtCompound()
         DefaultedNestedValue.serializer().put(obj, existing)
         val back = DefaultedNestedValue.serializer().getFrom(existing)
         assertEquals(obj, back)

@@ -1,7 +1,5 @@
 # Fabric Drawer
-[![CurseForge](https://curse.nikky.moe/api/img/334410?logo)](https://curseforge.com/minecraft/mc-mods/fabric-drawer)
 [![Discord](https://img.shields.io/discord/219787567262859264?color=blue&label=Discord)](https://discord.gg/CFaCu97)
-[![Bintray](https://api.bintray.com/packages/natanfudge/libs/fabric-drawer/images/download.svg)](https://bintray.com/beta/#/natanfudge/libs/fabric-drawer?tab=overview)
 [![Latest Commit](https://img.shields.io/github/last-commit/natanfudge/fabric-drawer)](https://github.com/natanfudge/Fabric-Drawer/commits/master)
 
 Drawer is a Fabric library mod for Kotlin mods that allows you to easily convert objects back and forth from NBT and PacketBytebuf using kotlinx.serialization, and provides KSerializers for common Minecraft types (for NBT, PacketBytebuf, or even JSON). 
@@ -9,26 +7,19 @@ Drawer is a Fabric library mod for Kotlin mods that allows you to easily convert
 <details><summary><b>Gradle</b></summary>
 <p>
 
-Add `jcenter()` to repositories if you haven't yet:
-```groovy
-repositories {
-    // [...]
-    jcenter()
-}
-```
-And add to dependencies:
+Add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("com.lettuce.fudge:fabric-drawer:4.0.0-1.16.5")
-    include("com.lettuce.fudge:fabric-drawer:4.0.0-1.16.5")
+    modImplementation("io.natanfudge.github:fabric-drawer:4.1.0-1.17.1")
+    include("io.natanfudge.github:fabric-drawer:4.1.0-1.17.1")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id ("org.jetbrains.kotlin.plugin.serialization") version 1.4.21 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version 1.5.21 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 
@@ -60,14 +51,14 @@ fun fillData() {
 var myInfo: BlockInfo = BlockInfo()
     private set
 
-override fun toTag(tag: CompoundTag): CompoundTag {
+override fun toNbt(tag: NbtCompound): NbtCompound {
     // Serialize
     BlockInfo.serializer().put(myInfo, inTag = tag)
-    return super.toTag(tag)
+    return super.toNbt(tag)
 }
 
-override fun fromTag(tag: CompoundTag) {
-    super.fromTag(tag)
+override fun fromNbt(tag: NbtCompound) {
+    super.fromNbt(tag)
     // Deserialize
     myInfo = BlockInfo.serializer().getFrom(tag)
 }
@@ -103,21 +94,21 @@ An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-ex
 </p>
 </details>
 
-<details><summary><b>Putting two objects of the same type in one CompoundTag</b></summary>
+<details><summary><b>Putting two objects of the same type in one NbtCompound</b></summary>
 <p>
 
- If you are putting two objects of the same type in one CompoundTag you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
+ If you are putting two objects of the same type in one NbtCompound you need to specify a unique key for each one. (Note: You don't need to do this with a `PacketByteBuf`.)
  For example:
 ```kotlin
 val myInfo1 = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, placementTime = 9999, firstToClick = "you")
 
-override fun toTag(tag: CompoundTag): CompoundTag {
+override fun toTag(tag: NbtCompound): NbtCompound {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag: CompoundTag) {
+override fun fromTag(tag: NbtCompound) {
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -127,7 +118,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag: CompoundTag) {
+fun toTag(tag: NbtCompound) {
     MyData.serializer().put(MyData(1, 2))
 }
 ```
@@ -135,7 +126,7 @@ fun toTag(tag: CompoundTag) {
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag: CompoundTag) {
+fun toTag(tag: NbtCompound) {
     MyData.serializer().put(MyData(1, 2), key = "first")
     MyData.serializer().put(MyData(3, 4), key = "second")
 }
@@ -184,7 +175,7 @@ If I've missed anything you need please [open an issue](https://github.com/natan
 
 You can also add your own serializers and more using the kotlinx.serialization API. For more information, [see the README](https://github.com/Kotlin/kotlinx.serialization/blob/master/README.md). 
 
-Note: Primitive serializers don't work right now for `CompoundTag`, so just use the existing `putInt` etc methods. 
+Note: Primitive serializers don't work right now for `NbtCompound`, so just use the existing `putInt` etc methods. 
 
 </p>
 </details>
@@ -219,10 +210,10 @@ If this is cumbersome a simple extension method on `KSerialize<T>` can be used t
 ```kotlin
 @Serializable
 data class MyData(val x: Int, val y: String) {
-    fun putIn(tag: CompoundTag) = MyData.serializer().put(this, tag)
+    fun putIn(tag: NbtCompound) = MyData.serializer().put(this, tag)
 }
 //Usage:
-fun toTag(tag: CompoundTag) {
+fun toTag(tag: NbtCompound) {
     val data = MyData(1, "hello")
     tag.putIn(tag) // Instead of MyData.serializer().put(data,tag)
 }
