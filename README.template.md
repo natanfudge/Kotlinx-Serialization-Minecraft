@@ -11,8 +11,8 @@ Add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("io.natanfudge.github:fabric-drawer:$total_version")
-    include("io.natanfudge.github:fabric-drawer:$total_version")
+    modImplementation("io.github.natanfudge:fabric-drawer:$total_version")
+    include("io.github.natanfudge:fabric-drawer:$total_version")
 }
 ```
 Add the kotlinx.serialization gradle plugin:

@@ -4,6 +4,7 @@ apply plugin: 'signing'
 //TODO: check if sources are being included
 java {
     withSourcesJar()
+    withJavadocJar()
 }
 
 group = maven_group
@@ -26,6 +27,7 @@ afterEvaluate {
                     classifier = "sources"
                     builtBy remapSourcesJar
                 }
+                artifact(javadocJar)
 
                 // Mostly self-explanatory metadata
                 pom {

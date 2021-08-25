@@ -11,8 +11,8 @@ Add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("io.natanfudge.github:fabric-drawer:4.1.0-1.17.1")
-    include("io.natanfudge.github:fabric-drawer:4.1.0-1.17.1")
+    modImplementation("io.github.natanfudge:fabric-drawer:4.1.0-1.17.1")
+    include("io.github.natanfudge:fabric-drawer:4.1.0-1.17.1")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
@@ -103,12 +103,12 @@ An example mod can be seen [here](https://github.com/natanfudge/fabric-drawer-ex
 val myInfo1 = BlockInfo(timesClicked = 7, placementTime = 1337, firstToClick = "fudge")
 val myInfo2 = BlockInfo(timesClicked = 3, placementTime = 9999, firstToClick = "you")
 
-override fun toTag(tag: NbtCompound): NbtCompound {
+override fun toNbt(tag: NbtCompound): NbtCompound {
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo1")
     BlockInfo.serializer().put(myInfo1, inTag = tag, key = "myInfo2")
 }
 
-override fun fromTag(tag: NbtCompound) {
+override fun fromNbt(tag: NbtCompound) {
     myInfo1 = BlockInfo.serializer.getFrom(tag, key = "myInfo1")
     myInfo2 = BlockInfo.serializer.getFrom(tag, key = "myInfo2")
 }
@@ -118,7 +118,7 @@ This is only true for when YOU are putting 2 instances of the same type. If a cl
 ```kotlin
 // No need for a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag: NbtCompound) {
+fun toNbt(tag: NbtCompound) {
     MyData.serializer().put(MyData(1, 2))
 }
 ```
@@ -126,7 +126,7 @@ fun toTag(tag: NbtCompound) {
 ```kotlin
 // Need a key
 data class MyData(val int1: Int = 0, val int2: Int = 0)
-fun toTag(tag: NbtCompound) {
+fun toNbt(tag: NbtCompound) {
     MyData.serializer().put(MyData(1, 2), key = "first")
     MyData.serializer().put(MyData(3, 4), key = "second")
 }
@@ -213,7 +213,7 @@ data class MyData(val x: Int, val y: String) {
     fun putIn(tag: NbtCompound) = MyData.serializer().put(this, tag)
 }
 //Usage:
-fun toTag(tag: NbtCompound) {
+fun toNbt(tag: NbtCompound) {
     val data = MyData(1, "hello")
     tag.putIn(tag) // Instead of MyData.serializer().put(data,tag)
 }
