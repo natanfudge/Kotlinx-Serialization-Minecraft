@@ -1,11 +1,13 @@
 package drawer.nbt
 
 import drawer.ForNbtCompound
+import drawer.ForNbtEnd
 import drawer.ForNbtList
 import drawer.NamedValueTagEncoder
 import drawer.mixin.AccessibleNbtList
 import drawer.util.DrawerLogger
-import kotlinx.serialization.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -121,11 +123,11 @@ private class NbtMapEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> Uni
         // writing key
         when {
             idx % 2 == 0 -> this.key = when (element) {
-                is NbtCompound, is AbstractNbtList<*>/*, is NbtNull */-> throw compoundTagInvalidKeyKind(
+                is NbtCompound, is AbstractNbtList<*>, is NbtEnd -> throw compoundTagInvalidKeyKind(
                     when (element) {
                         is NbtCompound -> ForNbtCompound.descriptor
                         is AbstractNbtList<*> -> ForNbtList.descriptor
-                        // is NbtNull -> ForNbtNull.descriptor
+                        is NbtEnd -> ForNbtEnd.descriptor
                         else -> error("impossible")
                     }
                 )

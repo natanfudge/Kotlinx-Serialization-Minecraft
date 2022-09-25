@@ -8,7 +8,7 @@
     ForNbtLong::class,
     ForNbtFloat::class,
     ForNbtDouble::class,
-    ForNbtNull::class,
+    ForNbtEnd::class,
     ForNbtByteArray::class,
     ForNbtIntArray::class,
     ForNbtLongArray::class,
@@ -99,7 +99,7 @@ data class Tags(
     val float: NbtFloat,
     val double: NbtDouble,
     val string: NbtString,
-    val end: NbtNull,
+    val end: NbtEnd,
     val byteArray: NbtByteArray,
     val intArray: NbtIntArray,
     val longArray: NbtLongArray
@@ -107,7 +107,7 @@ data class Tags(
 
 @Serializable
 data class NbtIntArrayWrapper(
-    val end: NbtNull,
+    val end: NbtEnd,
     val byteArray: NbtByteArray,
     val intArray: NbtIntArray,
     val longArray: NbtLongArray
@@ -343,7 +343,7 @@ val message = MessageWrapper(
 val messageModule = SerializersModule {
     polymorphic(PolymorphicMessage::class) {
         subclass(IntMessage::class , IntMessage.serializer())
-                subclass(StringMessage::class , StringMessage.serializer())
+        subclass(StringMessage::class , StringMessage.serializer())
     }
 }
 
@@ -355,14 +355,14 @@ val tags = Tags(
     NbtFloat.of(3.5f),
     NbtDouble.of(4.23),
     NbtString.of("amar"),
-    NbtNull.INSTANCE,
+    NbtEnd.INSTANCE,
     NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     NbtIntArray(listOf(8, 9, 10)),
     NbtLongArray(listOf(11L, 12L, 13L))
 )
 
 val intArrayTagWrapper = NbtIntArrayWrapper(
-    NbtNull.INSTANCE, NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
+    NbtEnd.INSTANCE, NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     NbtIntArray(listOf(8, 9, 10)), NbtLongArray(listOf(11L, 12L, 13L))
 )
 
@@ -392,7 +392,7 @@ val abstractTags = AbstractTags(
     NbtFloat.of(3.5f),
     NbtDouble.of(4.23),
     NbtString.of("amar"),
-    NbtNull.INSTANCE,
+    NbtEnd.INSTANCE,
     NbtByteArray(listOf(5.toByte(), 6.toByte(), 7.toByte())),
     NbtIntArray(listOf(8, 9, 10)),
     NbtLongArray(listOf(11L, 12L, 13L)),

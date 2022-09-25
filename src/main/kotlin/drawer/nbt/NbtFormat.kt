@@ -41,7 +41,7 @@ internal val TagModule = SerializersModule {
         subclass(NbtFloat::class, ForNbtFloat)
         subclass(NbtDouble::class, ForNbtDouble)
         subclass(NbtString::class, ForNbtString)
-        // subclass(NbtNull::class, ForNbtNull)
+        subclass(NbtEnd::class, ForNbtEnd)
         subclass(NbtByteArray::class, ForNbtByteArray)
         subclass(NbtIntArray::class, ForNbtIntArray)
         subclass(NbtLongArray::class, ForNbtLongArray)
@@ -74,8 +74,8 @@ class NbtFormat(context: SerializersModule = EmptySerializersModule()) : SerialF
     override val serializersModule = context + TagModule
 
 }
-internal const val NbtFormatNull = 1.toByte()
 
+internal const val NbtFormatNull = 1.toByte()
 
 
 internal const val ClassDiscriminator = "type"

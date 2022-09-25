@@ -112,15 +112,12 @@ object ForNbtString : KSerializer<NbtString> {
     override fun deserialize(decoder: Decoder): NbtString = NbtString.of(decoder.decodeString())
 }
 
-/**
- * Seems removed in 1.18
- */
-// @Serializer(forClass = NbtNull::class)
-// object ForNbtNull : KSerializer<NbtNull> {
-//     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtNull",PrimitiveKind.BYTE)
-//     override fun serialize(encoder: Encoder, value: NbtNull) = encoder.encodeByte(0)
-//     override fun deserialize(decoder: Decoder): NbtNull = NbtNull.INSTANCE.also { decoder.decodeByte() }
-// }
+ @Serializer(forClass = NbtEnd::class)
+ object ForNbtEnd : KSerializer<NbtEnd> {
+     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtEnd",PrimitiveKind.BYTE)
+     override fun serialize(encoder: Encoder, value: NbtEnd) = encoder.encodeByte(0)
+     override fun deserialize(decoder: Decoder): NbtEnd = NbtEnd.INSTANCE.also { decoder.decodeByte() }
+ }
 
 @Serializer(forClass = NbtByteArray::class)
 //TODO: optimizable by making the inner byte array public with a getter mixin
