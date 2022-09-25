@@ -17,7 +17,7 @@ import net.minecraft.recipe.Ingredient
 
 internal fun bufferedPacket() = PacketByteBuf(Unpooled.buffer())
 @OptIn(ExperimentalSerializationApi::class)
-internal class ByteBufFormat(context: SerializersModule = EmptySerializersModule) : SerialFormat {
+internal class ByteBufFormat(context: SerializersModule = EmptySerializersModule()) : SerialFormat {
 
     inner class ByteBufEncoder(private val buf: PacketByteBuf) : AbstractEncoder(), ICanEncodeNbtCompound,
         ICanEncodeIngredient {
@@ -84,7 +84,7 @@ internal class ByteBufFormat(context: SerializersModule = EmptySerializersModule
 
         override fun encodeChar(value: Char) {
             debug { "CHAR" }
-            buf.writeChar(value.toInt())
+            buf.writeChar(value.code)
         }
 
         override fun encodeString(value: String) {

@@ -17,8 +17,8 @@
     "fabric-drawer.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.4.0",
-    "fabric-language-kotlin": ">=1.3.50"
+    "fabricloader": ">=0.14.0",
+    "fabric-language-kotlin": ">=1.8.3"
   },
   "custom": {
     "modmenu:api": true

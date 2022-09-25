@@ -1,7 +1,6 @@
 pluginManagement {
     repositories {
         mavenLocal()
-        jcenter()
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
@@ -19,5 +18,4 @@ pluginManagement {
         id 'com.matthewprenger.cursegradle' version cursegradle_version
         id "org.jetbrains.kotlin.plugin.serialization" version kotlin_version
     }
-
 }

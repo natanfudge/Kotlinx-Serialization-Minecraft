@@ -22,7 +22,7 @@ fun <T> SerializationStrategy<T>.put(
     obj: T?,
     inTag: NbtCompound,
     key: String? = null,
-    context: SerializersModule = EmptySerializersModule
+    context: SerializersModule = EmptySerializersModule()
 ) {
     val usedKey = key ?: this.descriptor.serialName
     require(!inTag.contains(usedKey)) {
@@ -46,7 +46,7 @@ fun <T> SerializationStrategy<T>.put(
 fun <T> DeserializationStrategy<T>.getFrom(
     tag: NbtCompound,
     key: String? = null,
-    context: SerializersModule = EmptySerializersModule
+    context: SerializersModule = EmptySerializersModule()
 ): T {
     val deserializedTag =
         tag.get(key ?: this.descriptor.serialName) ?: if (descriptor.isNullable) return null as T else NbtCompound()
@@ -59,7 +59,11 @@ fun <T> DeserializationStrategy<T>.getFrom(
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
 @OptIn(ExperimentalSerializationApi::class)
-fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: SerializersModule = EmptySerializersModule) {
+fun <T> SerializationStrategy<T>.write(
+    obj: T?,
+    toBuf: PacketByteBuf,
+    context: SerializersModule = EmptySerializersModule()
+) {
     ByteBufFormat(context).ByteBufEncoder(toBuf).apply {
         if (obj != null) {
             encodeNotNullMark()
@@ -74,7 +78,10 @@ fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: S
  *  @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
 @OptIn(ExperimentalSerializationApi::class)
-fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerializersModule = EmptySerializersModule): T {
+fun <T> DeserializationStrategy<T>.readFrom(
+    buf: PacketByteBuf,
+    context: SerializersModule = EmptySerializersModule()
+): T {
     val decoder = ByteBufFormat(context).ByteBufDecoder(buf)
     return when {
         decoder.decodeNotNullMark() -> decoder.decodeSerializableValue(this)

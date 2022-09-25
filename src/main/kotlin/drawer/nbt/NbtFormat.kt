@@ -41,7 +41,7 @@ internal val TagModule = SerializersModule {
         subclass(NbtFloat::class, ForNbtFloat)
         subclass(NbtDouble::class, ForNbtDouble)
         subclass(NbtString::class, ForNbtString)
-        subclass(NbtNull::class, ForNbtNull)
+        // subclass(NbtNull::class, ForNbtNull)
         subclass(NbtByteArray::class, ForNbtByteArray)
         subclass(NbtIntArray::class, ForNbtIntArray)
         subclass(NbtLongArray::class, ForNbtLongArray)
@@ -54,8 +54,7 @@ internal val TagModule = SerializersModule {
 /**
  * Keeping this class public for now in case you want to serializer an object directly to tag and vise versa.
  */
-@OptIn(ExperimentalSerializationApi::class)
-class NbtFormat(context: SerializersModule = EmptySerializersModule) : SerialFormat {
+class NbtFormat(context: SerializersModule = EmptySerializersModule()) : SerialFormat {
 
     /**
      * Converts [obj] into a [NbtCompound] that represents [obj].

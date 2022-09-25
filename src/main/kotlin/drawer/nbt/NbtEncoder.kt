@@ -1,7 +1,6 @@
 package drawer.nbt
 
 import drawer.ForNbtCompound
-import drawer.ForNbtNull
 import drawer.ForNbtList
 import drawer.NamedValueTagEncoder
 import drawer.mixin.AccessibleNbtList
@@ -122,11 +121,11 @@ private class NbtMapEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> Uni
         // writing key
         when {
             idx % 2 == 0 -> this.key = when (element) {
-                is NbtCompound, is AbstractNbtList<*>, is NbtNull -> throw compoundTagInvalidKeyKind(
+                is NbtCompound, is AbstractNbtList<*>/*, is NbtNull */-> throw compoundTagInvalidKeyKind(
                     when (element) {
                         is NbtCompound -> ForNbtCompound.descriptor
                         is AbstractNbtList<*> -> ForNbtList.descriptor
-                        is NbtNull -> ForNbtNull.descriptor
+                        // is NbtNull -> ForNbtNull.descriptor
                         else -> error("impossible")
                     }
                 )

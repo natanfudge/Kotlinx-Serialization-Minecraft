@@ -1,11 +1,12 @@
 package utils
 
-import drawer.*
+import drawer.getFrom
+import drawer.put
+import drawer.readFrom
+import drawer.write
 import io.netty.buffer.Unpooled
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
@@ -60,7 +61,7 @@ fun testCases(init: TestCaseInit.() -> Unit) = TestCaseInit().apply(init)
 data class LazyCase<T : Any> @OptIn(ExperimentalSerializationApi::class) constructor(
     val lazyObj: () -> T,
     override val serializer: KSerializer<T>,
-    override val context: SerializersModule = EmptySerializersModule
+    override val context: SerializersModule = EmptySerializersModule()
 ) : Case<T> {
     override val obj: T get() = lazyObj()
     override val name: String get() = obj.javaClass.simpleName
@@ -73,7 +74,7 @@ data class LazyCase<T : Any> @OptIn(ExperimentalSerializationApi::class) constru
 data class EagerCase<T : Any> @OptIn(ExperimentalSerializationApi::class) constructor(
     override val obj: T,
     override val serializer: KSerializer<T>,
-    override val context: SerializersModule = EmptySerializersModule,
+    override val context: SerializersModule = EmptySerializersModule(),
     override val name: String = obj.javaClass.simpleName
 ) : Case<T>
 

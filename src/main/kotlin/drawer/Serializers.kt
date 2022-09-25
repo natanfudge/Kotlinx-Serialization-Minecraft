@@ -1,4 +1,5 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
+@file:OptIn(ExperimentalSerializationApi::class)
 
 package drawer
 
@@ -11,7 +12,6 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.internal.*
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
@@ -112,12 +112,15 @@ object ForNbtString : KSerializer<NbtString> {
     override fun deserialize(decoder: Decoder): NbtString = NbtString.of(decoder.decodeString())
 }
 
-@Serializer(forClass = NbtNull::class)
-object ForNbtNull : KSerializer<NbtNull> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtNull",PrimitiveKind.BYTE)
-    override fun serialize(encoder: Encoder, value: NbtNull) = encoder.encodeByte(0)
-    override fun deserialize(decoder: Decoder): NbtNull = NbtNull.INSTANCE.also { decoder.decodeByte() }
-}
+/**
+ * Seems removed in 1.18
+ */
+// @Serializer(forClass = NbtNull::class)
+// object ForNbtNull : KSerializer<NbtNull> {
+//     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtNull",PrimitiveKind.BYTE)
+//     override fun serialize(encoder: Encoder, value: NbtNull) = encoder.encodeByte(0)
+//     override fun deserialize(decoder: Decoder): NbtNull = NbtNull.INSTANCE.also { decoder.decodeByte() }
+// }
 
 @Serializer(forClass = NbtByteArray::class)
 //TODO: optimizable by making the inner byte array public with a getter mixin
