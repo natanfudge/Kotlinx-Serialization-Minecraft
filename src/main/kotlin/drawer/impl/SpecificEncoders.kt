@@ -1,4 +1,4 @@
-package drawer
+package drawer.impl
 
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.internal.NamedValueDecoder
@@ -37,10 +37,10 @@ internal interface ICanDecodeNbtCompound {
     fun decodeNbtCompound(): NbtCompound
 }
 
-internal interface ICanEncodeIngredient{
+internal interface ICanEncodeIngredient {
     fun encodeIngredient(ingredient: Ingredient)
 }
 
-interface ICanDecodeIngredient{
-    fun decodeIngredient() : Ingredient
+internal interface ICanDecodeIngredient {
+     fun decodeIngredient() : Ingredient
 }

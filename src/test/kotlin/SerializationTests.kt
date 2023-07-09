@@ -1,9 +1,9 @@
 
 import drawer.*
+import drawer.impl.bufferedPacket
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.Bootstrap
 import net.minecraft.nbt.NbtCompound
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

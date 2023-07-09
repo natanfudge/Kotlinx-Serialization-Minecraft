@@ -1,11 +1,9 @@
-package drawer.nbt
+package drawer.impl.nbt
 
-import drawer.ForNbtCompound
-import drawer.ForNbtNull
-import drawer.ForNbtList
-import drawer.NamedValueTagEncoder
+import drawer.*
+import drawer.impl.NamedValueTagEncoder
 import drawer.mixin.AccessibleNbtList
-import drawer.util.DrawerLogger
+import drawer.impl.util.DrawerLogger
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -14,8 +12,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 import java.lang.reflect.Field
-
-internal fun <T> NbtFormat.writeNbt(value: T, serializer: SerializationStrategy<T>): NbtElement {
+internal fun <T> Nbt.writeNbt(value: T, serializer: SerializationStrategy<T>): NbtElement {
     lateinit var result: NbtElement
     val encoder = NbtEncoder(this) { result = it }
     encoder.encodeSerializableValue(serializer, value)
@@ -23,7 +20,7 @@ internal fun <T> NbtFormat.writeNbt(value: T, serializer: SerializationStrategy<
 }
 @OptIn(ExperimentalSerializationApi::class)
 private sealed class AbstractNbtEncoder(
-    val format: NbtFormat,
+    val format: Nbt,
     val nodeConsumer: (NbtElement) -> Unit
 ) : NamedValueTagEncoder() {
 
@@ -102,7 +99,7 @@ private sealed class AbstractNbtEncoder(
 
 internal const val PRIMITIVE_TAG = "primitive" // also used in drawer.nbt.JsonPrimitiveInput
 
-private open class NbtEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> Unit) :
+private open class NbtEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) :
     AbstractNbtEncoder(format, nodeConsumer) {
 
     protected val content: NbtCompound = NbtCompound()
@@ -114,7 +111,7 @@ private open class NbtEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> U
     override fun getCurrent(): NbtElement = content
 }
 
-private class NbtMapEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> Unit) : NbtEncoder(format, nodeConsumer) {
+private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtEncoder(format, nodeConsumer) {
     private lateinit var key: String
 
     override fun putElement(key: String, element: NbtElement) {
@@ -140,7 +137,7 @@ private class NbtMapEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> Uni
 
 }
 
-private class NullableListEncoder(format: NbtFormat, nodeConsumer: (NbtElement) -> Unit) : NbtEncoder(format, nodeConsumer) {
+private class NullableListEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtEncoder(format, nodeConsumer) {
     override fun putElement(key: String, element: NbtElement) {
         content[key] = element
     }
@@ -165,7 +162,7 @@ private fun NbtList.addAnyTag(index: Int, tag: NbtElement) {
     innerList.add(index, tag)
 }
 
-private class NbtListEncoder(json: NbtFormat, nodeConsumer: (NbtElement) -> Unit) :
+private class NbtListEncoder(json: Nbt, nodeConsumer: (NbtElement) -> Unit) :
     AbstractNbtEncoder(json, nodeConsumer) {
     private val list: NbtList = NbtList()
 

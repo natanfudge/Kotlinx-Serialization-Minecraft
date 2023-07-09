@@ -4,10 +4,11 @@
 
 @file:Suppress("LeakingThis")
 
-package drawer.nbt
+package drawer.impl.nbt
 
 
-import drawer.NamedValueNbtDecoder
+import drawer.impl.NamedValueNbtDecoder
+import drawer.Nbt
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -16,7 +17,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 
-internal fun <T> NbtFormat.readNbt(element: NbtElement, deserializer: DeserializationStrategy<T>): T {
+internal fun <T> Nbt.readNbt(element: NbtElement, deserializer: DeserializationStrategy<T>): T {
     val input = when (element) {
         is NbtCompound -> NbtDecoder(this, element)
         is AbstractNbtList<*> -> TagListDecoder(this, element)
@@ -34,7 +35,7 @@ private inline fun <reified T> Any.cast() = this as T
 
 
 @OptIn(ExperimentalSerializationApi::class)
-private sealed class AbstractNbtDecoder(val format: NbtFormat, open val map: NbtElement) : NamedValueNbtDecoder() {
+private sealed class AbstractNbtDecoder(val format: Nbt, open val map: NbtElement) : NamedValueNbtDecoder() {
 
     override val serializersModule: SerializersModule
         get() = format.serializersModule
@@ -124,7 +125,7 @@ private sealed class AbstractNbtDecoder(val format: NbtFormat, open val map: Nbt
 }
 
 
-private class TagPrimitiveDecoder(json: NbtFormat, override val map: NbtElement) : AbstractNbtDecoder(json, map) {
+private class TagPrimitiveDecoder(json: Nbt, override val map: NbtElement) : AbstractNbtDecoder(json, map) {
 
     init {
         pushTag(PRIMITIVE_TAG)
@@ -137,7 +138,7 @@ private class TagPrimitiveDecoder(json: NbtFormat, override val map: NbtElement)
     }
 }
 
-private open class NbtDecoder(json: NbtFormat, override val map: NbtCompound) : AbstractNbtDecoder(json, map) {
+private open class NbtDecoder(json: Nbt, override val map: NbtCompound) : AbstractNbtDecoder(json, map) {
     private var position = 0
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -155,12 +156,12 @@ private open class NbtDecoder(json: NbtFormat, override val map: NbtCompound) : 
 
 }
 
-private class NbtMapDecoder(json: NbtFormat, override val map: NbtCompound) : NbtDecoder(json, map) {
+private class NbtMapDecoder(json: Nbt, override val map: NbtCompound) : NbtDecoder(json, map) {
     private val keys = map.keys.toList()
     private val size: Int = keys.size * 2
     private var position = -1
 
-    override fun elementName(desc: SerialDescriptor, index: Int): String {
+    override fun elementName(descriptor: SerialDescriptor, index: Int): String {
         val i = index / 2
         return keys[i]
     }
@@ -182,11 +183,11 @@ private class NbtMapDecoder(json: NbtFormat, override val map: NbtCompound) : Nb
     }
 }
 
-private class NullableListDecoder(json: NbtFormat, override val map: NbtCompound) : NbtDecoder(json, map) {
+private class NullableListDecoder(json: Nbt, override val map: NbtCompound) : NbtDecoder(json, map) {
     private val size: Int = map.size
     private var position = -1
 
-    override fun elementName(desc: SerialDescriptor, index: Int): String = index.toString()
+    override fun elementName(descriptor: SerialDescriptor, index: Int): String = index.toString()
 
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
@@ -207,11 +208,11 @@ private class NullableListDecoder(json: NbtFormat, override val map: NbtCompound
 }
 
 
-private class TagListDecoder(json: NbtFormat, override val map: AbstractNbtList<*>) : AbstractNbtDecoder(json, map) {
+private class TagListDecoder(json: Nbt, override val map: AbstractNbtList<*>) : AbstractNbtDecoder(json, map) {
     private val size = map.size
     private var currentIndex = -1
 
-    override fun elementName(desc: SerialDescriptor, index: Int): String = (index).toString()
+    override fun elementName(descriptor: SerialDescriptor, index: Int): String = (index).toString()
 
     override fun currentElement(tag: String): NbtElement {
         return map[tag.toInt()]

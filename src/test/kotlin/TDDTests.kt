@@ -1,6 +1,7 @@
 @file:UseSerializers(ForUuid::class, ForBlockPos::class, ForIdentifier::class, ForVec3d::class)
 
 import drawer.*
+import drawer.impl.bufferedPacket
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.builtins.nullable
@@ -214,8 +215,8 @@ class TDDTests {
     fun `ByteBufEncoder can serialize a nullable value`() {
         val obj: CityData? = CityData(1, "asd")
         val existing = bufferedPacket()
-        CityData.serializer().write(obj, existing)
-        val back = CityData.serializer().readFrom(existing)
+        CityData.serializer().nullable.write(obj, existing)
+        val back = CityData.serializer().nullable.readFrom(existing)
         assertEquals(obj, back)
     }
 

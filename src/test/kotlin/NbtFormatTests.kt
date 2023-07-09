@@ -1,5 +1,5 @@
-import drawer.nbt.NbtFormat
-import drawer.nbt.writeNbt
+import drawer.Nbt
+import drawer.impl.nbt.writeNbt
 import kotlinx.serialization.Serializable
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
@@ -22,7 +22,7 @@ class NestedNbtFormatTests {
     @Test
     fun `Objects gets serialized to NbtCompound`() {
         val simple = SimpleObj()
-        val actual = NbtFormat().writeNbt(simple, SimpleObj.serializer())
+        val actual = Nbt.writeNbt(simple, SimpleObj.serializer())
         val expected = NbtCompound().apply {
             putInt("x", 3)
             putString("y", "asdf")
@@ -37,7 +37,7 @@ class NestedNbtFormatTests {
             map = mapOf("3" to 3, "hello" to 2),
             simple = SimpleObj(y = "foo")
         )
-        val actual = NbtFormat().writeNbt(obj, ComplexObj.serializer())
+        val actual = Nbt.writeNbt(obj, ComplexObj.serializer())
         val expected = NbtCompound().apply {
             list("list") {
                 tag {
@@ -73,7 +73,7 @@ class NestedNbtFormatTests {
             )
         )
 
-        val actual = NbtFormat().writeNbt(obj, CustomMap.serializer())
+        val actual = Nbt.writeNbt(obj, CustomMap.serializer())
         val expected = NbtCompound().apply {
             list("map") {
                 tag {

@@ -1,11 +1,37 @@
 package drawer
 
-import drawer.nbt.NbtFormat
+import drawer.impl.nbt.TagModule
+import drawer.impl.nbt.readNbt
+import drawer.impl.nbt.writeNbt
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.plus
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.network.PacketByteBuf
+import net.minecraft.nbt.NbtElement
+
+
+public open class Nbt(context: SerializersModule) : SerialFormat {
+
+    public companion object Default : Nbt(EmptySerializersModule())
+
+    /**
+     * Converts [obj] into a [NbtCompound] that represents [obj].
+     * Later [decodeFromNbt] can be called to retrieve an identical instance of [obj] from the [NbtCompound].
+     */
+    public fun <T> encodeToNbt(serializer: SerializationStrategy<T>, obj: T): NbtElement {
+        return writeNbt(obj, serializer)
+    }
+
+    public fun <T> decodeFromNbt(deserializer: DeserializationStrategy<T>, tag: NbtElement): T {
+        return readNbt(tag, deserializer)
+    }
+
+    override val serializersModule: SerializersModule = context + TagModule
+}
+
+public inline fun <reified T> Nbt.encodeToNbt(obj: T): NbtElement = encodeToNbt(serializersModule.serializer(), obj)
+public inline fun <reified T> Nbt.decodeFromNbt(nbt: NbtElement): T = decodeFromNbt(serializersModule.serializer(), nbt)
 
 
 /**
@@ -18,11 +44,11 @@ import net.minecraft.network.PacketByteBuf
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
 @OptIn(ExperimentalSerializationApi::class)
-fun <T> SerializationStrategy<T>.put(
+public fun <T> SerializationStrategy<T>.put(
     obj: T?,
     inTag: NbtCompound,
     key: String? = null,
-    context: SerializersModule = EmptySerializersModule
+    context: SerializersModule = EmptySerializersModule()
 ) {
     val usedKey = key ?: this.descriptor.serialName
     require(!inTag.contains(usedKey)) {
@@ -31,7 +57,7 @@ fun <T> SerializationStrategy<T>.put(
         |Also make sure you didn't use the same key twice.
     """.trimMargin()
     }
-    if (obj != null) inTag.put(usedKey, NbtFormat(context).serialize(this, obj))
+    if (obj != null) inTag.put(usedKey, Nbt(context).encodeToNbt(this, obj))
 }
 
 /**
@@ -43,44 +69,12 @@ fun <T> SerializationStrategy<T>.put(
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
 @OptIn(ExperimentalSerializationApi::class)
-fun <T> DeserializationStrategy<T>.getFrom(
+public fun <T> DeserializationStrategy<T>.getFrom(
     tag: NbtCompound,
     key: String? = null,
-    context: SerializersModule = EmptySerializersModule
+    context: SerializersModule = EmptySerializersModule()
 ): T {
     val deserializedTag =
         tag.get(key ?: this.descriptor.serialName) ?: if (descriptor.isNullable) return null as T else NbtCompound()
-    return NbtFormat(context).deserialize(this, deserializedTag)
+    return Nbt(context).decodeFromNbt(this, deserializedTag)
 }
-
-
-/**
- * Writes [obj] into [toBuf], to later be retrieved with [readFrom].
- * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
- */
-@OptIn(ExperimentalSerializationApi::class)
-fun <T> SerializationStrategy<T>.write(obj: T?, toBuf: PacketByteBuf, context: SerializersModule = EmptySerializersModule) {
-    ByteBufFormat(context).ByteBufEncoder(toBuf).apply {
-        if (obj != null) {
-            encodeNotNullMark()
-            encodeSerializableValue(this@write, obj)
-        } else encodeNull()
-    }
-}
-
-
-/**
- * Retrieves the object that was stored in the [buf] previously with [write]. For nullable values use .nullable extension on the serializer.
- *  @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
- */
-@OptIn(ExperimentalSerializationApi::class)
-fun <T> DeserializationStrategy<T>.readFrom(buf: PacketByteBuf, context: SerializersModule = EmptySerializersModule): T {
-    val decoder = ByteBufFormat(context).ByteBufDecoder(buf)
-    return when {
-        decoder.decodeNotNullMark() -> decoder.decodeSerializableValue(this)
-        descriptor.isNullable -> null as T
-        else -> throw SerializationException("You need to use a nullable serializer to be able to read a nullable value. Use the .nullable extension property.")
-    }
-}
-
-
