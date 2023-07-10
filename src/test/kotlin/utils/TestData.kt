@@ -1,24 +1,24 @@
 @file:UseSerializers(
-    ForUuid::class,
-    ForBlockPos::class,
-    ForIdentifier::class,
-    ForNbtByte::class,
-    ForNbtShort::class,
-    ForNbtInt::class,
-    ForNbtLong::class,
-    ForNbtFloat::class,
-    ForNbtDouble::class,
-    ForNbtNull::class,
-    ForNbtByteArray::class,
-    ForNbtIntArray::class,
-    ForNbtLongArray::class,
-    ForNbtString::class,
-    ForNbtList::class,
-    ForNbtCompound::class,
-    ForItemStack::class,
-    ForIngredient::class,
-    ForVec3d::class,
-    ForSoundEvent::class
+    UUIDSerializer::class,
+    BlockPosSerializer::class,
+    IdentifierSerializer::class,
+    NBtByteSerializer::class,
+    NbtShortSerializer::class,
+    NbtIntSerializer::class,
+    NbtLongSerializer::class,
+    NbtFloatSerializer::class,
+    NbtDoubleSerializer::class,
+    NbtNullSerializer::class,
+    NbtByteArraySerializer::class,
+    NbtIntArraySerializer::class,
+    NbtLongArraySerializer::class,
+    NbtStringSerializer::class,
+    NbtListSerializer::class,
+    NbtCompoundSerializer::class,
+    ItemStackSerializer::class,
+    IngredientSerializer::class,
+    Vec3dSerializer::class,
+    SoundEventSerializer::class
 )
 
 package utils
@@ -451,7 +451,7 @@ val compoundTags = NbtCompounds(
     NbtCompound().apply {
         put("", tags.intArray)
         put("asdfff", tags.double)
-        ForUuid.put(UUID(1, 2), this, key = "amar")
+        UUIDSerializer.put(UUID(1, 2), this, key = "amar")
     },
     NbtCompound().apply {
         put("heavy shit", listTags.listTag5)
@@ -464,7 +464,7 @@ data class LessNbtCompounds(val compoundTag1: NbtCompound/*, val compoundTag2 : 
 
 val lessNbtCompounds = LessNbtCompounds(
     NbtCompound().apply {
-        ForUuid.put(UUID(1, 2), this, key = "amar")
+        UUIDSerializer.put(UUID(1, 2), this, key = "amar")
     }
 
 )
@@ -530,9 +530,9 @@ val ingredients = {
 
 @Serializable
 data class DefaultedLists(
-    @Serializable(with = ForDefaultedList::class) val itemStackList: DefaultedList<ItemStack>,
-    @Serializable(with = ForDefaultedList::class) val ingredientList: DefaultedList<Ingredient>,
-    @Serializable(with = ForDefaultedList::class) val intList: DefaultedList<Int>
+    @Serializable(with = DefaultedListSerializer::class) val itemStackList: DefaultedList<ItemStack>,
+    @Serializable(with = DefaultedListSerializer::class) val ingredientList: DefaultedList<Ingredient>,
+    @Serializable(with = DefaultedListSerializer::class) val intList: DefaultedList<Int>
 ) {
     override fun equals(other: Any?): Boolean {
         return other is DefaultedLists &&

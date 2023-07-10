@@ -1,4 +1,4 @@
-@file:UseSerializers(ForUuid::class, ForBlockPos::class, ForIdentifier::class, ForVec3d::class)
+@file:UseSerializers(UUIDSerializer::class, BlockPosSerializer::class, IdentifierSerializer::class, Vec3dSerializer::class)
 
 import drawer.*
 import drawer.impl.bufferedPacket

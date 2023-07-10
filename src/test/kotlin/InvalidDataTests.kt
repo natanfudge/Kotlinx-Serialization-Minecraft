@@ -1,17 +1,12 @@
-@file:UseSerializers(ForBlockPos::class, ForUuid::class, ForIdentifier::class, ForVec3d::class)
+@file:UseSerializers(BlockPosSerializer::class, UUIDSerializer::class, IdentifierSerializer::class, Vec3dSerializer::class)
 
 import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import kotlinx.serialization.json.Json
-import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
-import utils.CityData
-import utils.OtherFormats
-import utils.Zoo
 import utils.testTagSerializer
 import java.util.*
 import kotlin.test.assertEquals

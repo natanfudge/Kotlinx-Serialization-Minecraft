@@ -83,8 +83,7 @@ val testCases = testCases {
     StreetData2(2, "Broadway", CityData(1, "New York")) with StreetData2.serializer()
     StreetData2(2, "Broadway", null) with StreetData2.serializer()
     CountyData("US", listOf(CityData(1, "New York"), CityData(2, "Chicago"))) with CountyData.serializer()
-    //TODO: restore test with later serialization versions
-//    zoo with Zoo.serializer()
+    zoo with Zoo.serializer()
     shop with Shop.serializer()
     otherFormats with OtherFormats.serializer()
     otherLazyFormats with OtherLazyFormats.serializer()

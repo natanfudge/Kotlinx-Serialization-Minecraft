@@ -121,9 +121,9 @@ private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : N
             idx % 2 == 0 -> this.key = when (element) {
                 is NbtCompound, is AbstractNbtList<*>, is NbtNull -> throw compoundTagInvalidKeyKind(
                     when (element) {
-                        is NbtCompound -> ForNbtCompound.descriptor
-                        is AbstractNbtList<*> -> ForNbtList.descriptor
-                        is NbtNull -> ForNbtNull.descriptor
+                        is NbtCompound -> NbtCompoundSerializer.descriptor
+                        is AbstractNbtList<*> -> NbtListSerializer.descriptor
+                        is NbtNull -> NbtNullSerializer.descriptor
                         else -> error("impossible")
                     }
                 )

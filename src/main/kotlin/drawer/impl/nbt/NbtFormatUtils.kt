@@ -12,19 +12,19 @@ import net.minecraft.nbt.*
 
 internal val TagModule = SerializersModule {
     polymorphic(NbtElement::class) {
-        subclass(NbtByte::class, ForNbtByte)
-        subclass(NbtShort::class, ForNbtShort)
-        subclass(NbtInt::class, ForNbtInt)
-        subclass(NbtLong::class, ForNbtLong)
-        subclass(NbtFloat::class, ForNbtFloat)
-        subclass(NbtDouble::class, ForNbtDouble)
-        subclass(NbtString::class, ForNbtString)
-        subclass(NbtNull::class, ForNbtNull)
-        subclass(NbtByteArray::class, ForNbtByteArray)
-        subclass(NbtIntArray::class, ForNbtIntArray)
-        subclass(NbtLongArray::class, ForNbtLongArray)
-        subclass(NbtList::class, ForNbtList)
-        subclass(NbtCompound::class, ForNbtCompound)
+        subclass(NbtByte::class, NBtByteSerializer)
+        subclass(NbtShort::class, NbtShortSerializer)
+        subclass(NbtInt::class, NbtIntSerializer)
+        subclass(NbtLong::class, NbtLongSerializer)
+        subclass(NbtFloat::class, NbtFloatSerializer)
+        subclass(NbtDouble::class, NbtDoubleSerializer)
+        subclass(NbtString::class, NbtStringSerializer)
+        subclass(NbtNull::class, NbtNullSerializer)
+        subclass(NbtByteArray::class, NbtByteArraySerializer)
+        subclass(NbtIntArray::class, NbtIntArraySerializer)
+        subclass(NbtLongArray::class, NbtLongArraySerializer)
+        subclass(NbtList::class, NbtListSerializer)
+        subclass(NbtCompound::class, NbtCompoundSerializer)
     }
 }
 

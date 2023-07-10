@@ -1,16 +1,12 @@
-@file:UseSerializers(ForUuid::class)
+@file:UseSerializers(UUIDSerializer::class)
 
-import drawer.ForUuid
+import drawer.UUIDSerializer
 import drawer.getFrom
 import drawer.put
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtInt
 import org.junit.jupiter.api.Test
-import utils.Tree
-import java.util.*
 import kotlin.test.assertEquals
 
 

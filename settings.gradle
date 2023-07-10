@@ -1,23 +1,13 @@
 pluginManagement {
     repositories {
-        mavenLocal()
-        jcenter()
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
         gradlePluginPortal()
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
     }
+}
 
-    plugins {
-        id 'fabric-loom' version loom_version
-        id "org.jetbrains.kotlin.jvm" version kotlin_version
-        id 'com.matthewprenger.cursegradle' version cursegradle_version
-        id "org.jetbrains.kotlin.plugin.serialization" version kotlin_version
-    }
-
+plugins {
+    id 'de.fayard.refreshVersions' version '0.51.0'
 }

@@ -5,10 +5,7 @@ package drawer
 
 import drawer.impl.*
 import kotlinx.serialization.*
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.MapSerializer
-import kotlinx.serialization.builtins.nullable
-import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.builtins.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
@@ -34,20 +31,20 @@ private inline fun <T> missingField(missingField: String, deserializing: String,
 }
 
 
-public object ForBlockPos : KSerializer<BlockPos> {
+public object BlockPosSerializer : KSerializer<BlockPos> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("BlockPos", PrimitiveKind.LONG)
     override fun serialize(encoder: Encoder, value: BlockPos): Unit = encoder.encodeLong(value.asLong())
     override fun deserialize(decoder: Decoder): BlockPos = BlockPos.fromLong(decoder.decodeLong())
 }
 
 
-public object ForIdentifier : KSerializer<Identifier> {
+public object IdentifierSerializer : KSerializer<Identifier> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Identifier", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: Identifier): Unit = encoder.encodeString(value.toString())
     override fun deserialize(decoder: Decoder): Identifier = Identifier(decoder.decodeString())
 }
 
-public object ForSoundEvent : KSerializer<SoundEvent> {
+public object SoundEventSerializer : KSerializer<SoundEvent> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("SoundEvent", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: SoundEvent) {
         encoder.encodeInt(Registry.SOUND_EVENT.getRawId(value))
@@ -58,90 +55,83 @@ public object ForSoundEvent : KSerializer<SoundEvent> {
 }
 
 
-public object ForNbtByte : KSerializer<NbtByte> {
+public object NBtByteSerializer : KSerializer<NbtByte> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtByte", PrimitiveKind.BYTE)
     override fun serialize(encoder: Encoder, value: NbtByte): Unit = encoder.encodeByte(value.byteValue())
     override fun deserialize(decoder: Decoder): NbtByte = NbtByte.of(decoder.decodeByte())
 }
 
-public object ForNbtShort : KSerializer<NbtShort> {
+public object NbtShortSerializer : KSerializer<NbtShort> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtShort", PrimitiveKind.SHORT)
     override fun serialize(encoder: Encoder, value: NbtShort): Unit = encoder.encodeShort(value.shortValue())
     override fun deserialize(decoder: Decoder): NbtShort = NbtShort.of(decoder.decodeShort())
 }
 
-public object ForNbtInt : KSerializer<NbtInt> {
+public object NbtIntSerializer : KSerializer<NbtInt> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtInt", PrimitiveKind.INT)
     override fun serialize(encoder: Encoder, value: NbtInt): Unit = encoder.encodeInt(value.intValue())
     override fun deserialize(decoder: Decoder): NbtInt = NbtInt.of(decoder.decodeInt())
 }
 
-public object ForNbtLong : KSerializer<NbtLong> {
+public object NbtLongSerializer : KSerializer<NbtLong> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtLong", PrimitiveKind.LONG)
     override fun serialize(encoder: Encoder, value: NbtLong): Unit = encoder.encodeLong(value.longValue())
     override fun deserialize(decoder: Decoder): NbtLong = NbtLong.of(decoder.decodeLong())
 }
 
-public object ForNbtFloat : KSerializer<NbtFloat> {
+public object NbtFloatSerializer : KSerializer<NbtFloat> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtFloat", PrimitiveKind.FLOAT)
     override fun serialize(encoder: Encoder, value: NbtFloat): Unit = encoder.encodeFloat(value.floatValue())
     override fun deserialize(decoder: Decoder): NbtFloat = NbtFloat.of(decoder.decodeFloat())
 }
 
-public object ForNbtDouble : KSerializer<NbtDouble> {
+public object NbtDoubleSerializer : KSerializer<NbtDouble> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtDouble", PrimitiveKind.DOUBLE)
     override fun serialize(encoder: Encoder, value: NbtDouble): Unit = encoder.encodeDouble(value.doubleValue())
     override fun deserialize(decoder: Decoder): NbtDouble = NbtDouble.of(decoder.decodeDouble())
 }
 
-public object ForNbtString : KSerializer<NbtString> {
+public object NbtStringSerializer : KSerializer<NbtString> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtString", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: NbtString): Unit = encoder.encodeString(value.asString())
     override fun deserialize(decoder: Decoder): NbtString = NbtString.of(decoder.decodeString())
 }
 
-public object ForNbtNull : KSerializer<NbtNull> {
+public object NbtNullSerializer : KSerializer<NbtNull> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtNull", PrimitiveKind.BYTE)
     override fun serialize(encoder: Encoder, value: NbtNull): Unit = encoder.encodeByte(0)
     override fun deserialize(decoder: Decoder): NbtNull = NbtNull.INSTANCE.also { decoder.decodeByte() }
 }
 
-//TODO: optimizable by making the inner byte array public with a getter mixin
-public object ForNbtByteArray : KSerializer<NbtByteArray> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForNbtByte.descriptor, "NbtByteArray")
+public object NbtByteArraySerializer : KSerializer<NbtByteArray> {
+    private val serializer = ByteArraySerializer()
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
-    override fun serialize(encoder: Encoder, value: NbtByteArray): Unit =
-        ListSerializer(ForNbtByte).serialize(encoder, value)
+    override fun serialize(encoder: Encoder, value: NbtByteArray): Unit = serializer.serialize(encoder, value.byteArray)
 
-    override fun deserialize(decoder: Decoder): NbtByteArray =
-        NbtByteArray(ListSerializer(ForNbtByte).deserialize(decoder).map { it.byteValue() })
+    override fun deserialize(decoder: Decoder): NbtByteArray = NbtByteArray(serializer.deserialize(decoder))
 }
 
-//TODO: optimizable by making the inner int array public with a getter mixin
-public object ForNbtIntArray : KSerializer<NbtIntArray> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForNbtInt.descriptor, "NbtIntArray")
+public object NbtIntArraySerializer : KSerializer<NbtIntArray> {
+    private val serializer = IntArraySerializer()
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
-    override fun serialize(encoder: Encoder, value: NbtIntArray): Unit =
-        ListSerializer(ForNbtInt).serialize(encoder, value)
+    override fun serialize(encoder: Encoder, value: NbtIntArray): Unit = serializer.serialize(encoder, value.intArray)
 
-    override fun deserialize(decoder: Decoder): NbtIntArray =
-        NbtIntArray(ListSerializer(ForNbtInt).deserialize(decoder).map { it.intValue() })
+    override fun deserialize(decoder: Decoder): NbtIntArray = NbtIntArray(serializer.deserialize(decoder))
 }
 
-//TODO: optimizable by making the inner long array public with a getter mixin
-public object ForNbtLongArray : KSerializer<NbtLongArray> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForNbtLong.descriptor, "NbtLongArray")
+public object NbtLongArraySerializer : KSerializer<NbtLongArray> {
+    private val serializer = LongArraySerializer()
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
-    override fun serialize(encoder: Encoder, value: NbtLongArray): Unit =
-        ListSerializer(ForNbtLong).serialize(encoder, value)
+    override fun serialize(encoder: Encoder, value: NbtLongArray): Unit = serializer.serialize(encoder, value.longArray)
 
-    override fun deserialize(decoder: Decoder): NbtLongArray =
-        NbtLongArray(ListSerializer(ForNbtLong).deserialize(decoder).map { it.longValue() })
+    override fun deserialize(decoder: Decoder): NbtLongArray = NbtLongArray(serializer.deserialize(decoder))
 }
 
-//TODO: optimizable by using the exisiting encoding system
 @OptIn(InternalSerializationApi::class)
-public object ForTag : KSerializer<NbtElement> {
+public object NbtElementSerializer : KSerializer<NbtElement> {
     override val descriptor: SerialDescriptor = buildSerialDescriptor("kotlinx.serialization.Polymorphic", PolymorphicKind.OPEN) {
         element("type", String.serializer().descriptor)
         element(
@@ -164,60 +154,42 @@ public object ForTag : KSerializer<NbtElement> {
 /**
  * NbtList can only hold one type of tag
  */
-//TODO: optimizable by making the inner List<Tag> public with a getter mixin
-public object ForNbtList : KSerializer<NbtList> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForTag.descriptor, "NbtList")
+public object NbtListSerializer : KSerializer<NbtList> {
+    private val serializer = ListSerializer(NbtElementSerializer)
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun serialize(encoder: Encoder, value: NbtList) {
-        ListSerializer(ForTag).serialize(encoder, value)
+        serializer.serialize(encoder, value)
     }
 
-    override fun deserialize(decoder: Decoder): NbtList = NbtList().apply {
-        for (tag in ListSerializer(ForTag).deserialize(decoder)) {
-            add(tag)
-        }
-    }
+    override fun deserialize(decoder: Decoder): NbtList = NbtList(serializer.deserialize(decoder), 0)
 }
 
-//TODO: optimizable by making the inner Map<String,Tag> public with a getter mixin
-public object ForNbtCompound : KSerializer<NbtCompound> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("NbtCompound") {
-        mapSerialDescriptor(PrimitiveSerialDescriptor("Key", PrimitiveKind.STRING), ForTag.descriptor)
-    }
+public object NbtCompoundSerializer : KSerializer<NbtCompound> {
+    private val serializer = MapSerializer(String.serializer(), NbtElementSerializer)
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun serialize(encoder: Encoder, value: NbtCompound) {
         if (encoder is ICanEncodeNbtCompound) {
             encoder.encodeNbtCompound(value)
         } else {
-            MapSerializer(String.serializer(), ForTag).serialize(
-                encoder,
-                value.keys.map { it to value.get(it)!! }.toMap()
-            )
+            serializer.serialize(encoder, value.entries)
         }
-
     }
 
     override fun deserialize(decoder: Decoder): NbtCompound {
         if (decoder is ICanDecodeNbtCompound) {
             return decoder.decodeNbtCompound()
         }
-        return NbtCompound().apply {
-            for ((key, value) in MapSerializer(String.serializer(), ForTag).deserialize(decoder)) {
-                put(key, value)
-            }
-        }
+        return NbtCompound(serializer.deserialize(decoder))
     }
 }
 
-//TODO: serialize / deserialize can be optimized specifically in ByteBufEncoder / TagEncoder to use the built-in functions
-// PacketByteBuf#writeItemStack, ItemStack#ToTag, etc, Using canEncodeItemStack interface the same way as in Tag.
-//TODO: optimizable by making the inner TagCompound public with a getter mixin
-public object ForItemStack : KSerializer<ItemStack> {
+public object ItemStackSerializer : KSerializer<ItemStack> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ItemStack") {
         element("id", String.serializer().descriptor)
-        element("count", Int.serializer().descriptor)
-        element("tag", ForNbtCompound.descriptor)
-
+        element("Count", Int.serializer().descriptor)
+        element("tag", NbtCompoundSerializer.descriptor)
     }
     private const val IdIndex = 0
     private const val CountIndex = 1
@@ -225,15 +197,23 @@ public object ForItemStack : KSerializer<ItemStack> {
 
 
     override fun serialize(encoder: Encoder, value: ItemStack) {
-        val compositeOutput = encoder.beginStructure(descriptor)
-        compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(value.item).toString())
-        compositeOutput.encodeIntElement(descriptor, CountIndex, value.count)
-        compositeOutput.encodeSerializableElement(descriptor, TagIndex, ForNbtCompound.nullable, value.nbt)
-        compositeOutput.endStructure(descriptor)
+        if (encoder is ICanEncodeItemStack) {
+            encoder.encodeItemStack(value)
+        } else {
+            val compositeOutput = encoder.beginStructure(descriptor)
+            compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(value.item).toString())
+            compositeOutput.encodeIntElement(descriptor, CountIndex, value.count)
+            compositeOutput.encodeSerializableElement(descriptor, TagIndex, NbtCompoundSerializer.nullable, value.nbt)
+            compositeOutput.endStructure(descriptor)
+        }
     }
 
 
     override fun deserialize(decoder: Decoder): ItemStack {
+        if (decoder is ICanDecodeItemStack) {
+            return decoder.decodeItemStack()
+        }
+
         val dec = decoder.beginStructure(descriptor)
 
         var id: String? = null
@@ -243,7 +223,7 @@ public object ForItemStack : KSerializer<ItemStack> {
         if (dec.decodeSequentially()) {
             id = dec.decodeStringElement(descriptor, IdIndex)
             count = dec.decodeIntElement(descriptor, CountIndex)
-            tag = dec.decodeSerializableElement(descriptor, TagIndex, ForNbtCompound.nullable)
+            tag = dec.decodeSerializableElement(descriptor, TagIndex, NbtCompoundSerializer.nullable)
             countExists = true
         } else {
             loop@ while (true) {
@@ -259,7 +239,7 @@ public object ForItemStack : KSerializer<ItemStack> {
                     }
 
                     TagIndex -> {
-                        tag = dec.decodeNullableSerializableElement(descriptor, TagIndex, ForNbtCompound.nullable)
+                        tag = dec.decodeNullableSerializableElement(descriptor, TagIndex, NbtCompoundSerializer.nullable)
                     }
 
                     else -> throw SerializationException("Unknown index $i")
@@ -284,24 +264,15 @@ public object ForItemStack : KSerializer<ItemStack> {
 
 
 }
-
-
-//TODO: optimizable by making the inner Array<ItemStack> public with a getter mixin
-public object ForIngredient : KSerializer<Ingredient> {
-    override val descriptor: SerialDescriptor = PublicedListLikeDescriptorImpl(ForItemStack.descriptor, "Ingredient")
-
-    private val helperSerializer = ListSerializer(ForItemStack)
+public object IngredientSerializer : KSerializer<Ingredient> {
+    private val serializer = ArraySerializer(ItemStackSerializer)
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun serialize(encoder: Encoder, value: Ingredient) {
         if (encoder is ICanEncodeIngredient) {
             encoder.encodeIngredient(value)
         } else {
-            // This is the only choice to serialize Ingredient in other formats
-            val buf = bufferedPacket()
-            value.write(buf)
-            val stackArrayLength = buf.readVarInt()
-            val matchingStacks = List(stackArrayLength) { buf.readItemStack() }
-            helperSerializer.serialize(encoder, matchingStacks)
+            serializer.serialize(encoder, value.matchingStacks)
         }
     }
 
@@ -309,46 +280,29 @@ public object ForIngredient : KSerializer<Ingredient> {
         if (decoder is ICanDecodeIngredient) {
             return decoder.decodeIngredient()
         } else {
-            // This is the only choice to serialize Ingredient in other formats
-            val matchingStacks = helperSerializer.deserialize(decoder)
-            val buf = bufferedPacket().apply {
-                writeVarInt(matchingStacks.size)
-                for (matchingStack in matchingStacks) {
-                    writeItemStack(matchingStack)
-                }
-            }
-            return Ingredient.fromPacket(buf)
+            return Ingredient.ofStacks(*serializer.deserialize(decoder))
         }
     }
 }
 
-//TODO: optimizable by making the inner List<E> public with a setter mixin so we don't need to convert lists to array here
-
 /**
  * Note: there is no guarantee that the default value will be saved since it's impossible to access it.
- * Nontheless, the default value doesn't matter after the point the list has been initialized.
+ * Nevertheless, the default value doesn't matter after the point the list has been initialized.
  */
-public class ForDefaultedList<T>(elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>> {
-    override val descriptor: SerialDescriptor =
-        PublicedListLikeDescriptorImpl(elementSerializer.descriptor, "DefaultedList")
-
-    private val helperSerializer = ListSerializer(elementSerializer)
+public class DefaultedListSerializer<T>(elementSerializer: KSerializer<T>) : KSerializer<DefaultedList<T>> {
+    private val serializer = ListSerializer(elementSerializer)
+    override val descriptor: SerialDescriptor = serializer.descriptor
 
     override fun serialize(encoder: Encoder, value: DefaultedList<T>): Unit =
-        helperSerializer.serialize(encoder, value)
+        serializer.serialize(encoder, value)
 
     override fun deserialize(decoder: Decoder): DefaultedList<T> {
-        val list = helperSerializer.deserialize(decoder)
-        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "UNCHECKED_CAST")
-        list as java.util.Collection<T>
-
-        @Suppress("UNCHECKED_CAST")
-        return DefaultedList.copyOf(list.firstOrNull(), *list.toArray()) as DefaultedList<T>
+        val list = serializer.deserialize(decoder)
+        return DefaultedList(list, list.firstOrNull())
     }
 }
 
-@Serializer(forClass = UUID::class)
-public object ForUuid : KSerializer<UUID> {
+public object UUIDSerializer : KSerializer<UUID> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Uuid") {
         element("most", Long.serializer().descriptor)
         element("least", Long.serializer().descriptor)
@@ -379,7 +333,7 @@ public object ForUuid : KSerializer<UUID> {
         }
     }
 
-    //TODO: boxing can be avoided here
+    // boxing can be avoided here
     private fun handleUnorthodoxInputOrdering(index: Int, dec: CompositeDecoder): UUID {
         var most: Long? = null // consider using flags or bit mask if you
         var least: Long? = null // need to read nullable non-optional properties
@@ -407,7 +361,7 @@ public object ForUuid : KSerializer<UUID> {
 }
 
 
-public object ForVec3d : KSerializer<Vec3d> {
+public object Vec3dSerializer : KSerializer<Vec3d> {
 
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Vec3d") {

@@ -14,6 +14,10 @@ archivesBaseName = project.archives_base_name
 version = total_version
 group = project.maven_group
 
+loom {
+    accessWidenerPath = file("src/main/resources/fabricdrawer.accessWidener")
+}
+
 
 java {
     toolchain {

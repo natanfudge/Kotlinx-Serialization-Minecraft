@@ -1,14 +1,10 @@
-@file:UseSerializers(ForBlockPos::class, ForIdentifier::class, ForNbtCompound::class)
+@file:UseSerializers(BlockPosSerializer::class, IdentifierSerializer::class, NbtCompoundSerializer::class)
 
-import com.mojang.bridge.game.GameVersion
 import drawer.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.Bootstrap
-import net.minecraft.MinecraftVersion
-import net.minecraft.SharedConstants
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtIo
 import org.junit.jupiter.api.Test

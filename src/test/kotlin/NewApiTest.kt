@@ -24,6 +24,3 @@ class NewApiTest {
         assertEquals(dog, back)
     }
 }
-
-//TODO: 1. Run refreshVersions
-// 2. Optimize a reasonable amount of the Serializers TODOs

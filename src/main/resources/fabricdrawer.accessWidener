@@ -1,0 +1,8 @@
+accessWidener v1 named
+# NbtListSerializer
+accessible method net/minecraft/nbt/NbtList <init> (Ljava/util/List;B)V
+# NbtCompoundSerializer
+accessible field net/minecraft/nbt/NbtCompound entries Ljava/util/Map;
+accessible method net/minecraft/nbt/NbtCompound <init> (Ljava/util/Map;)V
+# DefaultedListSerializer
+accessible method net/minecraft/util/collection/DefaultedList <init> (Ljava/util/List;Ljava/lang/Object;)V

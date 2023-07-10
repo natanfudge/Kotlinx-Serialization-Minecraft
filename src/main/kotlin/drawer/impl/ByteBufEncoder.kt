@@ -14,6 +14,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
@@ -23,7 +24,7 @@ internal fun bufferedPacket() = PacketByteBuf(Unpooled.buffer())
 
 
 internal class ByteBufEncoder(private val buf: PacketByteBuf, private val format: Buf) : AbstractEncoder(), ICanEncodeNbtCompound,
-    ICanEncodeIngredient {
+    ICanEncodeIngredient, ICanEncodeItemStack {
 
     override val serializersModule: SerializersModule = format.serializersModule
 
@@ -115,10 +116,14 @@ internal class ByteBufEncoder(private val buf: PacketByteBuf, private val format
         buf.writeNbt(tag)
     }
 
+    override fun encodeItemStack(stack: ItemStack) {
+        buf.writeItemStack(stack)
+    }
+
 }
 
 internal class ByteBufDecoder(private val buf: PacketByteBuf, private val format: Buf) : AbstractDecoder(), ICanDecodeNbtCompound,
-    ICanDecodeIngredient {
+    ICanDecodeIngredient, ICanDecodeItemStack {
 
     override fun decodeSequentially(): Boolean {
         return true
@@ -214,6 +219,10 @@ internal class ByteBufDecoder(private val buf: PacketByteBuf, private val format
     override fun decodeIngredient(): Ingredient {
         debug { "INGREDIENT" }
         return Ingredient.fromPacket(buf)
+    }
+
+    override fun decodeItemStack(): ItemStack {
+        return buf.readItemStack()
     }
 
 }
