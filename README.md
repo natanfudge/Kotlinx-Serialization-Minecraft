@@ -11,15 +11,15 @@ Add to dependencies:
 ```groovy
 dependencies {
     // [...]
-    modImplementation("io.github.natanfudge:fabric-drawer:4.1.0-1.17.1")
-    include("io.github.natanfudge:fabric-drawer:4.1.0-1.17.1")
+    modImplementation("io.github.natanfudge:fabric-drawer:<drawer-version>")
+    include("io.github.natanfudge:fabric-drawer:<drawer-version>")
 }
 ```
 Add the kotlinx.serialization gradle plugin:
 ```groovy
 plugins {
     // [...]
-    id ("org.jetbrains.kotlin.plugin.serialization") version 1.5.21 // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
+    id ("org.jetbrains.kotlin.plugin.serialization") version <kotlin-version> // Or omit version here and use the new gradle 5.6 plugins block in settings.gradle https://docs.gradle.org/5.6/userguide/plugins.html#sec:plugin_version_management
 }
 ```
 

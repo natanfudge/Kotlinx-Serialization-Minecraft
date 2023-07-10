@@ -1,14 +1,14 @@
 plugins {
     alias libs.plugins.loom
     id "maven-publish"
+    id "signing"
     alias libs.plugins.kotlin
     alias libs.plugins.kotlin.serialization
     alias libs.plugins.nexus.publish
     alias libs.plugins.loom.quiltflower
 }
-
-
-def total_version = "$mod_version-$minecraft_version"
+// After publishing, the artifact must be closed and then released at https://oss.sonatype.org/#stagingRepositories
+def total_version = "${libs.versions.mod.version.get()}+${libs.versions.minecraft.get()}"
 
 archivesBaseName = project.archives_base_name
 version = total_version
@@ -56,39 +56,84 @@ test {
 }
 
 
-Properties properties = new Properties()
-File propertiesFile = new File('gradle.properties')
-propertiesFile.withInputStream {
-    properties.load(it)
-}
-properties.put("total_version",total_version)
 
-
-
-
-task updateTemplate(type: Copy) {
-    group = "template"
-    description = "Switches out variables like \$total_version in .template.md files, and copies the results into .md files."
-    from(rootDir)
-    include("**/*.template.md")
-    filesMatching("**/*.template.md") {
-        def extensionLength = ".template.md".length()
-
-        name = sourceName.substring(0, sourceName.length() - extensionLength) + ".md"
-        expand(properties)
-    }
-    destinationDir = rootDir
+def getSecretProperty(String path, String key) {
+    def rootPath = System.getenv("SECRETS_PATH")
+    def file = new File("${rootPath}/${path}.properties")
+    if (!file.exists()) return ""
+    def properties = new Properties()
+    new FileInputStream(file).withCloseable { is -> properties.load(is) }
+    return properties[key]
 }
 
-apply from: "${rootDir}/scripts/publish-root.gradle"
-
-ext {
-    PUBLISH_VERSION = total_version
+def getSecretFile(String path) {
+    def rootPath = System.getenv("SECRETS_PATH")
+    def file = new File("$rootPath/$path.properties")
+    if (!file.exists()) return ""
+    return new String(file.readBytes())
 }
 
-apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"
+//TODO: figure out how to publish update with one command https://github.com/gradle-nexus/publish-plugin
+//afterEvaluate {
+//    task uploadDrawer {
+//        group = "drawer"
+//        dependsOn tasks.publishToSonatype, tasks.closeAndReleaseSonatypeStagingRepository
+//    }
+//}
 
 afterEvaluate {
-    publishReleasePublicationToSonatypeRepository.dependsOn updateTemplate
-}
+    publishing {
+        publications {
+            release(MavenPublication) {
+                // The coordinates of the library, being set from variables that
+                // we'll set up later
+                groupId maven_group
+                artifactId archives_base_name
+                version total_version
 
+                //TODO: test this new setup works properly (i replaced artifact(remapJar) and stuff)
+                from components.java
+
+                // Mostly self-explanatory metadata
+                pom {
+                    name = archives_base_name
+                    description = 'Fabric mod that adds NBT and PacketByteBuf to kotlinx.serialization'
+                    url = github_url
+                    licenses {
+                        license {
+                            name = license
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "fudge"
+                            name = "natan"
+                            email = "natandestroyer100@gmail.com"
+                        }
+                    }
+
+                    scm {
+                        url = github_url
+                    }
+                }
+            }
+        }
+    }
+}
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId = getSecretProperty('fabric-drawer/keys', "sonatype_staging_profile_id")
+            username = getSecretProperty("sonatype", "ossrh_username")
+            password = getSecretProperty("sonatype", "ossrh_password")
+        }
+    }
+}
+signing {
+    useInMemoryPgpKeys(
+            getSecretProperty("fabric-drawer/keys", "gpg_key_id"),
+            getSecretFile("fabric-drawer/secret_key.txt"),
+            getSecretProperty("fabric-drawer/keys", "gpg_key_password"),
+    )
+    sign publishing.publications
+}
