@@ -6,10 +6,10 @@ accessible field net/minecraft/nbt/NbtCompound entries Ljava/util/Map;
 accessible method net/minecraft/nbt/NbtCompound <init> (Ljava/util/Map;)V
 # DefaultedListSerializer
 accessible method net/minecraft/util/collection/DefaultedList <init> (Ljava/util/List;Ljava/lang/Object;)V
-# Yarn 1.18.2+build.4 specific bugfix
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41114 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;)Lnet/minecraft/world/gen/noise/SimpleNoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41103 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Z)Lnet/minecraft/world/gen/noise/SimpleNoiseRouter;
+# Yarn 1.19+build.4 specific bugfix
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41103 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Z)Lnet/minecraft/class_7056;
 accessible field net/minecraft/world/gen/OreVeinSampler$VeinType minY I
 accessible field net/minecraft/world/gen/OreVeinSampler$VeinType maxY I
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41118 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;)Lnet/minecraft/world/gen/noise/SimpleNoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41120 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;)Lnet/minecraft/world/gen/noise/SimpleNoiseRouter;
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41120 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;)Lnet/minecraft/class_7056;
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41118 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;)Lnet/minecraft/class_7056;
+accessible method net/minecraft/world/gen/densityfunction/DensityFunctions method_41114 (Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;)Lnet/minecraft/class_7056;
