@@ -1,6 +1,7 @@
+import io.netty.buffer.Unpooled
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.minecraft.*
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
+import net.minecraft.network.PacketByteBuf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +11,7 @@ class NewApiTest {
     @Test
     fun newBufApiWorks() {
         val dog = Dog(3)
-        val buf = PacketByteBufs.create()
+        val buf = PacketByteBuf(Unpooled.buffer())
         Buf.encodeToByteBuf(dog, buf)
         val back = Buf.decodeFromByteBuf<Dog>(buf)
         assertEquals(dog, back)

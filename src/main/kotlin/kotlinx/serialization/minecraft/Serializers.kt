@@ -28,7 +28,6 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
-import org.apache.logging.log4j.LogManager
 import java.util.*
 
 private inline fun <T> missingField(missingField: String, deserializing: String, defaultValue: () -> T): T {
@@ -103,10 +102,10 @@ public object NbtStringSerializer : KSerializer<NbtString> {
     override fun deserialize(decoder: Decoder): NbtString = NbtString.of(decoder.decodeString())
 }
 
-public object NbtNullSerializer : KSerializer<NbtNull> {
+public object NbtEndSerializer : KSerializer<NbtEnd> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtNull", PrimitiveKind.BYTE)
-    override fun serialize(encoder: Encoder, value: NbtNull): Unit = encoder.encodeByte(0)
-    override fun deserialize(decoder: Decoder): NbtNull = NbtNull.INSTANCE.also { decoder.decodeByte() }
+    override fun serialize(encoder: Encoder, value: NbtEnd): Unit = encoder.encodeByte(0)
+    override fun deserialize(decoder: Decoder): NbtEnd = NbtEnd.INSTANCE.also { decoder.decodeByte() }
 }
 
 public object NbtByteArraySerializer : KSerializer<NbtByteArray> {

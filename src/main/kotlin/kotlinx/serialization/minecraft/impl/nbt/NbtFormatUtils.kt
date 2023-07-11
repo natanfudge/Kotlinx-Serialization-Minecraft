@@ -19,7 +19,7 @@ internal val TagModule = SerializersModule {
         subclass(NbtFloat::class, NbtFloatSerializer)
         subclass(NbtDouble::class, NbtDoubleSerializer)
         subclass(NbtString::class, NbtStringSerializer)
-        subclass(NbtNull::class, NbtNullSerializer)
+        subclass(NbtEnd::class, NbtEndSerializer)
         subclass(NbtByteArray::class, NbtByteArraySerializer)
         subclass(NbtIntArray::class, NbtIntArraySerializer)
         subclass(NbtLongArray::class, NbtLongArraySerializer)

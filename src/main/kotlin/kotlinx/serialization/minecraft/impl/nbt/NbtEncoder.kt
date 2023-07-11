@@ -11,7 +11,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.minecraft.Nbt
 import kotlinx.serialization.minecraft.NbtCompoundSerializer
 import kotlinx.serialization.minecraft.NbtListSerializer
-import kotlinx.serialization.minecraft.NbtNullSerializer
+import kotlinx.serialization.minecraft.NbtEndSerializer
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 import java.lang.reflect.Field
@@ -122,11 +122,11 @@ private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : N
         // writing key
         when {
             idx % 2 == 0 -> this.key = when (element) {
-                is NbtCompound, is AbstractNbtList<*>, is NbtNull -> throw compoundTagInvalidKeyKind(
+                is NbtCompound, is AbstractNbtList<*>, is NbtEnd -> throw compoundTagInvalidKeyKind(
                     when (element) {
                         is NbtCompound -> NbtCompoundSerializer.descriptor
                         is AbstractNbtList<*> -> NbtListSerializer.descriptor
-                        is NbtNull -> NbtNullSerializer.descriptor
+                        is NbtEnd -> NbtEndSerializer.descriptor
                         else -> error("impossible")
                     }
                 )
