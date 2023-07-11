@@ -20,7 +20,7 @@ loom_quiltflower = "1.10.0"
 # Minecraft
 minecraft = "1.18.2"
 # Mods & Libraries
-yarn_mappings = "1.19+build.4"
+yarn_mappings = "1.19.2+build.28"
 fabric_loader = "0.14.21"
 flk = "1.10.0+kotlin.1.9.0"
 
