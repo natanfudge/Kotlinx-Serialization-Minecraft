@@ -28,6 +28,5 @@ flk = "1.10.0+kotlin.1.9.0"
 
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
-fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
 flk = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "flk"}
 kotlin_test = {module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin"}
