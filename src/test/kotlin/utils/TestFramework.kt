@@ -1,11 +1,12 @@
 package utils
 
-import drawer.*
 import io.netty.buffer.Unpooled
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.minecraft.getFrom
+import kotlinx.serialization.minecraft.put
+import kotlinx.serialization.minecraft.readFrom
+import kotlinx.serialization.minecraft.write
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap

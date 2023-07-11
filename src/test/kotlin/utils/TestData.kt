@@ -23,9 +23,9 @@
 
 package utils
 
-import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.minecraft.*
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import net.minecraft.client.sound.SoundInstance

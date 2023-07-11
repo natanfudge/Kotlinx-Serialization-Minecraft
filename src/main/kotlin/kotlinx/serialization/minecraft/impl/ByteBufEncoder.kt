@@ -1,19 +1,15 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package drawer.impl
+package kotlinx.serialization.minecraft.impl
 
-import drawer.Buf
-import drawer.impl.nbt.TagModule
+import kotlinx.serialization.minecraft.Buf
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialFormat
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.CompositeEncoder
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.plus
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf

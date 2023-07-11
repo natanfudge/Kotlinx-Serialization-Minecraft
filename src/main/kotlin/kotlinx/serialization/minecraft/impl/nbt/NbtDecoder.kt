@@ -4,11 +4,11 @@
 
 @file:Suppress("LeakingThis")
 
-package drawer.impl.nbt
+package kotlinx.serialization.minecraft.impl.nbt
 
 
-import drawer.impl.NamedValueNbtDecoder
-import drawer.Nbt
+import kotlinx.serialization.minecraft.impl.NamedValueNbtDecoder
+import kotlinx.serialization.minecraft.Nbt
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor

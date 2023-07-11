@@ -1,4 +1,4 @@
-package drawer.impl
+package kotlinx.serialization.minecraft.impl
 
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.internal.NamedValueDecoder

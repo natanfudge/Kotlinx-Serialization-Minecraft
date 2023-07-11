@@ -1,9 +1,9 @@
 @file:UseSerializers(BlockPosSerializer::class, IdentifierSerializer::class, NbtCompoundSerializer::class)
 
-import drawer.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.minecraft.*
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtIo

@@ -1,8 +1,11 @@
 
-import drawer.*
-import drawer.impl.bufferedPacket
+import kotlinx.serialization.minecraft.impl.bufferedPacket
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.nullable
+import kotlinx.serialization.minecraft.getFrom
+import kotlinx.serialization.minecraft.put
+import kotlinx.serialization.minecraft.readFrom
+import kotlinx.serialization.minecraft.write
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.NbtCompound
 import org.junit.jupiter.api.Assertions

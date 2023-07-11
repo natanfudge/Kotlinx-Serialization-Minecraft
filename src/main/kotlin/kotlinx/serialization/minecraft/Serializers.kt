@@ -1,15 +1,23 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package drawer
+package kotlinx.serialization.minecraft
 
-import drawer.impl.*
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.minecraft.impl.ICanDecodeIngredient
+import kotlinx.serialization.minecraft.impl.ICanDecodeItemStack
+import kotlinx.serialization.minecraft.impl.ICanDecodeNbtCompound
+import kotlinx.serialization.minecraft.impl.ICanDecodeTag
+import kotlinx.serialization.minecraft.impl.ICanEncodeIngredient
+import kotlinx.serialization.minecraft.impl.ICanEncodeItemStack
+import kotlinx.serialization.minecraft.impl.ICanEncodeNbtCompound
+import kotlinx.serialization.minecraft.impl.ICanEncodeTag
+import kotlinx.serialization.minecraft.impl.util.MinecraftSerializationLogger
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
@@ -23,10 +31,8 @@ import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import java.util.*
 
-private val Logger = LogManager.getLogger("Fabric-Drawer")
-
 private inline fun <T> missingField(missingField: String, deserializing: String, defaultValue: () -> T): T {
-    Logger.warn("Missing $missingField while deserializing $deserializing")
+    MinecraftSerializationLogger.warn("Missing $missingField while deserializing $deserializing")
     return defaultValue()
 }
 

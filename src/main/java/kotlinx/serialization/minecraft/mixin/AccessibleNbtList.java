@@ -1,4 +1,4 @@
-package drawer.mixin;
+package kotlinx.serialization.minecraft.mixin;
 
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;

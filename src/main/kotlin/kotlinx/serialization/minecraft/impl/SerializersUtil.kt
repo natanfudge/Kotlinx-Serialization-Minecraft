@@ -1,4 +1,4 @@
-package drawer.impl
+package kotlinx.serialization.minecraft.impl
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor

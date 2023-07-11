@@ -1,8 +1,8 @@
 @file:UseSerializers(UUIDSerializer::class)
 
-import drawer.UUIDSerializer
-import drawer.getFrom
-import drawer.put
+import kotlinx.serialization.minecraft.UUIDSerializer
+import kotlinx.serialization.minecraft.getFrom
+import kotlinx.serialization.minecraft.put
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import net.minecraft.nbt.NbtCompound

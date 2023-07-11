@@ -1,8 +1,8 @@
-package drawer
+package kotlinx.serialization.minecraft
 
-import drawer.impl.nbt.TagModule
-import drawer.impl.nbt.readNbt
-import drawer.impl.nbt.writeNbt
+import kotlinx.serialization.minecraft.impl.nbt.TagModule
+import kotlinx.serialization.minecraft.impl.nbt.readNbt
+import kotlinx.serialization.minecraft.impl.nbt.writeNbt
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule

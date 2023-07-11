@@ -1,5 +1,5 @@
-import drawer.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.minecraft.*
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import kotlin.test.Test
 import kotlin.test.assertEquals

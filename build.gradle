@@ -15,7 +15,7 @@ version = total_version
 group = project.maven_group
 
 loom {
-    accessWidenerPath = file("src/main/resources/fabricdrawer.accessWidener")
+    accessWidenerPath = file("src/main/resources/kotlinx_serialization_minecraft.accessWidener")
 }
 
 
@@ -68,18 +68,17 @@ def getSecretProperty(String path, String key) {
 
 def getSecretFile(String path) {
     def rootPath = System.getenv("SECRETS_PATH")
-    def file = new File("$rootPath/$path.properties")
+    def file = new File("${rootPath}/${path}")
     if (!file.exists()) return ""
     return new String(file.readBytes())
 }
 
-//TODO: figure out how to publish update with one command https://github.com/gradle-nexus/publish-plugin
-//afterEvaluate {
-//    task uploadDrawer {
-//        group = "drawer"
-//        dependsOn tasks.publishToSonatype, tasks.closeAndReleaseSonatypeStagingRepository
-//    }
-//}
+afterEvaluate {
+    task uploadLibrary {
+        group = "kotlinSerializationMinecraft"
+        dependsOn tasks.publishToSonatype, tasks.closeAndReleaseSonatypeStagingRepository
+    }
+}
 
 afterEvaluate {
     publishing {
@@ -123,7 +122,7 @@ afterEvaluate {
 nexusPublishing {
     repositories {
         sonatype {
-            stagingProfileId = getSecretProperty('fabric-drawer/keys', "sonatype_staging_profile_id")
+            stagingProfileId = getSecretProperty('ksm/keys', "sonatype_staging_profile_id")
             username = getSecretProperty("sonatype", "ossrh_username")
             password = getSecretProperty("sonatype", "ossrh_password")
         }
@@ -131,9 +130,9 @@ nexusPublishing {
 }
 signing {
     useInMemoryPgpKeys(
-            getSecretProperty("fabric-drawer/keys", "gpg_key_id"),
-            getSecretFile("fabric-drawer/secret_key.txt"),
-            getSecretProperty("fabric-drawer/keys", "gpg_key_password"),
+            getSecretProperty("ksm/keys", "gpg_key_id"),
+            getSecretFile("ksm/secret_key.txt"),
+            getSecretProperty("ksm/keys", "gpg_key_password"),
     )
     sign publishing.publications
 }

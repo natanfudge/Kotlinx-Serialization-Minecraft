@@ -15,6 +15,5 @@ out/
 # fabric
 
 run/
-minecraft/
 cursegradle.properties
 logs/

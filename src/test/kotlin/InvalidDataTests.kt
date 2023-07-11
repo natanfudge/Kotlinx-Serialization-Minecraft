@@ -1,8 +1,11 @@
 @file:UseSerializers(BlockPosSerializer::class, UUIDSerializer::class, IdentifierSerializer::class, Vec3dSerializer::class)
 
-import drawer.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.minecraft.BlockPosSerializer
+import kotlinx.serialization.minecraft.IdentifierSerializer
+import kotlinx.serialization.minecraft.UUIDSerializer
+import kotlinx.serialization.minecraft.Vec3dSerializer
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d

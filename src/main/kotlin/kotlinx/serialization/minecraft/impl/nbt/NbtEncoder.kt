@@ -1,14 +1,17 @@
-package drawer.impl.nbt
+package kotlinx.serialization.minecraft.impl.nbt
 
-import drawer.*
-import drawer.impl.NamedValueTagEncoder
-import drawer.mixin.AccessibleNbtList
-import drawer.impl.util.DrawerLogger
+import kotlinx.serialization.minecraft.impl.NamedValueTagEncoder
+import kotlinx.serialization.minecraft.mixin.AccessibleNbtList
+import kotlinx.serialization.minecraft.impl.util.MinecraftSerializationLogger
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeEncoder
+import kotlinx.serialization.minecraft.Nbt
+import kotlinx.serialization.minecraft.NbtCompoundSerializer
+import kotlinx.serialization.minecraft.NbtListSerializer
+import kotlinx.serialization.minecraft.NbtNullSerializer
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 import java.lang.reflect.Field
@@ -97,7 +100,7 @@ private sealed class AbstractNbtEncoder(
 }
 
 
-internal const val PRIMITIVE_TAG = "primitive" // also used in drawer.nbt.JsonPrimitiveInput
+internal const val PRIMITIVE_TAG = "primitive" // also used in minecraft.nbt.JsonPrimitiveInput
 
 private open class NbtEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) :
     AbstractNbtEncoder(format, nodeConsumer) {
@@ -151,7 +154,7 @@ private operator fun NbtCompound.set(key: String, value: NbtElement) = put(key, 
 
 private const val WrappedListName = "value"
 private val wrappedListField: Field by lazy {
-    DrawerLogger.warn("Fabric-Drawer is using reflection to access NbtList wrapped list. This should NOT happen normally. If you see this, it's a bug.")
+    MinecraftSerializationLogger.warn("Kotlinx-Serialization-Minecraft is using reflection to access NbtList wrapped list. This should NOT happen normally. If you see this, it's a bug.")
     // using named field here is fine
     NbtList::class.java.getDeclaredField(WrappedListName).apply { isAccessible = true }
 }

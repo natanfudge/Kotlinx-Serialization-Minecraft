@@ -1,11 +1,11 @@
 @file:UseSerializers(UUIDSerializer::class, BlockPosSerializer::class, IdentifierSerializer::class, Vec3dSerializer::class)
 
-import drawer.*
-import drawer.impl.bufferedPacket
+import kotlinx.serialization.minecraft.impl.bufferedPacket
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.minecraft.*
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import net.minecraft.nbt.NbtCompound

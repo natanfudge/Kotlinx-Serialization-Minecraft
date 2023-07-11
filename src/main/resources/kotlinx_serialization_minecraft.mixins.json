@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "drawer.mixin",
+  "package": "kotlinx.serialization.minecraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AccessibleNbtList"

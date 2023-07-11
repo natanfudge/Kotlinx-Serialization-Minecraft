@@ -1,5 +1,5 @@
-import drawer.Nbt
-import drawer.impl.nbt.writeNbt
+import kotlinx.serialization.minecraft.Nbt
+import kotlinx.serialization.minecraft.impl.nbt.writeNbt
 import kotlinx.serialization.Serializable
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
