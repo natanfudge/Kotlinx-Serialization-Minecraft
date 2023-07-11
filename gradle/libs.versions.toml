@@ -22,7 +22,6 @@ minecraft = "1.18.2"
 # Mods & Libraries
 yarn_mappings = "1.18.2+build.4"
 fabric_loader = "0.14.21"
-fabric_api = "0.76.0+1.18.2"
 flk = "1.10.0+kotlin.1.9.0"
 
 [libraries]
