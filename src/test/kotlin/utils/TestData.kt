@@ -415,7 +415,6 @@ data class NbtLists(
     val listTag5: NbtList
 )
 
-//TODO: list tag of compound tag
 val listTags = NbtLists(NbtList().apply {
     add(NbtInt.of(1))
     add(NbtInt.of(2))

@@ -113,15 +113,6 @@ class SerializationTests {
 
 
     @Test
-    fun `Test Bytebuf works as expected`() {
-//        val buf = bufferedPacket()
-//        buf.writeByte(1)
-//
-//        val result = buf.readString()
-//        assertEquals("foo",result)
-    }
-
-    @Test
     fun `Abstract array tags can be encoded in a ByteBuf`() {
         val buf = bufferedPacket()
         val data = lessAbstractTags

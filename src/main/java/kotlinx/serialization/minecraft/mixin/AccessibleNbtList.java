@@ -15,6 +15,7 @@ import java.util.List;
 public interface AccessibleNbtList {
     /**
      * Internal
+     * @return The private list
      */
     @Accessor("value")
     @NotNull

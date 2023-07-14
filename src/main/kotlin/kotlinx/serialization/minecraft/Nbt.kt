@@ -1,6 +1,6 @@
 package kotlinx.serialization.minecraft
 
-import kotlinx.serialization.minecraft.impl.nbt.TagModule
+import kotlinx.serialization.minecraft.impl.nbt.MinecraftModule
 import kotlinx.serialization.minecraft.impl.nbt.readNbt
 import kotlinx.serialization.minecraft.impl.nbt.writeNbt
 import kotlinx.serialization.*
@@ -27,7 +27,7 @@ public open class Nbt(context: SerializersModule) : SerialFormat {
         return readNbt(tag, deserializer)
     }
 
-    override val serializersModule: SerializersModule = context + TagModule
+    override val serializersModule: SerializersModule = context + MinecraftModule
 }
 
 public inline fun <reified T> Nbt.encodeToNbt(obj: T): NbtElement = encodeToNbt(serializersModule.serializer(), obj)
@@ -68,6 +68,7 @@ public fun <T> SerializationStrategy<T>.put(
  * The same key must be used in [put].
  * @param context Used for polymorphic serialization, see [Here](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/polymorphism.md).
  */
+@Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalSerializationApi::class)
 public fun <T> DeserializationStrategy<T>.getFrom(
     tag: NbtCompound,

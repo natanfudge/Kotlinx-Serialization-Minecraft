@@ -4,7 +4,7 @@ package kotlinx.serialization.minecraft
 
 import kotlinx.serialization.minecraft.impl.ByteBufDecoder
 import kotlinx.serialization.minecraft.impl.ByteBufEncoder
-import kotlinx.serialization.minecraft.impl.nbt.TagModule
+import kotlinx.serialization.minecraft.impl.nbt.MinecraftModule
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
@@ -34,7 +34,7 @@ public open class Buf(context: SerializersModule) : SerialFormat {
         }
     }
 
-    override val serializersModule: SerializersModule = context + TagModule
+    override val serializersModule: SerializersModule = context + MinecraftModule
 }
 
 public inline fun <reified T> Buf.encodeToByteBuf(obj: T, buf: PacketByteBuf): Unit = encodeToByteBuf(serializersModule.serializer(), obj, buf)

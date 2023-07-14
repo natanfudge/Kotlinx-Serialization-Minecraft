@@ -12,9 +12,13 @@ import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.Bootstrap
 import net.minecraft.MinecraftVersion
 import net.minecraft.SharedConstants
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.recipe.Ingredient
 import kotlin.reflect.KFunction
+import kotlin.test.assertEquals
+import kotlin.test.asserter
 
 data class TestResult(
     val obj: Any, // original object
@@ -176,21 +180,33 @@ interface SerialContainer<T> {
 class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val tag: NbtCompound = NbtCompound()) : SerialContainer<T> {
     override fun serialize(obj: T) = serializer.put(obj, tag)
     override fun deserialize(): T = serializer.getFrom(tag)
+
     @OptIn(ExperimentalSerializationApi::class)
-    val innerTag : NbtCompound get() = tag.get(serializer.descriptor.serialName) as NbtCompound
+    val innerTag: NbtCompound get() = tag.get(serializer.descriptor.serialName) as NbtCompound
 }
 
-class BufSerialContainer<T>(override val serializer: KSerializer<T>, private val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) : SerialContainer<T> {
+class BufSerialContainer<T>(override val serializer: KSerializer<T>, private val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) :
+    SerialContainer<T> {
     override fun serialize(obj: T) = serializer.write(obj, buf)
     override fun deserialize(): T = serializer.readFrom(buf)
 }
 
 
-fun <T> testSerializers(serializer: KSerializer<T>,  bufOnly : Boolean = false, tagOnly:Boolean = false,init: SerialContainer<T>.() -> Unit) {
-    if(!bufOnly) TagSerialContainer(serializer).init()
-    if(!tagOnly) BufSerialContainer(serializer).init()
+fun <T> testSerializers(serializer: KSerializer<T>, bufOnly: Boolean = false, tagOnly: Boolean = false, init: SerialContainer<T>.() -> Unit) {
+    if (!bufOnly) TagSerialContainer(serializer).init()
+    if (!tagOnly) BufSerialContainer(serializer).init()
 }
 
-fun <T> testTagSerializer(serializer: KSerializer<T>,  init: TagSerialContainer<T>.() -> Unit) {
+fun <T> testTagSerializer(serializer: KSerializer<T>, init: TagSerialContainer<T>.() -> Unit) {
     TagSerialContainer(serializer).init()
+}
+
+fun <T> smartAssertEquals(expected: T, actual: T) {
+    if(expected is ItemStack && actual is ItemStack) {
+        if(!ItemStack.areEqual(expected,actual))  asserter.fail("$expected is not equal to $actual")
+    } else if (expected is Ingredient && actual is Ingredient) {
+        if(!(expected actuallyEquals actual))  asserter.fail("$expected is not equal to $actual")
+    } else {
+        assertEquals(expected,actual)
+    }
 }

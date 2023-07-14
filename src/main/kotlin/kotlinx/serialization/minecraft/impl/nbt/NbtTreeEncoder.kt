@@ -1,31 +1,40 @@
 package kotlinx.serialization.minecraft.impl.nbt
 
-import kotlinx.serialization.minecraft.impl.NamedValueTagEncoder
-import kotlinx.serialization.minecraft.mixin.AccessibleNbtList
-import kotlinx.serialization.minecraft.impl.util.MinecraftSerializationLogger
-import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.PolymorphicKind
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeEncoder
+import kotlinx.serialization.internal.NamedValueEncoder
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.minecraft.Nbt
 import kotlinx.serialization.minecraft.NbtCompoundSerializer
-import kotlinx.serialization.minecraft.NbtListSerializer
 import kotlinx.serialization.minecraft.NbtEndSerializer
+import kotlinx.serialization.minecraft.NbtListSerializer
+import kotlinx.serialization.minecraft.impl.NbtEncoder
+import kotlinx.serialization.minecraft.impl.util.MinecraftSerializationLogger
+import kotlinx.serialization.minecraft.mixin.AccessibleNbtList
 import kotlinx.serialization.modules.SerializersModule
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import java.lang.reflect.Field
+
 internal fun <T> Nbt.writeNbt(value: T, serializer: SerializationStrategy<T>): NbtElement {
     lateinit var result: NbtElement
-    val encoder = NbtEncoder(this) { result = it }
+    val encoder = NbtTreeEncoder(this) { result = it }
     encoder.encodeSerializableValue(serializer, value)
     return result
 }
+
 @OptIn(ExperimentalSerializationApi::class)
+private val SerialDescriptor.requiresTopLevelTag: Boolean
+    get() = kind is PrimitiveKind || kind === SerialKind.ENUM
+
+@OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class)
 private sealed class AbstractNbtEncoder(
     val format: Nbt,
     val nodeConsumer: (NbtElement) -> Unit
-) : NamedValueTagEncoder() {
+) : NamedValueEncoder(), NbtEncoder {
 
     final override val serializersModule: SerializersModule
         get() = format.serializersModule
@@ -37,7 +46,16 @@ private sealed class AbstractNbtEncoder(
     abstract fun putElement(key: String, element: NbtElement)
     abstract fun getCurrent(): NbtElement
 
-    override fun encodeTaggedNull(tag: String) = putElement(tag, NbtByte.of(NbtFormatNull))
+    // has no tag when encoding a nullable element at root level
+    override fun encodeNotNullMark() {}
+
+    // has no tag when encoding a nullable element at root level
+    override fun encodeNull() {
+        val tag = currentTagOrNull ?: return nodeConsumer(NbtNull)
+        encodeTaggedNull(tag)
+    }
+
+    override fun encodeTaggedNull(tag: String) = putElement(tag, NbtNull)
 
     override fun encodeTaggedInt(tag: String, value: Int) = putElement(tag, NbtInt.of(value))
     override fun encodeTaggedByte(tag: String, value: Byte) = putElement(tag, NbtByte.of(value))
@@ -58,11 +76,31 @@ private sealed class AbstractNbtEncoder(
         ordinal: Int
     ) = putElement(tag, NbtString.of(enumDescriptor.getElementName(ordinal)))
 
+    override fun encodeTag(tag: NbtElement) = encodeTaggedTag(popTag(), tag)
+//    override fun encodeItemStack(stack: ItemStack) = encodeTaggedTag(popTag(), NbtCompound().also { stack.writeNbt(it) })
+
 
     override fun encodeTaggedTag(key: String, tag: NbtElement) = putElement(key, tag)
 
     override fun encodeTaggedValue(tag: String, value: Any) {
         putElement(tag, NbtString.of(value.toString()))
+    }
+
+//    override fun encodeTaggedInline(tag: String, inlineDescriptor: SerialDescriptor): Encoder {
+//        return super.encodeTaggedInline(tag, inlineDescriptor)
+//    }
+//
+//    override fun encodeInline(descriptor: SerialDescriptor): Encoder {
+//        return super.encodeInline(descriptor)
+//    }
+
+    override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
+        // Writing non-structured data (i.e. primitives) on top-level (e.g. without any tag) requires special output
+        if (currentTagOrNull != null || !serializer.descriptor.carrierDescriptor(serializersModule).requiresTopLevelTag) {
+            serializer.serialize(this, value)
+        } else NbtPrimitiveEncoder(format, nodeConsumer).apply {
+            encodeSerializableValue(serializer, value)
+        }
     }
 
     override fun elementName(descriptor: SerialDescriptor, index: Int): String {
@@ -73,17 +111,19 @@ private sealed class AbstractNbtEncoder(
         val consumer = if (currentTagOrNull == null) nodeConsumer
         else { node -> putElement(currentTag, node) }
 
-        val encoder = when (descriptor.kind) {
+        val encoder: AbstractNbtEncoder = when (descriptor.kind) {
             StructureKind.LIST -> {
                 if (descriptor.kind == StructureKind.LIST && descriptor.getElementDescriptor(0).isNullable) NullableListEncoder(format, consumer)
                 else NbtListEncoder(format, consumer)
             }
+
             is PolymorphicKind -> NbtMapEncoder(format, consumer)
             StructureKind.MAP -> format.selectMapMode(descriptor,
                 ifMap = { NbtMapEncoder(format, consumer) },
                 ifList = { NbtListEncoder(format, consumer) }
             )
-            else -> NbtEncoder(format, consumer)
+
+            else -> NbtTreeEncoder(format, consumer)
         }
 
         if (writePolymorphic) {
@@ -100,9 +140,9 @@ private sealed class AbstractNbtEncoder(
 }
 
 
-internal const val PRIMITIVE_TAG = "primitive" // also used in minecraft.nbt.JsonPrimitiveInput
+internal const val PRIMITIVE_TAG = "primitive"
 
-private open class NbtEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) :
+private open class NbtTreeEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) :
     AbstractNbtEncoder(format, nodeConsumer) {
 
     protected val content: NbtCompound = NbtCompound()
@@ -114,7 +154,7 @@ private open class NbtEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) :
     override fun getCurrent(): NbtElement = content
 }
 
-private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtEncoder(format, nodeConsumer) {
+private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtTreeEncoder(format, nodeConsumer) {
     private lateinit var key: String
 
     override fun putElement(key: String, element: NbtElement) {
@@ -130,8 +170,10 @@ private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : N
                         else -> error("impossible")
                     }
                 )
+
                 else -> element.asString()
             }
+
             else -> content[this.key] = element
         }
     }
@@ -140,13 +182,35 @@ private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : N
 
 }
 
-private class NullableListEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtEncoder(format, nodeConsumer) {
+private class NullableListEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtTreeEncoder(format, nodeConsumer) {
     override fun putElement(key: String, element: NbtElement) {
         content[key] = element
     }
 
     override fun getCurrent(): NbtElement = content
 
+}
+
+
+private class NbtPrimitiveEncoder(
+    nbt: Nbt,
+    nodeConsumer: (NbtElement) -> Unit
+) : AbstractNbtEncoder(nbt, nodeConsumer) {
+    private var content: NbtElement? = null
+
+    init {
+        pushTag(PRIMITIVE_TAG)
+    }
+
+    override fun putElement(key: String, element: NbtElement) {
+        require(key === PRIMITIVE_TAG) { "This output can only consume primitives with '${PRIMITIVE_TAG}' tag" }
+        require(content == null) { "Primitive element was already recorded. Does call to .encodeXxx happen more than once?" }
+        content = element
+        nodeConsumer(element)
+    }
+
+    override fun getCurrent(): NbtElement =
+        requireNotNull(content) { "Primitive element has not been recorded. Is call to .encodeXxx is missing in serializer?" }
 }
 
 

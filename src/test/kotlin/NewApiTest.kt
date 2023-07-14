@@ -1,7 +1,10 @@
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.minecraft.*
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.util.math.BlockPos
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,5 +26,22 @@ class NewApiTest {
         val nbt = Nbt.encodeToNbt(dog)
         val back = Nbt.decodeFromNbt<Dog>(nbt)
         assertEquals(dog, back)
+    }
+
+    @Test
+    fun newBufApiWorksWithBlockPos() {
+        val pos = BlockPos(1, 2, 3)
+        val buf = PacketByteBuf(Unpooled.buffer())
+        Buf.encodeToByteBuf(pos, buf)
+        val back = Buf.decodeFromByteBuf<BlockPos>(buf)
+        assertEquals(pos, back)
+    }
+
+    @Test
+    fun newNbtApiWorksWithBlockPos() {
+        val pos = BlockPos(1, 2, 3)
+        val nbt = Nbt.encodeToNbt(pos)
+        val back = Nbt.decodeFromNbt<BlockPos>(nbt)
+        assertEquals(pos, back)
     }
 }

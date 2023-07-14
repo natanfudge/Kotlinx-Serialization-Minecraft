@@ -1,24 +1,29 @@
 package kotlinx.serialization.minecraft.impl
 
 import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.encoding.CompositeEncoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.internal.NamedValueDecoder
-import kotlinx.serialization.internal.NamedValueEncoder
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.recipe.Ingredient
 
-@OptIn(InternalSerializationApi::class)
-internal abstract class NamedValueTagEncoder : NamedValueEncoder(), ICanEncodeTag, ICanEncodeItemStack {
-    final override fun encodeTag(tag: NbtElement) = encodeTaggedTag(popTag(), tag)
-    final override fun encodeItemStack(stack: ItemStack) = encodeTaggedTag(popTag(), NbtCompound().also { stack.writeNbt(it) })
-    abstract fun encodeTaggedTag(key: String, tag: NbtElement)
+internal interface NbtEncoder : ICanEncodeTag, /*ICanEncodeItemStack, */Encoder, CompositeEncoder  {
+    fun encodeTaggedTag(key: String, tag: NbtElement)
 }
 
+//@OptIn(InternalSerializationApi::class)
+//internal abstract class NamedValueTagEncoder : NamedValueEncoder(), ICanEncodeTag, ICanEncodeItemStack {
+//    final override fun encodeTag(tag: NbtElement) = encodeTaggedTag(popTag(), tag)
+//    final override fun encodeItemStack(stack: ItemStack) = encodeTaggedTag(popTag(), NbtCompound().also { stack.writeNbt(it) })
+//    abstract fun encodeTaggedTag(key: String, tag: NbtElement)
+//}
+
 @OptIn(InternalSerializationApi::class)
-internal abstract class NamedValueNbtDecoder : NamedValueDecoder(), ICanDecodeTag, ICanDecodeItemStack {
+internal abstract class NamedValueNbtDecoder : NamedValueDecoder(), ICanDecodeTag/*, ICanDecodeItemStack*/ {
     final override fun decodeTag(): NbtElement = decodeTaggedTag(popTag())
-    final override fun decodeItemStack(): ItemStack = ItemStack.fromNbt(decodeTaggedTag(popTag()) as NbtCompound)
+//    final override fun decodeItemStack(): ItemStack = ItemStack.fromNbt(decodeTaggedTag(popTag()) as NbtCompound)
     abstract fun decodeTaggedTag(key: String): NbtElement
 }
 

@@ -11,7 +11,7 @@ nexus_publish = {id = "io.github.gradle-nexus.publish-plugin", version.ref = "ne
 [versions]
 
 # This Mod Version
-mod_version = "1.0.0"
+mod_version = "1.0.1"
 # Gradle Plugins
 kotlin = "1.9.0"
 nexus = "1.3.0"

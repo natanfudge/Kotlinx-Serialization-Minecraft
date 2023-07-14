@@ -89,7 +89,6 @@ afterEvaluate {
                 artifactId archives_base_name
                 version total_version
 
-                //TODO: test this new setup works properly (i replaced artifact(remapJar) and stuff)
                 from components.java
 
                 // Mostly self-explanatory metadata

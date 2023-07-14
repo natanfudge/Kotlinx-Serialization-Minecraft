@@ -9,6 +9,7 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.minecraft.impl.ICanDecodeIngredient
 import kotlinx.serialization.minecraft.impl.ICanDecodeItemStack
 import kotlinx.serialization.minecraft.impl.ICanDecodeNbtCompound

@@ -14,6 +14,7 @@ import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 
@@ -96,6 +97,9 @@ private sealed class AbstractNbtDecoder(val format: Nbt, open val map: NbtElemen
         val byteValue = (currentElement(tag) as? NbtByte)?.byteValue()
         return byteValue != NbtFormatNull
     }
+
+    override fun decodeNotNullMark(): Boolean = currentObject() != NbtNull
+
 
 //    override fun decodeTaggedUnit(tag: String) {
 //        return
