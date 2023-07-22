@@ -38,6 +38,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${libs.versions.yarn.mappings.get()}:v2"
     modImplementation libs.fabric.loader
     modImplementation libs.flk
+    api libs.kotlin.serialization.core
     testImplementation libs.kotlin.test
 }
 
