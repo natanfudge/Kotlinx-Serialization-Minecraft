@@ -1,13 +1,14 @@
 pluginManagement {
     repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
+        maven { url "https://maven.fabricmc.net/" }
+        maven { url "https://maven.architectury.dev/" }
+        maven { url "https://maven.minecraftforge.net/" }
         gradlePluginPortal()
     }
 }
 
-plugins {
-    id 'de.fayard.refreshVersions' version '0.51.0'
-}
+include("common")
+include("fabric")
+include("forge")
+
+rootProject.name = "Kotlinx-Serialization-Minecraft"

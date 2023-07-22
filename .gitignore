@@ -1,19 +1,19 @@
-# gradle
-
-.gradle/
 build/
-out/
-
-# idea
-
-.idea/
-*.iml
 *.ipr
-*.iws
-
-
-# fabric
-
 run/
-cursegradle.properties
-logs/
+*.iws
+out/
+*.iml
+.gradle/
+output/
+bin/
+libs/
+
+.classpath
+.project
+.idea/
+classes/
+.metadata
+.vscode
+.settings
+*.launch

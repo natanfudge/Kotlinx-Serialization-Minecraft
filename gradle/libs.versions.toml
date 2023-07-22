@@ -2,31 +2,52 @@
 
 [plugins]
 
-loom = { id = "fabric-loom", version.ref = "loom" }
-loom_quiltflower = { id = "io.github.juuxel.loom-quiltflower", version.ref = "loom_quiltflower" }
-kotlin = {id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"}
-kotlin_serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-nexus_publish = {id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus"}
+architectury_plugin = { id = "architectury-plugin", version.ref = "architectury_plugin" }
+architectury_loom = { id = "dev.architectury.loom", version.ref = "architectury_loom" }
+loom_vineflower = { id = "io.github.juuxel.loom-vineflower", version.ref = "loom_vineflower" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+task_tree = { id = "com.dorongold.task-tree", version.ref = "task_tree" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin_serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+nexus_publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
 
 [versions]
 
 # This Mod Version
-mod_version = "1.0.1"
+mod_version = "1.1.0"
+
 # Gradle Plugins
+architectury_plugin = "3.4-SNAPSHOT"
+architectury_loom = "1.3-SNAPSHOT"
+loom_vineflower = "1.11.0"
+shadow = "8.1.1"
+task_tree = "2.1.1"
 kotlin = "1.9.0"
+fabric_language_kotlin = "1.10.0+kotlin.1.9.0"
 nexus = "1.3.0"
-loom = "1.3-SNAPSHOT"
-loom_quiltflower = "1.10.0"
+kotlin_serialization = "1.5.1"
+
 # Minecraft
 minecraft = "1.19.2"
+
 # Mods & Libraries
 yarn_mappings = "1.19.2+build.28"
 fabric_loader = "0.14.21"
-flk = "1.10.0+kotlin.1.9.0"
+fabric_api = "0.76.0+1.19.2"
+forge = "1.19.2-43.2.21"
+architectury_api = "6.5.85"
 
 [libraries]
 
+
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
-flk = {module = "net.fabricmc:fabric-language-kotlin", version.ref = "flk"}
-kotlin_test = {module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin"}
+fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
+architectury_api = { module = "dev.architectury:architectury", version.ref = "architectury_api" }
+fabric_language_kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric_language_kotlin" }
+kotlin_test = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+architectury_fabric = { module = "dev.architectury:architectury-fabric", version.ref = "architectury_api" }
+architectury_forge = { module = "dev.architectury:architectury-forge", version.ref = "architectury_api" }
+forge = { module = "net.minecraftforge:forge", version.ref = "forge" }
+kotlin_serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlin_serialization" }
+kotlin_serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin_serialization" }
