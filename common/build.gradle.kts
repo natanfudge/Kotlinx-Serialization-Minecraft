@@ -11,6 +11,5 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation(libs.fabric.loader)
     modApi(libs.architectury.api)
-    modImplementation("org.junit.platform:junit-platform-engine:1.9.3")
 }
 

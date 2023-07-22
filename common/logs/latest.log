@@ -1,0 +1,899 @@
+[10:49:10] [Test worker/INFO]: Building unoptimized datafixer
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 274877919234L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "foo:bar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:glow_item_frame"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:item_frame"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12431L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4124124L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.3d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 41.2d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 31.6d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "f"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Bar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 123
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 274877919234L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "foo:bar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:glow_item_frame"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:item_frame"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12431L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4124124L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.3d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 41.2d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 31.6d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Running with testDat
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case CityData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Broadway"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Broadway"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Broadway"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case CountyData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "US"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Chicago"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Zoo
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 20s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 30
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 40L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 50.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 60.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "A"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "POSITIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 70
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 31
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 41L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 51.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 61.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "B"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEUTRAL"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEGATIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "root"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "one"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "two"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "three"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "first"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "2"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "second"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 100
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 200
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 300
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Shop
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "jb test shop"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Lucas"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Canberra"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "DotTrace"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 129.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "DotTrace"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 159.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Cooper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Canberra"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Nathan"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Vancouver"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "RubyMine"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 99.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "WebStorm"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 49.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Reka"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Budapest"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Bajram"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Ankara"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Asuka"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Tokyo"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case OtherFormats
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 222222222L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11111111111111111L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21440476749836L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1099511652357L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1924145385480L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2748779118603L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "spatialcrafting:x2crafter_piece"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.2d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -123.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2323.3d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "AMBIENT"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "LINEAR"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case OtherLazyFormats
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 25
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case VariousNumbers
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case VariousNullableNumbers
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Tags
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3.5f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4.23d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 13L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtIntArrayWrapper
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 13L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case AbstractTags
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtByte"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtShort"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtInt"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtLong"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtFloat"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3.5f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtDouble"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4.23d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtString"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtNull"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.ByteArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.IntArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.LongArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 13L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.collections.ArrayList"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.collections.LinkedHashMap"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {as:0b}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case MessageWrapper
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "utils.IntMessage"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Asdf"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtLists
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "asdf"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "asdf"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [B;1B,2B,3B]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [B;2B,4B,3B]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [B;-13B,2B,4B]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [1b]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [0.3f]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtCompounds
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {"":[I;8,9,10],amar:{least:2L,most:1L},asdfff:4.23d}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {dd:12.3d,"heavy shit":[]}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case ItemStacks
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:acacia_wood"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:air"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:birch_planks"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 64
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {aaa:"hello",waefwe:222}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Ingredients
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:acacia_wood"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:birch_planks"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 64
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {aaa:"hello",waefwe:222}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:carrot"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:iron_chestplate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {Damage:0}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:spawner"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case DefaultedLists
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:birch_planks"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 64
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {aaa:"hello",waefwe:222}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:acacia_wood"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:air"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:item_frame"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: {map:[{x:3,y:"asdf"},{x:22,y:"asdf"},{x:2,y:"asdf"},{x:3,y:"asdf"},{x:3,y:"bar"},{x:3,y:"fay"}]}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 274877919234L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 20s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 30
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 40L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 50.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 60.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "A"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "POSITIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 70
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 31
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 41L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 51.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 61.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "B"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEUTRAL"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEGATIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "root"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "one"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "two"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "three"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "first"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "2"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "second"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 100
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 200
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 300
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "oomer"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.IntArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Running with testTag
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case CityData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Broadway"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Broadway"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Broadway"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case CountyData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "US"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "New York"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Chicago"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Zoo
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 20s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 30
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 40L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 50.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 60.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "A"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "POSITIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 70
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 31
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 41L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 51.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 61.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "B"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEUTRAL"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEGATIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "root"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "one"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "two"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "three"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "first"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "2"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "second"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 100
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 200
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 300
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Shop
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "jb test shop"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Lucas"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Canberra"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "DotTrace"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 129.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "DotTrace"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 159.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Cooper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Canberra"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Nathan"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Vancouver"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "RubyMine"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 99.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "WebStorm"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 49.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Reka"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Budapest"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Bajram"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Ankara"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Asuka"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Tokyo"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case OtherFormats
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 222222222L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11111111111111111L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21440476749836L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1099511652357L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1924145385480L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2748779118603L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "spatialcrafting:x2crafter_piece"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.2d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -123.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2323.3d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "AMBIENT"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "LINEAR"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case OtherLazyFormats
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 25
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case VariousNumbers
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case VariousNullableNumbers
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Tags
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3.5f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4.23d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 13L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtIntArrayWrapper
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 13L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case AbstractTags
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtByte"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtShort"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtInt"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtLong"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtFloat"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3.5f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtDouble"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4.23d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtString"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtNull"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.ByteArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.IntArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.LongArray"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 12L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 13L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.collections.ArrayList"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "kotlin.collections.LinkedHashMap"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {as:0b}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case MessageWrapper
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "utils.IntMessage"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Asdf"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtLists
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "asdf"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "asdf"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [B;1B,2B,3B]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [B;2B,4B,3B]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [B;-13B,2B,4B]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [1b]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: [0.3f]
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtCompounds
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {"":[I;8,9,10],amar:{least:2L,most:1L},asdfff:4.23d}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {dd:12.3d,"heavy shit":[]}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case ItemStacks
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:acacia_wood"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:air"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:birch_planks"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 64
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {aaa:"hello",waefwe:222}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Ingredients
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:acacia_wood"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:birch_planks"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 64
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {aaa:"hello",waefwe:222}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:carrot"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:iron_chestplate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {Damage:0}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:spawner"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case DefaultedLists
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:birch_planks"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 64
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {aaa:"hello",waefwe:222}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:acacia_wood"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:air"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "minecraft:item_frame"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "jb test shop"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Lucas"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Canberra"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "DotTrace"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 129.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "DotTrace"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 159.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Cooper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Canberra"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Nathan"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Vancouver"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "RubyMine"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 99.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "WebStorm"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 49.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Reka"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Budapest"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Bajram"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Ankara"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ReSharper"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 149.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Asuka"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Tokyo"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "IntelliJ IDEA Ultimate"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 199.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 20s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 30
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 40L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 50.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 60.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "A"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "POSITIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 70
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21s
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 31
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 41L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 51.0f
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 61.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "B"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEUTRAL"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 10
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NEGATIVE"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "root"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.left"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "right.right"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "one"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "two"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "three"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "first"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "2"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "second"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3b
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 100
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 200
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 300
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 222222222L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 3L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 11111111111111111L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 21440476749836L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1099511652357L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1924145385480L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2748779118603L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "spatialcrafting:x2crafter_piece"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 0.2d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: -123.0d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2323.3d
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "AMBIENT"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "LINEAR"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: {amar:{least:2L,most:1L}}
+[10:49:11] [Test worker/INFO]: [STDOUT]: Running with testByteBuf
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case CityData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case StreetData2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case CountyData
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Zoo
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Shop
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case OtherFormats
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case OtherLazyFormats
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case VariousNumbers
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case VariousNullableNumbers
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Tags
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtIntArrayWrapper
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case AbstractTags
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case MessageWrapper
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtLists
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case NbtCompounds
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case ItemStacks
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case Ingredients
+[10:49:11] [Test worker/INFO]: [STDOUT]: Test case DefaultedLists
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "0"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "foo"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 123L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 345L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "asd"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Wef"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "1232"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 123123L
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "ImplData1"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "NbtInt"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "amar"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 2
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 9
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 1
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "asd"
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 4
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 5
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 6
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 7
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: 8
+[10:49:11] [Test worker/INFO]: [STDOUT]: Element: "Str1"

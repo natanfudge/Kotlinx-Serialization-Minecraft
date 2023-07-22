@@ -18,7 +18,7 @@ val developmentFabric: Configuration by configurations.getting
 
 configurations {
     compileOnly.configure { extendsFrom(common) }
-    runtimeOnly.configure { extendsFrom(common) }
+    runtimeClasspath.configure { extendsFrom(common) }
     developmentFabric.extendsFrom(common)
 }
 

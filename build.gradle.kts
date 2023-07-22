@@ -33,11 +33,11 @@ subprojects {
         implementation(kotlinSerialization)
         testImplementation(kotlinSerializationJson)
         testImplementation(kotlinTest)
-        testImplementation("org.junit.platform:junit-platform-engine:1.9.3")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
     }
 
     tasks.test {
-        useJUnitPlatform()
+        useJUnit()
     }
 }
 

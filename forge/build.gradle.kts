@@ -22,7 +22,7 @@ val developmentForge: Configuration by configurations.getting
 
 configurations {
     compileOnly.configure { extendsFrom(common) }
-    runtimeOnly.configure { extendsFrom(common) }
+    runtimeClasspath.configure { extendsFrom(common) }
     developmentForge.extendsFrom(common)
 }
 
