@@ -216,17 +216,9 @@ private class NbtPrimitiveEncoder(
 
 private operator fun NbtCompound.set(key: String, value: NbtElement) = put(key, value)
 
-private const val WrappedListName = "value"
-private val wrappedListField: Field by lazy {
-    MinecraftSerializationLogger.warn("Kotlinx-Serialization-Minecraft is using reflection to access NbtList wrapped list. This should NOT happen normally. If you see this, it's a bug.")
-    // using named field here is fine
-    NbtList::class.java.getDeclaredField(WrappedListName).apply { isAccessible = true }
-}
 
 private fun NbtList.addAnyTag(index: Int, tag: NbtElement) {
-    val innerList = if (this is AccessibleNbtList) this.wrappedList
-    else wrappedListField.get(this) as MutableList<NbtElement>
-    innerList.add(index, tag)
+    value.add(index, tag)
 }
 
 private class NbtListEncoder(json: Nbt, nodeConsumer: (NbtElement) -> Unit) :

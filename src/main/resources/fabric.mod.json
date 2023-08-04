@@ -13,9 +13,6 @@
   },
   "license": "The MIT License",
   "environment": "*",
-  "mixins": [
-    "kotlinx_serialization_minecraft.mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric-language-kotlin": ">=1.3.50"
