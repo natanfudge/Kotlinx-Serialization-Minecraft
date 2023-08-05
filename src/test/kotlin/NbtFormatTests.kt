@@ -16,9 +16,9 @@ data class ComplexObj(val list: List<SimpleObj>, val map: Map<String, Int>, val 
 data class CustomMap(val map: Map<SimpleObj, SimpleObj>)
 
 class NestedNbtFormatTests {
-    private fun NbtCompound.tag(key: String, init: NbtCompound.() -> Unit) = put(key, NbtCompound().apply(init))
+    private fun NbtCompound.compound(key: String, init: NbtCompound.() -> Unit) = put(key, NbtCompound().apply(init))
     private fun NbtCompound.list(key: String, init: NbtList.() -> Unit) = put(key, NbtList().apply(init))
-    private fun NbtList.tag(init: NbtCompound.() -> Unit) = add(NbtCompound().apply(init))
+    private fun NbtList.compound(init: NbtCompound.() -> Unit) = add(NbtCompound().apply(init))
     @Test
     fun `Objects gets serialized to NbtCompound`() {
         val simple = SimpleObj()
@@ -40,21 +40,21 @@ class NestedNbtFormatTests {
         val actual = Nbt.writeNbt(obj, ComplexObj.serializer())
         val expected = NbtCompound().apply {
             list("list") {
-                tag {
+                compound {
                     putInt("x", 3)
                     putString("y", "asdf")
                 }
-                tag {
+                compound {
                     putInt("x", 2)
                     putString("y", "asdf")
                 }
             }
-            tag("map") {
+            compound("map") {
                 putInt("3", 3)
                 putInt("hello", 2)
             }
 
-            tag("simple") {
+            compound("simple") {
                 putInt("x", 3)
                 putString("y", "foo")
             }
@@ -75,30 +75,19 @@ class NestedNbtFormatTests {
 
         val actual = Nbt.writeNbt(obj, CustomMap.serializer())
         val expected = NbtCompound().apply {
-            list("map") {
-                tag {
-                    putInt("x", 3)
-                    putString("y","asdf")
-                }
-                tag {
+
+            compound("map") {
+                compound("{}") {
                     putInt("x", 22)
                     putString("y","asdf")
                 }
-                tag {
-                    putInt("x", 2)
-                    putString("y","asdf")
-                }
-                tag {
+                compound("{\"y\":\"bar\"}"){
                     putInt("x", 3)
-                    putString("y","asdf")
+                    putString("y", "fay")
                 }
-                tag {
+                compound("{\"x\":2}") {
                     putInt("x", 3)
-                    putString("y","bar")
-                }
-                tag {
-                    putInt("x", 3)
-                    putString("y","fay")
+                    putString("y", "asdf")
                 }
             }
         }

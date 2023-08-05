@@ -35,7 +35,6 @@ class SerializationTests {
     fun `TagEncoder serializes and deserializes correctly`() {
         bootstrapMinecraft()
         testMethod(::testTag,  verbose = false)
-
     }
 
     @Test

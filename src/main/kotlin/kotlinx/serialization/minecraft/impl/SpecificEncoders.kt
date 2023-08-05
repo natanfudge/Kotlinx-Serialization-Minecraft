@@ -4,6 +4,8 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.internal.NamedValueDecoder
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.minecraft.Nbt
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
@@ -11,6 +13,13 @@ import net.minecraft.recipe.Ingredient
 
 internal interface NbtEncoder : ICanEncodeTag, /*ICanEncodeItemStack, */Encoder, CompositeEncoder  {
     fun encodeTaggedTag(key: String, tag: NbtElement)
+
+    companion object {
+        val json = Json {
+            serializersModule = Nbt.serializersModule
+            useArrayPolymorphism = true
+        }
+    }
 }
 
 //@OptIn(InternalSerializationApi::class)

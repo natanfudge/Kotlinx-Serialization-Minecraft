@@ -6,18 +6,13 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.internal.NamedValueEncoder
-import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.minecraft.Nbt
 import kotlinx.serialization.minecraft.NbtCompoundSerializer
 import kotlinx.serialization.minecraft.NbtEndSerializer
 import kotlinx.serialization.minecraft.NbtListSerializer
 import kotlinx.serialization.minecraft.impl.NbtEncoder
-import kotlinx.serialization.minecraft.impl.util.MinecraftSerializationLogger
-import kotlinx.serialization.minecraft.mixin.AccessibleNbtList
 import kotlinx.serialization.modules.SerializersModule
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
-import java.lang.reflect.Field
 
 internal fun <T> Nbt.writeNbt(value: T, serializer: SerializationStrategy<T>): NbtElement {
     lateinit var result: NbtElement
@@ -117,11 +112,12 @@ private sealed class AbstractNbtEncoder(
                 else NbtListEncoder(format, consumer)
             }
 
-            is PolymorphicKind -> NbtMapEncoder(format, consumer)
-            StructureKind.MAP -> format.selectMapMode(descriptor,
-                ifMap = { NbtMapEncoder(format, consumer) },
-                ifList = { NbtListEncoder(format, consumer) }
-            )
+            is PolymorphicKind, StructureKind.MAP -> NbtMapEncoder(format, consumer)
+//            StructureKind.MAP -> NbtMapEncoder(format, consumer)
+//            format.selectMapMode(descriptor,
+//                ifMap = { NbtMapEncoder(format, consumer) },
+//                ifList = { NbtListEncoder(format, consumer) }
+//            )
 
             else -> NbtTreeEncoder(format, consumer)
         }
@@ -171,6 +167,7 @@ private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : N
                     }
                 )
 
+                is AbstractNbtNumber -> element.numberValue().toString()
                 else -> element.asString()
             }
 
@@ -178,9 +175,28 @@ private class NbtMapEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : N
         }
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun <T> encodeSerializableElement(descriptor: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T) {
+        if (index % 2 == 0 && serializer.descriptor.kind !is PrimitiveKind) {
+            if (encodeElement(descriptor, index)) {
+                encodeStringElement(descriptor, index, NbtEncoder.json.encodeToString(serializer, value))
+            }
+        } else {
+            super.encodeSerializableElement(descriptor, index, serializer, value)
+        }
+    }
+
+    private fun encodeElement(desc: SerialDescriptor, index: Int): Boolean {
+        val tag = desc.getTag(index)
+        pushTag(tag)
+        return true
+    }
+
+
     override fun getCurrent(): NbtElement = content
 
 }
+
 
 private class NullableListEncoder(format: Nbt, nodeConsumer: (NbtElement) -> Unit) : NbtTreeEncoder(format, nodeConsumer) {
     override fun putElement(key: String, element: NbtElement) {
@@ -221,8 +237,9 @@ private fun NbtList.addAnyTag(index: Int, tag: NbtElement) {
     value.add(index, tag)
 }
 
-private class NbtListEncoder(json: Nbt, nodeConsumer: (NbtElement) -> Unit) :
-    AbstractNbtEncoder(json, nodeConsumer) {
+
+private class NbtListEncoder(nbt: Nbt, nodeConsumer: (NbtElement) -> Unit) :
+    AbstractNbtEncoder(nbt, nodeConsumer) {
     private val list: NbtList = NbtList()
 
     override fun elementName(descriptor: SerialDescriptor, index: Int): String = index.toString()

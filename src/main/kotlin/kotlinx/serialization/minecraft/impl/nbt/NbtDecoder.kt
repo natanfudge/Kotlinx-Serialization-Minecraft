@@ -7,14 +7,17 @@
 package kotlinx.serialization.minecraft.impl.nbt
 
 
-import kotlinx.serialization.minecraft.impl.NamedValueNbtDecoder
-import kotlinx.serialization.minecraft.Nbt
-import kotlinx.serialization.*
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PolymorphicKind
+import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.minecraft.Nbt
+import kotlinx.serialization.minecraft.impl.NamedValueNbtDecoder
+import kotlinx.serialization.minecraft.impl.NbtEncoder
 import kotlinx.serialization.modules.SerializersModule
 import net.minecraft.nbt.*
 
@@ -57,24 +60,23 @@ private sealed class AbstractNbtDecoder(val format: Nbt, open val map: NbtElemen
                 )
                 else TagListDecoder(format, cast(currentObject))
             }
-            is PolymorphicKind -> NbtMapDecoder(format, cast(currentObject))
-            StructureKind.MAP -> format.selectMapMode(
-                descriptor,
-                { NbtMapDecoder(format, cast(currentObject)) },
-                { TagListDecoder(format, cast(currentObject)) }
-            )
-            else -> NbtDecoder(format, cast(currentObject))
+
+            is PolymorphicKind, StructureKind.MAP -> NbtMapDecoder(format, cast(currentObject))
+
+//            StructureKind.MAP -> NbtMapDecoder(format, cast(currentObject))
+            else -> {
+                when (currentObject) {
+                    is NbtCompound -> NbtDecoder(format, cast(currentObject))
+                    // In map keys, objects may be encoded as strings.
+                    is NbtString -> TODO()
+                    else -> error("Objects should be encoded as NbtCompound or NbtString")
+                }
+            }
         }
     }
 
     protected open fun getValue(tag: String): NbtElement {
-        return currentElementWithTest(tag)
-    }
-
-    private fun currentElementWithTest(tag: String): NbtElement {
-        val element = currentElement(tag)
-        println("Element: $element")
-        return element
+        return currentElement(tag)
     }
 
     protected abstract fun currentElement(tag: String): NbtElement
@@ -117,24 +119,29 @@ private sealed class AbstractNbtDecoder(val format: Nbt, open val map: NbtElemen
 
     override fun decodeTaggedTag(key: String): NbtElement = getValue(key)
 
-    private inline fun <T> getNumberValue(
+    private fun <T> getNumberValue(
         tag: String,
         getter: AbstractNbtNumber.() -> T,
         stringGetter: String.() -> T
     ): T {
         val value = getValue(tag)
         if (value is AbstractNbtNumber) return value.getter()
+        if (value is NbtCompound) {
+            TODO()
+        }
+        // Map keys are encoded as NbtString
         else return value.cast<NbtString>().asString().stringGetter()
     }
 }
 
 
-private class TagPrimitiveDecoder(json: Nbt, override val map: NbtElement) : AbstractNbtDecoder(json, map) {
+private class TagPrimitiveDecoder(nbt: Nbt, override val map: NbtElement) : AbstractNbtDecoder(nbt, map) {
 
     init {
         pushTag(PRIMITIVE_TAG)
     }
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int  = 0
+
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = 0
 
     override fun currentElement(tag: String): NbtElement {
         require(tag === PRIMITIVE_TAG) { "This input can only handle primitives with '$PRIMITIVE_TAG' tag" }
@@ -142,7 +149,7 @@ private class TagPrimitiveDecoder(json: Nbt, override val map: NbtElement) : Abs
     }
 }
 
-private open class NbtDecoder(json: Nbt, override val map: NbtCompound) : AbstractNbtDecoder(json, map) {
+private open class NbtDecoder(nbt: Nbt, override val map: NbtCompound) : AbstractNbtDecoder(nbt, map) {
     private var position = 0
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -160,7 +167,7 @@ private open class NbtDecoder(json: Nbt, override val map: NbtCompound) : Abstra
 
 }
 
-private class NbtMapDecoder(json: Nbt, override val map: NbtCompound) : NbtDecoder(json, map) {
+private class NbtMapDecoder(nbt: Nbt, override val map: NbtCompound) : NbtDecoder(nbt, map) {
     private val keys = map.keys.toList()
     private val size: Int = keys.size * 2
     private var position = -1
@@ -182,12 +189,25 @@ private class NbtMapDecoder(json: Nbt, override val map: NbtCompound) : NbtDecod
         return if (position % 2 == 0) NbtString.of(tag) else map.get(tag)!!
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
+        if (deserializer.descriptor.kind !is PrimitiveKind) {
+            val current = currentElement(currentTag)
+            if (current is NbtString) {
+                // If we have a string but descriptor expects something complex, it means we serialized it as json.
+                return NbtEncoder.json.decodeFromString(deserializer, current.asString())
+            }
+        }
+//        if(current is NbtString)
+        return super.decodeSerializableValue(deserializer)
+    }
+
     override fun endStructure(descriptor: SerialDescriptor) {
         // do nothing, maps do not have strict keys, so strict mode check is omitted
     }
 }
 
-private class NullableListDecoder(json: Nbt, override val map: NbtCompound) : NbtDecoder(json, map) {
+private class NullableListDecoder(nbt: Nbt, override val map: NbtCompound) : NbtDecoder(nbt, map) {
     private val size: Int = map.size
     private var position = -1
 
@@ -212,7 +232,7 @@ private class NullableListDecoder(json: Nbt, override val map: NbtCompound) : Nb
 }
 
 
-private class TagListDecoder(json: Nbt, override val map: AbstractNbtList<*>) : AbstractNbtDecoder(json, map) {
+private class TagListDecoder(nbt: Nbt, override val map: AbstractNbtList<*>) : AbstractNbtDecoder(nbt, map) {
     private val size = map.size
     private var currentIndex = -1
 

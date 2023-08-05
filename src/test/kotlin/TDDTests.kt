@@ -12,10 +12,11 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtInt
 import net.minecraft.util.math.Vec3d
-import org.junit.jupiter.api.Test
 import utils.CityData
 import java.util.*
+import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.expect
 
 @Serializable
 data class SimpleData(val name: String, val age: Int)
@@ -256,15 +257,33 @@ class TDDTests {
         assertEquals(obj, back)
     }
 
-//    @Test
-//    fun `Tree gets serialized properly to ByteBuf`() {
-//        val buf = bufferedPacket()
-//        val zoo = lesserZoo
-//        LesserZoo.serializer().write(zoo, buf)
-//        val result = LesserZoo.serializer().readFrom(buf)
-//        assertEquals(zoo, result)
-//    }
+    @Test
+    fun `Complex maxkey can be serialized to nbt`() {
+        val obj = TestComplexMapKey(mapOf(UUID(5,9) to 4))
+        val tag = Nbt.encodeToNbt(obj)
+        val back: TestComplexMapKey = Nbt.decodeFromNbt(tag)
+        assertEquals(obj, back)
+    }
+    @Test
+    fun `Complex maxkey can be serialized to bytebuf`() {
+        val obj = TestComplexMapKey(mapOf(UUID(0,1) to 4))
+        val buf = bufferedPacket()
+        Buf.encodeToByteBuf(obj, buf)
+        val back: TestComplexMapKey = Buf.decodeFromByteBuf(buf)
+        assertEquals(obj, back)
+    }
+
+    @Test
+    fun `String key map can be serialized`() {
+        val obj = StringMap(mapOf("asdf" to 4))
+        val tag = Nbt.encodeToNbt(obj)
+        val back: StringMap = Nbt.decodeFromNbt(tag)
+        assertEquals(obj, back)
+    }
+
 }
+@Serializable
+data class StringMap(val map: Map<String,Int>)
 
 
 val lesserZoo = LesserZoo(
@@ -315,3 +334,5 @@ data class LesserZoo(
     val listIntDataN: Int,
     val tree: Long
 )
+@Serializable
+data class TestComplexMapKey(val map: Map<UUID, Int>)

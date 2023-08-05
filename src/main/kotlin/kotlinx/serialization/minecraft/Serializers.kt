@@ -9,6 +9,7 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.encodeCollection
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.minecraft.impl.ICanDecodeIngredient
 import kotlinx.serialization.minecraft.impl.ICanDecodeItemStack
@@ -180,6 +181,30 @@ public object NbtCompoundSerializer : KSerializer<NbtCompound> {
             encoder.encodeNbtCompound(value)
         } else {
             serializer.serialize(encoder, value.entries)
+            //TODO: this is only relevant for serializing NbtCompound to json, and i think we can leave that inefficient.
+//            encoder.genericSerialize(value)
+        }
+    }
+
+    private fun Encoder.genericSerialize(value: NbtCompound) {
+        val size = value.size
+        encodeCollection(descriptor, size) {
+            var index = 0
+            for((k,v) in value.entries) {
+                encodeStringElement(descriptor, index++, k)
+                when(v) {
+                    is NbtCompound -> genericSerialize(v)
+                    is NbtInt -> encodeIntElement(descriptor, index++, v.intValue())
+                    is AbstractNbtNumber -> encodeStringElement(descriptor,index++, v.asString())
+                    else -> TODO()
+                }
+//                encodeSerializableElement(descriptor, index++, keySerializer, k)
+//                encodeSerializableElement(descriptor, index++, valueSerializer, v)
+            }
+//            val iterator = value.collectionIterator()
+//            var index = 0
+//            iterator.forEach { (k, v) ->
+//              }
         }
     }
 
