@@ -1,8 +1,7 @@
-
-import kotlinx.serialization.minecraft.impl.bufferedPacket
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.minecraft.getFrom
+import kotlinx.serialization.minecraft.impl.bufferedPacket
 import kotlinx.serialization.minecraft.put
 import kotlinx.serialization.minecraft.readFrom
 import kotlinx.serialization.minecraft.write
@@ -11,7 +10,6 @@ import net.minecraft.nbt.NbtCompound
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import utils.*
-import kotlin.test.assertEquals
 
 fun testTag(serializer: KSerializer<Any>, obj: Any, context: SerializersModule): TestResult {
     val tag = NbtCompound()
@@ -28,26 +26,23 @@ fun testByteBuf(serializer: KSerializer<Any>, obj: Any, context: SerializersModu
 }
 
 
-
 class SerializationTests {
 
     @Test
-    fun `TagEncoder serializes and deserializes correctly`() {
+    fun `TagEncoderSerializesAndDeserializesCorrectly`() {
         bootstrapMinecraft()
-        testMethod(::testTag,  verbose = false)
+        testMethod(::testTag, verbose = false)
     }
 
     @Test
-    fun `ByteBufEncoder serializes and deserializes correctly`() {
+    fun ByteBufEncoderSerializesAndDeserializesCorrectly() {
         bootstrapMinecraft()
-        testMethod(::testByteBuf,  verbose = false)
+        testMethod(::testByteBuf, verbose = false)
     }
 
 
-
-
     @Test
-    fun `TagEncoder can serialize a zoo`() {
+    fun TagEncoderCanSerializeAZoo() {
         val obj = zoo
         val existing = NbtCompound()
         Zoo.serializer().put(obj, existing)
@@ -102,7 +97,7 @@ class SerializationTests {
     }
 
     @Test
-    fun `You can use getFrom or readFrom on null`() = testSerializers(CityData.serializer().nullable) {
+    fun YouCanUseGetFromOrReadFromOnNull() = testSerializers(CityData.serializer().nullable) {
         val data: CityData? = null
         serialize(data)
         val back = deserialize()

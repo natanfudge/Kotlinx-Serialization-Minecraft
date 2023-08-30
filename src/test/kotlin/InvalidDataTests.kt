@@ -10,9 +10,9 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import org.junit.jupiter.api.Test
+import utils.assertEquals
 import utils.testTagSerializer
 import java.util.*
-import kotlin.test.assertEquals
 
 @Serializable
 data class DefaultedData(
@@ -23,19 +23,19 @@ data class DefaultedData(
 
 @Serializable
 data class DefaultedOtherFormats(
-    val uuid: UUID = UUID(1,2),
-    val uuidList: List<UUID> = listOf(UUID(2,3)),
-    val blockPos: BlockPos = BlockPos(-1,2,33),
+    val uuid: UUID = UUID(1, 2),
+    val uuidList: List<UUID> = listOf(UUID(2, 3)),
+    val blockPos: BlockPos = BlockPos(-1, 2, 33),
     val blockPosList: List<BlockPos> = listOf(),
     val id: Identifier = Identifier("asdf:6sss"),
-    val vec3d : Vec3d = Vec3d(777.0,123.0,-3.3)
+    val vec3d: Vec3d = Vec3d(777.0, 123.0, -3.3)
 )
 
 class InvalidDataTests {
 
 
     @Test
-    fun `If you have defaulted data you know the values are always valid`() =
+    fun IfYouHaveDefaultedDataYouKnowTheValuesAreAlwaysValid() =
         testTagSerializer(DefaultedData.serializer()) {
             val originalValue = DefaultedData(
                 UUID(1, 2), BlockPos(6, 7, 8), Identifier("holy", "gradle")
@@ -57,25 +57,23 @@ class InvalidDataTests {
 
 
     @Test
-    fun `If the tag is empty you will get the default value instead`() =
+    fun IfTheTagIsEmptyYouWillGetTheDefaultValueInstead() =
         testTagSerializer(DefaultedData.serializer()) {
             val result = deserialize()
 
-            assertEquals(result,DefaultedData())
+            assertEquals(result, DefaultedData())
 
         }
 
 
     @Test
-    fun `Custom serializers properly default the values`() =
+    fun CustomSerializersProperlyDefaultTheValues() =
         testTagSerializer(DefaultedOtherFormats.serializer()) {
             val result = deserialize()
 
-            assertEquals(result,DefaultedOtherFormats())
+            assertEquals(result, DefaultedOtherFormats())
 
         }
-
-
 
 
 }

@@ -9,12 +9,14 @@ accessible method net/minecraft/util/collection/DefaultedList <init> (Ljava/util
 # NbtTreeEncoder
 accessible field net/minecraft/nbt/NbtList value Ljava/util/List;
 # Yarn 1.19.2+build.28 specific bugfix
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createEndNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible field net/minecraft/world/gen/OreVeinSampler$VeinType minY I
-accessible field net/minecraft/world/gen/OreVeinSampler$VeinType maxY I
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createNetherNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createSurfaceNoiseRouter (Lnet/minecraft/util/registry/Registry;ZZ)Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createCavesNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createFloatingIslandsNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createMissingNoiseRouter ()Lnet/minecraft/world/gen/noise/NoiseRouter;
-accessible method net/minecraft/world/biome/source/util/VanillaBiomeParameters writeOverworldBiomeParameters (Ljava/util/function/Consumer;)V
+#accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createEndNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
+#accessible field net/minecraft/world/gen/OreVeinSampler$VeinType minY I
+#accessible field net/minecraft/world/gen/OreVeinSampler$VeinType maxY I
+#accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createNetherNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
+#accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createSurfaceNoiseRouter (Lnet/minecraft/util/registry/Registry;ZZ)Lnet/minecraft/world/gen/noise/NoiseRouter;
+#accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createCavesNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
+#accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createFloatingIslandsNoiseRouter (Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/gen/noise/NoiseRouter;
+#accessible method net/minecraft/world/gen/densityfunction/DensityFunctions createMissingNoiseRouter ()Lnet/minecraft/world/gen/noise/NoiseRouter;
+#accessible method net/minecraft/world/biome/source/util/VanillaBiomeParameters writeOverworldBiomeParameters (Ljava/util/function/Consumer;)V
+# Yarn 1.20.1+build.10 specific bugfix
+accessible method net/minecraft/registry/entry/RegistryEntry$Reference setRegistryKey (Lnet/minecraft/registry/RegistryKey;)V

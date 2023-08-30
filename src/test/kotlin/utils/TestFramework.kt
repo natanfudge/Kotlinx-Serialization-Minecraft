@@ -16,9 +16,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
+import org.junit.jupiter.api.Assertions
 import kotlin.reflect.KFunction
-import kotlin.test.assertEquals
-import kotlin.test.asserter
 
 data class TestResult(
     val obj: Any, // original object
@@ -202,11 +201,13 @@ fun <T> testTagSerializer(serializer: KSerializer<T>, init: TagSerialContainer<T
 }
 
 fun <T> smartAssertEquals(expected: T, actual: T) {
-    if(expected is ItemStack && actual is ItemStack) {
-        if(!ItemStack.areEqual(expected,actual))  asserter.fail("$expected is not equal to $actual")
+    if (expected is ItemStack && actual is ItemStack) {
+        if (!ItemStack.areEqual(expected, actual)) Assertions.fail<Unit>("$expected is not equal to $actual")
     } else if (expected is Ingredient && actual is Ingredient) {
-        if(!(expected actuallyEquals actual))  asserter.fail("$expected is not equal to $actual")
+        if (!(expected actuallyEquals actual)) Assertions.fail<Unit>("$expected is not equal to $actual")
     } else {
-        assertEquals(expected,actual)
+        Assertions.assertEquals(expected, actual)
     }
 }
+
+fun <T> assertEquals(a: T, b: T) = Assertions.assertEquals(a, b)

@@ -1,12 +1,10 @@
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.minecraft.*
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.math.BlockPos
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Test
+import utils.assertEquals
 
 @Serializable
 data class Dog(val woof: Int)

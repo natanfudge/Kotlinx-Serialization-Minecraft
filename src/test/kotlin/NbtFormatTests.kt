@@ -1,10 +1,10 @@
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.minecraft.Nbt
 import kotlinx.serialization.minecraft.impl.nbt.writeNbt
-import kotlinx.serialization.Serializable
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import utils.assertEquals
 
 @Serializable
 data class SimpleObj(val x: Int = 3, val y: String = "asdf")
@@ -19,6 +19,7 @@ class NestedNbtFormatTests {
     private fun NbtCompound.compound(key: String, init: NbtCompound.() -> Unit) = put(key, NbtCompound().apply(init))
     private fun NbtCompound.list(key: String, init: NbtList.() -> Unit) = put(key, NbtList().apply(init))
     private fun NbtList.compound(init: NbtCompound.() -> Unit) = add(NbtCompound().apply(init))
+
     @Test
     fun `Objects gets serialized to NbtCompound`() {
         val simple = SimpleObj()
@@ -31,7 +32,7 @@ class NestedNbtFormatTests {
     }
 
     @Test
-    fun `Lists get serialized to NbtLists, maps and objects to NbtCompounds`() {
+    fun ListsGetSerializedToNbtListsMapsAndObjectsToNbtCompounds() {
         val obj = ComplexObj(
             list = listOf(SimpleObj(), SimpleObj(x = 2)),
             map = mapOf("3" to 3, "hello" to 2),
@@ -64,7 +65,7 @@ class NestedNbtFormatTests {
     }
 
     @Test
-    fun `Maps with custom objects as keys can be serialized`() {
+    fun MapsWithCustomObjectsAsKeysCanBeSerialized() {
         val obj = CustomMap(
             mapOf(
                 SimpleObj() to SimpleObj(x = 22),
@@ -79,9 +80,9 @@ class NestedNbtFormatTests {
             compound("map") {
                 compound("{}") {
                     putInt("x", 22)
-                    putString("y","asdf")
+                    putString("y", "asdf")
                 }
-                compound("{\"y\":\"bar\"}"){
+                compound("{\"y\":\"bar\"}") {
                     putInt("x", 3)
                     putString("y", "fay")
                 }
@@ -92,7 +93,7 @@ class NestedNbtFormatTests {
             }
         }
 
-        assertEquals(expected,actual)
+        assertEquals(expected, actual)
 
         println(actual)
     }

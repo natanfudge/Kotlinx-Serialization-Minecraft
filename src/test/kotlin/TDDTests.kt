@@ -1,22 +1,21 @@
 @file:UseSerializers(UUIDSerializer::class, BlockPosSerializer::class, IdentifierSerializer::class, Vec3dSerializer::class)
 
-import kotlinx.serialization.minecraft.impl.bufferedPacket
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.minecraft.*
+import kotlinx.serialization.minecraft.impl.bufferedPacket
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtInt
 import net.minecraft.util.math.Vec3d
+import org.junit.jupiter.api.Test
 import utils.CityData
+import utils.assertEquals
 import java.util.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.expect
 
 @Serializable
 data class SimpleData(val name: String, val age: Int)
@@ -70,6 +69,7 @@ data class Vec3dContainer(
 
 @Serializable
 data class IntStringMap(val intString: Map<Int, String>)
+
 @Serializable
 data class NullableProperty(val nullable: Int?)
 
@@ -259,14 +259,15 @@ class TDDTests {
 
     @Test
     fun `Complex maxkey can be serialized to nbt`() {
-        val obj = TestComplexMapKey(mapOf(UUID(5,9) to 4))
+        val obj = TestComplexMapKey(mapOf(UUID(5, 9) to 4))
         val tag = Nbt.encodeToNbt(obj)
         val back: TestComplexMapKey = Nbt.decodeFromNbt(tag)
         assertEquals(obj, back)
     }
+
     @Test
     fun `Complex maxkey can be serialized to bytebuf`() {
-        val obj = TestComplexMapKey(mapOf(UUID(0,1) to 4))
+        val obj = TestComplexMapKey(mapOf(UUID(0, 1) to 4))
         val buf = bufferedPacket()
         Buf.encodeToByteBuf(obj, buf)
         val back: TestComplexMapKey = Buf.decodeFromByteBuf(buf)
@@ -282,8 +283,9 @@ class TDDTests {
     }
 
 }
+
 @Serializable
-data class StringMap(val map: Map<String,Int>)
+data class StringMap(val map: Map<String, Int>)
 
 
 val lesserZoo = LesserZoo(
@@ -334,5 +336,6 @@ data class LesserZoo(
     val listIntDataN: Int,
     val tree: Long
 )
+
 @Serializable
 data class TestComplexMapKey(val map: Map<UUID, Int>)
