@@ -1,12 +1,13 @@
 package kotlinx.serialization.minecraft.impl
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SealedSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.SerialKind
 import kotlinx.serialization.descriptors.StructureKind
 
 
-@OptIn(ExperimentalSerializationApi::class)
+@OptIn(SealedSerializationApi::class)
 internal sealed class PublicedListLikeDescriptor(val elementDesc: SerialDescriptor) : SerialDescriptor {
     override val kind: SerialKind get() = StructureKind.LIST
     override val elementsCount: Int = 1
@@ -41,5 +42,3 @@ internal sealed class PublicedListLikeDescriptor(val elementDesc: SerialDescript
         return elementDesc.hashCode() * 31 + serialName.hashCode()
     }
 }
-@OptIn(ExperimentalSerializationApi::class)
-internal open class PublicedListLikeDescriptorImpl(elementDesc: SerialDescriptor, override val serialName : String) : PublicedListLikeDescriptor(elementDesc)

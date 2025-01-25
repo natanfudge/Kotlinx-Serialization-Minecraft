@@ -35,6 +35,8 @@ interface Case<T : Any> {
 
 private var initialized = false
 
+
+@Synchronized
 fun bootstrapMinecraft() {
     if (!initialized) {
         SharedConstants.setGameVersion(MinecraftVersion.create())
@@ -57,7 +59,6 @@ class TestCaseInit {
         cases.add(LazyCase(this, serializer))
     }
 
-//    class Moduleable
 }
 
 fun testCases(init: TestCaseInit.() -> Unit) = TestCaseInit().apply(init)
@@ -65,7 +66,7 @@ fun testCases(init: TestCaseInit.() -> Unit) = TestCaseInit().apply(init)
 data class LazyCase<T : Any> @OptIn(ExperimentalSerializationApi::class) constructor(
     val lazyObj: () -> T,
     override val serializer: KSerializer<T>,
-    override val context: SerializersModule = EmptySerializersModule
+    override val context: SerializersModule = EmptySerializersModule()
 ) : Case<T> {
     override val obj: T get() = lazyObj()
     override val name: String get() = obj.javaClass.simpleName
@@ -78,7 +79,7 @@ data class LazyCase<T : Any> @OptIn(ExperimentalSerializationApi::class) constru
 data class EagerCase<T : Any> @OptIn(ExperimentalSerializationApi::class) constructor(
     override val obj: T,
     override val serializer: KSerializer<T>,
-    override val context: SerializersModule = EmptySerializersModule,
+    override val context: SerializersModule = EmptySerializersModule(),
     override val name: String = obj.javaClass.simpleName
 ) : Case<T>
 
@@ -177,7 +178,8 @@ interface SerialContainer<T> {
 //    fun deserializeAndCompare() = deserialize()
 }
 
-class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val tag: NbtCompound = NbtCompound()) : SerialContainer<T> {
+class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val tag: NbtCompound = NbtCompound()) :
+    SerialContainer<T> {
     override fun serialize(obj: T) = serializer.put(obj, tag)
     override fun deserialize(): T = serializer.getFrom(tag)
 
@@ -185,14 +187,22 @@ class TagSerialContainer<T>(override val serializer: KSerializer<T>, private val
     val innerTag: NbtCompound get() = tag.get(serializer.descriptor.serialName) as NbtCompound
 }
 
-class BufSerialContainer<T>(override val serializer: KSerializer<T>, private val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())) :
+class BufSerialContainer<T>(
+    override val serializer: KSerializer<T>,
+    private val buf: PacketByteBuf = PacketByteBuf(Unpooled.buffer())
+) :
     SerialContainer<T> {
     override fun serialize(obj: T) = serializer.write(obj, buf)
     override fun deserialize(): T = serializer.readFrom(buf)
 }
 
 
-fun <T> testSerializers(serializer: KSerializer<T>, bufOnly: Boolean = false, tagOnly: Boolean = false, init: SerialContainer<T>.() -> Unit) {
+fun <T> testSerializers(
+    serializer: KSerializer<T>,
+    bufOnly: Boolean = false,
+    tagOnly: Boolean = false,
+    init: SerialContainer<T>.() -> Unit
+) {
     if (!bufOnly) TagSerialContainer(serializer).init()
     if (!tagOnly) BufSerialContainer(serializer).init()
 }
@@ -202,11 +212,11 @@ fun <T> testTagSerializer(serializer: KSerializer<T>, init: TagSerialContainer<T
 }
 
 fun <T> smartAssertEquals(expected: T, actual: T) {
-    if(expected is ItemStack && actual is ItemStack) {
-        if(!ItemStack.areEqual(expected,actual))  asserter.fail("$expected is not equal to $actual")
+    if (expected is ItemStack && actual is ItemStack) {
+        if (!ItemStack.areEqual(expected, actual)) asserter.fail("$expected is not equal to $actual")
     } else if (expected is Ingredient && actual is Ingredient) {
-        if(!(expected actuallyEquals actual))  asserter.fail("$expected is not equal to $actual")
+        if (!(expected actuallyEquals actual)) asserter.fail("$expected is not equal to $actual")
     } else {
-        assertEquals(expected,actual)
+        assertEquals(expected, actual)
     }
 }

@@ -84,14 +84,8 @@ class DatTests {
     @Test
     fun `Various keys in a map may be written to and from a dat file`() {
         val obj = WeirdMapKeys2(
-//            mapOf(BlockPos(1,2,3) to 4),
-//            mapOf(33.toByte() to 1),
-//            mapOf(44.toShort() to 3),
             3,
             mapOf(UUID.randomUUID() to 123),
-//            mapOf(2.3f to 34),
-//            mapOf(321.23 to 43),
-//            mapOf(listOf(1,2,3) to 4)
         )
         val tag = NbtCompound().also { WeirdMapKeys2.serializer().put(obj, it) }
         val file = Files.createTempFile("testkeys",".dat").toFile()
@@ -121,9 +115,6 @@ sealed interface Polymorphic {
     @Serializable
     data class Option2(val y: Int, val z: Float): Polymorphic
 }
-
-@Serializable
-data class WeirdMapKeys(val map: Map<BlockPos, Int>, val map2: Map<Byte, Int>, val map3: Map<Short, Int>, val map4: Map<String, Int>, val map5: Map<UUID, Int>, val map6: Map<Float, Int>, val map7: Map<Double, Int>, val map8: Map<List<Int>, Int>)
 @Serializable
 data class WeirdMapKeys2(val map4: Int, val map5: Map<UUID, Int>)
 

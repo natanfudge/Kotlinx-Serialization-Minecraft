@@ -18,9 +18,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import utils.bootstrapMinecraft
 import utils.smartAssertEquals
-import java.util.UUID
+import java.util.*
 import kotlin.test.Test
-
 
 
 @Serializable
@@ -31,13 +30,14 @@ class ContextualSerializersTest {
         bootstrapMinecraft()
         testDirect(BlockPos(1, 2, 3))
         testDirect(Identifier("foo:bar"))
-        testDirect(SoundEvents.AMBIENT_BASALT_DELTAS_ADDITIONS)
+        testDirect(SoundEvents.AMBIENT_BASALT_DELTAS_ADDITIONS.value())
         testDirect(ItemStack(Items.GLOW_ITEM_FRAME))
         testDirect<Ingredient>(Ingredient.ofItems(Items.ITEM_FRAME))
         testDirect<DefaultedList<Int>>(DefaultedList.ofSize(10, 2))
-        testDirect(UUID(12431,4124124))
-        testDirect(Vec3d(0.3,41.2,31.6))
+        testDirect(UUID(12431, 4124124))
+        testDirect(Vec3d(0.3, 41.2, 31.6))
     }
+
     @Test
     fun testBuiltinContextual() {
         bootstrapMinecraft()
@@ -55,14 +55,14 @@ class ContextualSerializersTest {
         testDirect<Dog2?>(Dog2(123))
         testDirect<BlockPos?>(BlockPos(1, 2, 3))
         testDirect<Identifier?>(Identifier("foo:bar"))
-        testDirect<SoundEvent?>(SoundEvents.AMBIENT_BASALT_DELTAS_ADDITIONS)
+        testDirect<SoundEvent?>(SoundEvents.AMBIENT_BASALT_DELTAS_ADDITIONS.value())
         testDirect<ItemStack?>(ItemStack(Items.GLOW_ITEM_FRAME))
         testDirect<Ingredient?>(Ingredient.ofItems(Items.ITEM_FRAME))
         testDirect<DefaultedList<Int>?>(DefaultedList.ofSize(10, 2))
         testDirect<DefaultedList<Int?>?>(DefaultedList.ofSize(10, 2))
         testDirect<DefaultedList<Int?>>(DefaultedList.ofSize(10, 2))
-        testDirect<UUID>(UUID(12431,4124124))
-        testDirect<Vec3d>(Vec3d(0.3,41.2,31.6))
+        testDirect<UUID>(UUID(12431, 4124124))
+        testDirect<Vec3d>(Vec3d(0.3, 41.2, 31.6))
         testDirect<Dog2?>(null)
         testDirect<BlockPos?>(null)
         testDirect<Identifier?>(null)
@@ -81,9 +81,9 @@ class ContextualSerializersTest {
         smartAssertEquals(exampleValue, back)
 
         val asJson = json.encodeToString(serializer, exampleValue)
-        smartAssertEquals( exampleValue, json.decodeFromString(asJson))
+        smartAssertEquals(exampleValue, json.decodeFromString(asJson))
         val asJsonElement = json.encodeToJsonElement(serializer, exampleValue)
-        smartAssertEquals( exampleValue, json.decodeFromJsonElement(asJsonElement))
+        smartAssertEquals(exampleValue, json.decodeFromJsonElement(asJsonElement))
     }
 }
 
@@ -91,11 +91,4 @@ private val json = Json {
     serializersModule = Nbt.serializersModule
     useArrayPolymorphism = true
 }
-//    contextual(BlockPos::class, BlockPosSerializer)
-//    contextual(Identifier::class, IdentifierSerializer)
-//    contextual(SoundEvent::class, SoundEventSerializer)
-//    contextual(ItemStack::class, ItemStackSerializer)
-//    contextual(Ingredient::class, IngredientSerializer)
-//    contextual(DefaultedList::class) { args -> DefaultedListSerializer(args[0]) }
-//    contextual(UUID::class, UUIDSerializer)
-//    contextual(Vec3d::class, Vec3dSerializer)
+

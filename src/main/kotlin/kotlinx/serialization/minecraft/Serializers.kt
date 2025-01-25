@@ -23,13 +23,14 @@ import kotlinx.serialization.minecraft.impl.util.MinecraftSerializationLogger
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.*
 import net.minecraft.recipe.Ingredient
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
-import net.minecraft.util.registry.Registry
 import java.util.*
 
 private inline fun <T> missingField(missingField: String, deserializing: String, defaultValue: () -> T): T {
@@ -54,10 +55,10 @@ public object IdentifierSerializer : KSerializer<Identifier> {
 public object SoundEventSerializer : KSerializer<SoundEvent> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("SoundEvent", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: SoundEvent) {
-        encoder.encodeInt(Registry.SOUND_EVENT.getRawId(value))
+        encoder.encodeInt(Registries.SOUND_EVENT.getRawId(value))
     }
 
-    override fun deserialize(decoder: Decoder): SoundEvent = Registry.SOUND_EVENT.get(decoder.decodeInt())
+    override fun deserialize(decoder: Decoder): SoundEvent = Registries.SOUND_EVENT.get(decoder.decodeInt())
         ?: SoundEvents.ENTITY_ITEM_PICKUP
 }
 
@@ -232,7 +233,7 @@ public object ItemStackSerializer : KSerializer<ItemStack> {
             encoder.encodeItemStack(value)
         } else {
             val compositeOutput = encoder.beginStructure(descriptor)
-            compositeOutput.encodeStringElement(descriptor, IdIndex, Registry.ITEM.getId(value.item).toString())
+            compositeOutput.encodeStringElement(descriptor, IdIndex, Registries.ITEM.getId(value.item).toString())
             compositeOutput.encodeIntElement(descriptor, CountIndex, value.count)
             compositeOutput.encodeSerializableElement(descriptor, TagIndex, NbtCompoundSerializer.nullable, value.nbt)
             compositeOutput.endStructure(descriptor)
@@ -288,7 +289,7 @@ public object ItemStackSerializer : KSerializer<ItemStack> {
         }
 
         return ItemStack(
-            Registry.ITEM.get(Identifier(id)).also { if (tag != null) it.postProcessNbt(tag) },
+            Registries.ITEM.get(Identifier(id)).also { if (tag != null) it.postProcessNbt(tag) },
             count
         ).apply { this.nbt = tag }
     }

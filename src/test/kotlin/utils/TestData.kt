@@ -159,14 +159,8 @@ val idea = Product("IntelliJ IDEA Ultimate", 199.0)
 val reSharper = Product("ReSharper", 149.0)
 val dotTrace = Product("DotTrace", 159.0)
 val dotMemory = Product("DotTrace", 129.0)
-val dotCover = Product("DotCover", 99.0)
-val appCode = Product("AppCode", 99.0)
-val phpStorm = Product("PhpStorm", 99.0)
-val pyCharm = Product("PyCharm", 99.0)
 val rubyMine = Product("RubyMine", 99.0)
 val webStorm = Product("WebStorm", 49.0)
-val teamCity = Product("TeamCity", 299.0)
-val youTrack = Product("YouTrack", 500.0)
 
 //customers
 val lucas = "Lucas"
@@ -277,6 +271,14 @@ data class ZooWithArrays(
             arrInt.contentEquals(other.arrInt) &&
             arrIntN.contentEquals(other.arrIntN) &&
             arrIntData.contentEquals(other.arrIntData)
+
+    override fun hashCode(): Int {
+        var result = arrByte.contentHashCode()
+        result = 31 * result + arrInt.contentHashCode()
+        result = 31 * result + arrIntN.contentHashCode()
+        result = 31 * result + arrIntData.contentHashCode()
+        return result
+    }
 }
 
 

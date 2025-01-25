@@ -56,29 +56,12 @@ test {
 }
 
 
-
-def getSecretProperty(String path, String key) {
-    def rootPath = System.getenv("SECRETS_PATH")
-    def file = new File("${rootPath}/${path}.properties")
-    if (!file.exists()) return ""
-    def properties = new Properties()
-    new FileInputStream(file).withCloseable { is -> properties.load(is) }
-    return properties[key]
-}
-
-def getSecretFile(String path) {
-    def rootPath = System.getenv("SECRETS_PATH")
-    def file = new File("${rootPath}/${path}")
-    if (!file.exists()) return ""
-    return new String(file.readBytes())
-}
-
-afterEvaluate {
-    task uploadLibrary {
-        group = "kotlinSerializationMinecraft"
-        dependsOn tasks.publishToSonatype, tasks.closeAndReleaseSonatypeStagingRepository
-    }
-}
+//afterEvaluate {
+//    task uploadLibrary {
+//        group = "kotlinSerializationMinecraft"
+//        dependsOn tasks.publishToSonatype, tasks.closeAndReleaseSonatypeStagingRepository
+//    }
+//}
 
 afterEvaluate {
     publishing {
@@ -118,20 +101,24 @@ afterEvaluate {
         }
     }
 }
-nexusPublishing {
-    repositories {
-        sonatype {
-            stagingProfileId = getSecretProperty('ksm/keys', "sonatype_staging_profile_id")
-            username = getSecretProperty("sonatype", "ossrh_username")
-            password = getSecretProperty("sonatype", "ossrh_password")
-        }
-    }
-}
+//TODO: use jreleaser with the new sonatype publishing portal. i can't be bothered to get the old system to work.
+//nexusPublishing {
+//    repositories {
+//        sonatype {
+//            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+//            stagingProfileId = System.getenv("NATAN_SONATYPE_STAGING_PROFILE_ID")
+//            username = System.getenv("NATAN_OSSRH_USERTOKEN_USERNAME")
+//            password = System.getenv("NATAN_OSSRH_USERTOKEN_PASSWORD")
+//        }
+//    }
+//}
 signing {
     useInMemoryPgpKeys(
-            getSecretProperty("ksm/keys", "gpg_key_id"),
-            getSecretFile("ksm/secret_key.txt"),
-            getSecretProperty("ksm/keys", "gpg_key_password"),
+            System.getenv("NATAN_GPG_KEY_ID"),
+//         The ONELINE secret key contains literal '\n' in place of new lines in order to make it fit in a windows env variable.
+//         We then replace the literal '\n's with actual '\n's.
+            System.getenv("NATAN_GPG_SECRET_KEY_ONELINE")?.replace("\\n", "\n"),
+            System.getenv("NATAN_GPG_KEY_PASSWORD")
     )
     sign publishing.publications
 }

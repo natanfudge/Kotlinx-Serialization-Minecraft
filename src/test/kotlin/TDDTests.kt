@@ -286,53 +286,6 @@ class TDDTests {
 data class StringMap(val map: Map<String,Int>)
 
 
-val lesserZoo = LesserZoo(
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-)
 
-@Serializable
-data class LesserZoo(
-    val unit: Int,
-    val boolean: Int,
-    val byte: Int,
-    val short: Int,
-    val int: Int,
-    val long: Int,
-    val float: Int,
-    val double: Int,
-    val char: Int,
-    val string: Int,
-    val enum: Int,
-    val intData: Int,
-    val unitN: Int,
-    val booleanN: Int,
-    val byteN: Int,
-    val shortN: Int,
-    val intN: Int,
-    val longN: Int,
-    val floatN: Int,
-    val doubleN: Int,
-    val charN: Int,
-    val stringN: Int,
-    val enumN: Int,
-    val intDataN: Int,
-    val listInt: Int,
-    val listIntN: Int,
-    val listNInt: Int,
-    val listNIntN: Int,
-    val listListEnumN: Int,
-    val listIntData: Int,
-    val listIntDataN: Int,
-    val tree: Long
-)
 @Serializable
 data class TestComplexMapKey(val map: Map<UUID, Int>)
